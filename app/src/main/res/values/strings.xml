@@ -7,4 +7,6 @@
     <string name="info">Lokalizacja pojazdów jest przybliżona. Nie są widoczne pojazdy, które nie przekazują informacji o swoim położeniu. Dane o lokalizacji odświeżają się co około 30 sekund.
         \n\nAplikacja korzysta z danych podchodzących ze strony http://zditm.szczecin.pl. Proszę mieć na uwadze, że system czasem może nie działać (lub działać wolno) i nie jest to zależne od aplikacji.
     </string>
+    <string name="no_internet">Brak połączenia z internetem</string>
+    <string name="refresh">Odśwież</string>
 </resources>

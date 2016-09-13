@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -35,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        myWebView.loadUrl(Config.URL);
-        showInitDialog();
+        loadPage();
     }
 
     @Override
@@ -55,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void loadPage() {
+        if(Functions.isNetworkAvailable(this)) {
+            myWebView.loadUrl(Config.URL);
+            showInitDialog();
+        } else {
+            showNoInternetSnackbar();
+        }
     }
 
     private void showInitDialog()
@@ -82,5 +91,18 @@ public class MainActivity extends AppCompatActivity {
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private void showNoInternetSnackbar()
+    {
+        Snackbar
+                .make(findViewById(R.id.swiperefresh), R.string.no_internet, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.refresh, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadPage();
+                    }
+                })
+                .show();
     }
 }
