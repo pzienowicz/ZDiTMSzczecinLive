@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">ZDiTM Szczecin Live</string>
+    <string name="app_name">Komunikacja Miejska Szczecin</string>
 
     <string name="dialog_title">Witamy!</string>
     <string name="close">Zamknij</string>
     <string name="do_not_show_more">Nie pokazuj więcej</string>
     <string name="info">Lokalizacja pojazdów jest przybliżona. Nie są widoczne pojazdy, które nie przekazują informacji o swoim położeniu. Dane o lokalizacji odświeżają się co około 30 sekund.
-        \n\nAplikacja korzysta z danych podchodzących ze strony http://zditm.szczecin.pl. Proszę mieć na uwadze, że system czasem może nie działać (lub działać wolno) i nie jest to zależne od aplikacji.
+        \n\nAplikacja nieoficjalna. Korzysta ona z danych podchodzących ze strony http://zditm.szczecin.pl. Proszę mieć na uwadze, że system czasem może nie działać (lub działać wolno) i nie jest to zależne od aplikacji.
     </string>
     <string name="no_internet">Brak połączenia z internetem</string>
     <string name="refresh">Odśwież</string>
