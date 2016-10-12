@@ -1,8 +1,13 @@
-package pl.pzienowicz.zditmszczecinlive;
+package pl.pzienowicz.zditmszczecinlive.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -12,22 +17,47 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
+
+import com.onesignal.OneSignal;
+
+import pl.pzienowicz.zditmszczecinlive.Config;
+import pl.pzienowicz.zditmszczecinlive.Functions;
+import pl.pzienowicz.zditmszczecinlive.R;
+import pl.pzienowicz.zditmszczecinlive.dialog.LineDialog;
 
 public class MainActivity extends AppCompatActivity {
 
     WebView myWebView = null;
     SharedPreferences sharedPreferences = null;
+    Context context = null;
+    BroadcastReceiver bcr = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        OneSignal.startInit(this).init();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
         if(getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
+        FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.floatingButton);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LineDialog dialog = new LineDialog(context);
+                dialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                dialog.show();
+//                myWebView.loadUrl("http://www.zditm.szczecin.pl/mapy/linia,16");
+            }
+        });
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putInt(Config.PREFERENCE_SELECTED_LINE, 0).apply();
 
         myWebView = (WebView) findViewById(R.id.webView);
         myWebView.getSettings().setJavaScriptEnabled(true);
@@ -37,7 +67,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loadPage();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Config.INTENT_LOAD_NEW_URL);
+
+        bcr = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch(intent.getAction()) {
+                    case Config.INTENT_LOAD_NEW_URL:
+                        int lineId = intent.getIntExtra(Config.EXTRA_LINE_ID, 0);
+                        if(lineId == 0) {
+                            myWebView.loadUrl(Config.URL);
+                        } else {
+                            myWebView.loadUrl(Config.LINE_URL + lineId);
+                        }
+                    break;
+                }
+            }
+        };
+        registerReceiver(bcr, filter);
     }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(bcr);
+        super.onDestroy();
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
