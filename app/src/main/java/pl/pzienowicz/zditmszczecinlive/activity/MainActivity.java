@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +17,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.onesignal.OneSignal;
 
 import pl.pzienowicz.zditmszczecinlive.Config;
@@ -45,14 +45,26 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.floatingButton);
+        final FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+
+        FloatingActionButton setFavouriteBtn = (FloatingActionButton) findViewById(R.id.set_favourite);
+        setFavouriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharedPreferences.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, myWebView.getUrl()).apply();
+                Snackbar.make(findViewById(R.id.swiperefresh), R.string.set_favourite, Snackbar.LENGTH_LONG).show();
+                floatingActionsMenu.collapse();
+            }
+        });
+
+        FloatingActionButton actionButton = (FloatingActionButton) findViewById(R.id.show_lines);
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LineDialog dialog = new LineDialog(context);
                 dialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 dialog.show();
-//                myWebView.loadUrl("http://www.zditm.szczecin.pl/mapy/linia,16");
+                floatingActionsMenu.collapse();
             }
         });
 
@@ -116,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadPage() {
         if(Functions.isNetworkAvailable(this)) {
-            myWebView.loadUrl(Config.URL);
+            String favouriteMap = sharedPreferences.getString(Config.PREFERENCE_FAVOURITE_MAP, Config.URL);
+
+            myWebView.loadUrl(favouriteMap);
             showInitDialog();
         } else {
             showNoInternetSnackbar();
