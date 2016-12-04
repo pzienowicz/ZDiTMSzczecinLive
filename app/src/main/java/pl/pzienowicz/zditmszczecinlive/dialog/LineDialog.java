@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -45,6 +46,7 @@ public class LineDialog extends Dialog {
         TableLayout busNormalLayout = (TableLayout) findViewById(R.id.busNormalLayout);
         TableLayout busExpressLayout = (TableLayout) findViewById(R.id.busExpressLayout);
         TableLayout busNightLayout = (TableLayout) findViewById(R.id.busNightLayout);
+        TableLayout busSubstituteLayout = (TableLayout) findViewById(R.id.busSubstituteLayout);
 
         TextView clearFilterText = (TextView) findViewById(R.id.clearFilterText);
         clearFilterText.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +62,7 @@ public class LineDialog extends Dialog {
         drawLinesTable(Lines.getBusNormal(), busNormalLayout);
         drawLinesTable(Lines.getBusExpress(), busExpressLayout);
         drawLinesTable(Lines.getBusNight(), busNightLayout);
+        drawLinesTable(Lines.getBusSubstitute(), busSubstituteLayout);
     }
 
     private void drawLinesTable(ArrayList<Line> lines, TableLayout layout)
@@ -76,47 +79,49 @@ public class LineDialog extends Dialog {
             TableRow row = new TableRow(context);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
+            Line line = null;
             for (int j = 1; j <= linesPerRow; j++) {
-                if(iterator >= lines.size()) {
-                    continue;
-                }
-
-                Line line = lines.get(iterator);
-
                 LinearLayout cellLayout = new LinearLayout(context);
                 TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
                 params.setMargins(2, 2, 2, 3);
                 cellLayout.setLayoutParams(params);
-                cellLayout.setClickable(true);
-                cellLayout.setFocusable(true);
-                cellLayout.setId(lines.get(iterator).getId());
-
-                if(currentLine == line.getId()) {
-                    cellLayout.setBackgroundColor(context.getResources().getColor(R.color.yellow));
-                } else {
-                    cellLayout.setBackgroundResource(R.drawable.selector_line);
-                }
-
-                cellLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        changeFilter(view.getId());
-                    }
-                });
 
                 TextView tv = new TextView(context);
 
                 tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 tv.setGravity(Gravity.CENTER);
-//                tv.setTextColor(getResources().getColor(R.color.white));
-                tv.setText(lines.get(iterator).getName());
+
+                if(iterator < lines.size()) {
+                    line = lines.get(iterator);
+
+                    cellLayout.setClickable(true);
+                    cellLayout.setFocusable(true);
+                    cellLayout.setId(lines.get(iterator).getId());
+
+                    if(currentLine == line.getId()) {
+                        cellLayout.setBackgroundColor(context.getResources().getColor(R.color.yellow));
+                    } else {
+                        cellLayout.setBackgroundResource(R.drawable.selector_line);
+                    }
+
+                    cellLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            changeFilter(view.getId());
+                        }
+                    });
+
+                    tv.setText(lines.get(iterator).getName());
+
+                    linesMap.put(line.getId(), line);
+                } else {
+                    tv.setText(line.getName());
+                    tv.setTextColor(ContextCompat.getColor(context, android.R.color.white));
+                }
 
                 cellLayout.addView(tv);
                 row.addView(cellLayout);
-
-                linesMap.put(line.getId(), line);
-
                 iterator++;
             }
 

@@ -44,6 +44,7 @@ public class Lines {
         lines.add(new Line("62", 24, LineType.BUS_NORMAL));
         lines.add(new Line("63", 25, LineType.BUS_NORMAL));
         lines.add(new Line("64", 26, LineType.BUS_NORMAL));
+        lines.add(new Line("65", 27, LineType.BUS_NORMAL));
 
         lines.add(new Line("66", 28, LineType.BUS_NORMAL));
         lines.add(new Line("67", 29, LineType.BUS_NORMAL));
@@ -121,6 +122,15 @@ public class Lines {
         lines.add(new Line("534", 75, LineType.BUS_NIGHT));
         lines.add(new Line("535", 93, LineType.BUS_NIGHT));
         lines.add(new Line("536", 88, LineType.BUS_NIGHT));
+
+        return lines;
+    }
+
+    public static ArrayList<Line> getBusSubstitute() {
+        ArrayList<Line> lines = new ArrayList<>();
+
+        lines.add(new Line("856", 98, LineType.BUS_SUBSTITUTE));
+        lines.add(new Line("896", 99, LineType.BUS_SUBSTITUTE));
 
         return lines;
     }
