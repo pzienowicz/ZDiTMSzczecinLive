@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        loadPage();
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(Config.INTENT_LOAD_NEW_URL);
 
@@ -99,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         registerReceiver(bcr, filter);
+
+        if (savedInstanceState != null) {
+            myWebView.restoreState(savedInstanceState);
+        } else {
+            loadPage();
+        }
     }
 
     @Override
@@ -107,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        myWebView.saveState(outState);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
