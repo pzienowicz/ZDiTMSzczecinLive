@@ -28,10 +28,6 @@ Screenshots
 ![alt text](https://lh3.googleusercontent.com/o_dJMUlYbeAg856Aa-26dShEDxFNwHp_ck5-OZ_C97qx_ikxNCUMfY7a4LepV_8_5sI=h410-rw)
 ![alt text](https://lh3.googleusercontent.com/dGNvYSBALl9zsE9LIPXSQUN1r3Fm26jq_z-gA7XlFQlQUPcRbm2s8NNgqzKK2RXT_csO=h410-rw)
 
-Incoming changes
-==========
-- widget with one line
-
 
 Contact
 ==========
