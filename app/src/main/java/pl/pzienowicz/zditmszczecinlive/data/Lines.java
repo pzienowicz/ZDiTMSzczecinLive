@@ -130,7 +130,9 @@ public class Lines {
         ArrayList<Line> lines = new ArrayList<>();
 
         lines.add(new Line("856", 98, LineType.BUS_SUBSTITUTE));
+        lines.add(new Line("872", 111, LineType.BUS_SUBSTITUTE));
         lines.add(new Line("896", 99, LineType.BUS_SUBSTITUTE));
+
 
         return lines;
     }
