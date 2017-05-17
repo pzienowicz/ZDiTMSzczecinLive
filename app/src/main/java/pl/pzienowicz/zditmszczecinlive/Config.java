@@ -12,6 +12,10 @@ public class Config {
 
     public static final String PREFERENCE_SELECTED_LINE = "selectedLine";
     public static final String INTENT_LOAD_NEW_URL = "loadNewUrl";
+    public static final String INTENT_REFRESH_SETTINGS = "refreshSettings";
     public static final String EXTRA_LINE_ID = "lineId";
+
+    public static final String PREFERENCE_USE_LOCATION = "useLocation";
+    public static final String PREFERENCE_ZOOM_MAP = "zoomMap";
 
 }
