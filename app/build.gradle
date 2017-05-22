@@ -8,8 +8,8 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 11
-        versionName "1.4.0"
+        versionCode 12
+        versionName "1.4.1"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
