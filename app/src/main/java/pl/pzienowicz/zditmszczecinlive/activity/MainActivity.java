@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private Location currentLocation = null;
     private Timer myTimer = null;
     private boolean zoomMap = false;
+    private String currentUrl = Config.URL;
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1443;
 
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         setFavouriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharedPreferences.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, myWebView.getUrl()).apply();
+                sharedPreferences.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, currentUrl).apply();
                 Snackbar.make(findViewById(R.id.swiperefresh), R.string.set_favourite, Snackbar.LENGTH_LONG).show();
                 floatingActionsMenu.collapse();
             }
@@ -116,10 +118,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     case Config.INTENT_LOAD_NEW_URL:
                         int lineId = intent.getIntExtra(Config.EXTRA_LINE_ID, 0);
                         if (lineId == 0) {
-                            myWebView.loadUrl(Config.URL);
+                            currentUrl = Config.URL;
                         } else {
-                            myWebView.loadUrl(Config.LINE_URL + lineId);
+                            currentUrl = Config.LINE_URL + lineId;
                         }
+                        myWebView.loadUrl(currentUrl);
                         break;
                     case Config.INTENT_REFRESH_SETTINGS:
                         refreshSettings();
@@ -144,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String newUrl = myWebView.getUrl() + "?lat=" + currentLocation.getLatitude() + "&lon=" + currentLocation.getLongitude();
+                            String newUrl = currentUrl + "?lat=" + currentLocation.getLatitude() + "&lon=" + currentLocation.getLongitude();
 
                             if(zoomMap) {
                                 newUrl += "&zoom=16";
@@ -197,11 +200,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_BACK:
-                    if (myWebView.canGoBack()) {
-                        myWebView.goBack();
-                    } else {
-                        finish();
-                    }
+                    finish();
                     return true;
             }
 
