@@ -1,190 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:padding="10dp">
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:srcCompat="@drawable/tdz25"
-                android:id="@+id/imageView1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/tdz25"
+                    android:id="@+id/imageView1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label1"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/normal_tram_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tramNormalLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/adz25"
+                    android:id="@+id/imageView2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label2"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/normal_bus_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/busNormalLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/adp25"
+                    android:id="@+id/imageView5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label5"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/special_bus_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/busExpressLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/adz25"
+                    android:id="@+id/imageView6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label6"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/substitute_bus_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/busSubstituteLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/anz25"
+                    android:id="@+id/imageView4" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label4"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/night_bus_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/busNightLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:gravity="end"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
-                android:id="@+id/label1"
+                android:id="@+id/clearFilterText"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/normal_tram_lines" />
-
+                android:text="@string/clear_filter" />
         </LinearLayout>
+    </ScrollView>
 
-        <TableLayout
-            android:id="@+id/tramNormalLayout"
-            android:layout_width="fill_parent"
+    <FrameLayout
+        android:id="@+id/progressBarHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.4"
+        android:animateLayoutChanges="true"
+        android:background="#000000"
+        android:layout_gravity="center"
+        android:visibility="gone" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:shrinkColumns="*"
-            android:stretchColumns="*"
-            android:dividerPadding="10dp">
-        </TableLayout>
+            android:layout_gravity="center"
+            android:indeterminate="true"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    </FrameLayout>
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:srcCompat="@drawable/adz25"
-                android:id="@+id/imageView2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:id="@+id/label2"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/normal_bus_lines" />
-
-        </LinearLayout>
-
-        <TableLayout
-            android:id="@+id/busNormalLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:shrinkColumns="*"
-            android:stretchColumns="*"
-            android:dividerPadding="10dp">
-        </TableLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:srcCompat="@drawable/adp25"
-                android:id="@+id/imageView5" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:id="@+id/label5"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/special_bus_lines" />
-
-        </LinearLayout>
-
-        <TableLayout
-            android:id="@+id/busExpressLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:shrinkColumns="*"
-            android:stretchColumns="*"
-            android:dividerPadding="10dp">
-        </TableLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:srcCompat="@drawable/adz25"
-                android:id="@+id/imageView6" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:id="@+id/label6"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/substitute_bus_lines" />
-
-        </LinearLayout>
-
-        <TableLayout
-            android:id="@+id/busSubstituteLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:shrinkColumns="*"
-            android:stretchColumns="*"
-            android:dividerPadding="10dp">
-        </TableLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:srcCompat="@drawable/anz25"
-                android:id="@+id/imageView4" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:id="@+id/label4"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/night_bus_lines" />
-
-        </LinearLayout>
-
-        <TableLayout
-            android:id="@+id/busNightLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:shrinkColumns="*"
-            android:stretchColumns="*"
-            android:dividerPadding="10dp">
-        </TableLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            android:id="@+id/clearFilterText"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/clear_filter" />
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>

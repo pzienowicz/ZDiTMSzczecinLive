@@ -7,5 +7,4 @@ public class LineType {
     public static final String BUS_EXPRESS = "busExpress";
     public static final String BUS_SUBSTITUTE = "busSubstitute";
     public static final String TRAM_NORMAL = "tramNormal";
-
 }

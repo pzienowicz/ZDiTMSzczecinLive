@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Config.INTENT_LOAD_NEW_URL);
         filter.addAction(Config.INTENT_REFRESH_SETTINGS);
+        filter.addAction(Config.INTENT_NO_INTERNET_CONNETION);
 
         bcr = new BroadcastReceiver() {
             @Override
@@ -126,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         break;
                     case Config.INTENT_REFRESH_SETTINGS:
                         refreshSettings();
+                        break;
+                    case Config.INTENT_NO_INTERNET_CONNETION:
+                        showNoInternetSnackbar();
                         break;
                 }
             }

@@ -12,19 +12,28 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import pl.pzienowicz.zditmszczecinlive.Config;
+import pl.pzienowicz.zditmszczecinlive.Functions;
 import pl.pzienowicz.zditmszczecinlive.R;
-import pl.pzienowicz.zditmszczecinlive.data.Lines;
 import pl.pzienowicz.zditmszczecinlive.model.Line;
+import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LineDialog extends Dialog {
 
@@ -32,8 +41,9 @@ public class LineDialog extends Dialog {
     private SharedPreferences sharedPreferences = null;
     private Map<Integer, Line> linesMap = new HashMap<>();
     private int currentLine = 0;
+    private FrameLayout progressBarHolder = null;
 
-    public LineDialog(Context context) {
+    public LineDialog(final Context context) {
         super(context);
         this.context = context;
 
@@ -42,11 +52,13 @@ public class LineDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_line);
 
-        TableLayout tramNormalLayout = (TableLayout) findViewById(R.id.tramNormalLayout);
-        TableLayout busNormalLayout = (TableLayout) findViewById(R.id.busNormalLayout);
-        TableLayout busExpressLayout = (TableLayout) findViewById(R.id.busExpressLayout);
-        TableLayout busNightLayout = (TableLayout) findViewById(R.id.busNightLayout);
-        TableLayout busSubstituteLayout = (TableLayout) findViewById(R.id.busSubstituteLayout);
+        final TableLayout tramNormalLayout = (TableLayout) findViewById(R.id.tramNormalLayout);
+        final TableLayout busNormalLayout = (TableLayout) findViewById(R.id.busNormalLayout);
+        final TableLayout busExpressLayout = (TableLayout) findViewById(R.id.busExpressLayout);
+        final TableLayout busNightLayout = (TableLayout) findViewById(R.id.busNightLayout);
+        final TableLayout busSubstituteLayout = (TableLayout) findViewById(R.id.busSubstituteLayout);
+
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         TextView clearFilterText = (TextView) findViewById(R.id.clearFilterText);
         clearFilterText.setOnClickListener(new View.OnClickListener() {
@@ -58,14 +70,61 @@ public class LineDialog extends Dialog {
 
         currentLine = sharedPreferences.getInt(Config.PREFERENCE_SELECTED_LINE, 0);
 
-        drawLinesTable(Lines.getTramNormal(), tramNormalLayout);
-        drawLinesTable(Lines.getBusNormal(), busNormalLayout);
-        drawLinesTable(Lines.getBusExpress(), busExpressLayout);
-        drawLinesTable(Lines.getBusNight(), busNightLayout);
-        drawLinesTable(Lines.getBusSubstitute(), busSubstituteLayout);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Config.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        if(!Functions.isNetworkAvailable(context)) {
+            Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(Config.INTENT_NO_INTERNET_CONNETION);
+            context.sendBroadcast(intent);
+
+            dismiss();
+            return;
+        }
+
+        progressBarHolder.setVisibility(View.VISIBLE);
+
+        ZDiTMService service = retrofit.create(ZDiTMService.class);
+        Call<List<Line>> lines = service.listLines();
+        lines.enqueue(new Callback<List<Line>>() {
+            @Override
+            public void onResponse(Call<List<Line>> call, Response<List<Line>> response) {
+                progressBarHolder.setVisibility(View.GONE);
+
+                if(response.isSuccessful()) {
+                    drawLinesTable(filterLines(response.body(), "tdz"), tramNormalLayout);
+                    drawLinesTable(filterLines(response.body(), "adz"), busNormalLayout);
+                    drawLinesTable(filterLines(response.body(), "adp"), busExpressLayout);
+                    drawLinesTable(filterLines(response.body(), "anz"), busNightLayout);
+                    drawLinesTable(filterLines(response.body(), "ada"), busSubstituteLayout);
+                } else {
+                    Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Line>> call, Throwable t) {
+                progressBarHolder.setVisibility(View.GONE);
+                Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void drawLinesTable(ArrayList<Line> lines, TableLayout layout)
+    private List<Line> filterLines(List<Line> lines, String type) {
+        List<Line> temp = new ArrayList<>();
+        for(Line line : lines) {
+            if(line.getType().equals(type)) {
+                temp.add(line);
+            }
+        }
+
+        return temp;
+    }
+
+    private void drawLinesTable(List<Line> lines, TableLayout layout)
     {
         int iterator = 0;
 
@@ -99,10 +158,14 @@ public class LineDialog extends Dialog {
                     cellLayout.setFocusable(true);
                     cellLayout.setId(lines.get(iterator).getId());
 
-                    if(currentLine == line.getId()) {
+                    if(line.isChanged()) {
                         cellLayout.setBackgroundColor(context.getResources().getColor(R.color.yellow));
                     } else {
                         cellLayout.setBackgroundResource(R.drawable.selector_line);
+                    }
+
+                    if(currentLine == line.getId()) {
+                        tv.setTextColor(context.getResources().getColor(R.color.red));
                     }
 
                     cellLayout.setOnClickListener(new View.OnClickListener() {

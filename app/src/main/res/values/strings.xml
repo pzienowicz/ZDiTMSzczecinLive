@@ -20,4 +20,6 @@
     <string name="set_favourite">Ustawiono jako mapę domyślną - będzie ona widoczna od razu po włączeniu aplikacji.</string>
     <string name="use_location">Użyj lokalizacji aby dostosować mapę do pozycji</string>
     <string name="zoom_map">Przybliż mapę gdy znaleziono lokalizację</string>
+
+    <string name="lines_request_error">Nie udało się pobrać linii</string>
 </resources>
