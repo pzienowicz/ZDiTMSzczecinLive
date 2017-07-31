@@ -18,6 +18,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tramNormalLabel"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -39,7 +40,7 @@
             </LinearLayout>
 
             <TableLayout
-                android:id="@+id/tramNormalLayout"
+                android:id="@+id/tramNormalTable"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -51,6 +52,75 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/tramSubstituteLabel"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/tdz25"
+                    android:id="@+id/imageView7" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label7"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/substitute_tram_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tramSubstituteTable"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tramTouristicLabel"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/tdt25"
+                    android:id="@+id/imageView8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:id="@+id/label8"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/touristic_tram_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tramTouristicTable"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/busNormalLabel"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -72,7 +142,7 @@
             </LinearLayout>
 
             <TableLayout
-                android:id="@+id/busNormalLayout"
+                android:id="@+id/busNormalTable"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -84,6 +154,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/busExpressLabel"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -105,7 +176,7 @@
             </LinearLayout>
 
             <TableLayout
-                android:id="@+id/busExpressLayout"
+                android:id="@+id/busExpressTable"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -117,6 +188,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/busSubstituteLabel"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -138,7 +210,7 @@
             </LinearLayout>
 
             <TableLayout
-                android:id="@+id/busSubstituteLayout"
+                android:id="@+id/busSubstituteTable"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -150,6 +222,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/busNightLabel"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -171,7 +244,7 @@
             </LinearLayout>
 
             <TableLayout
-                android:id="@+id/busNightLayout"
+                android:id="@+id/busNightTable"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

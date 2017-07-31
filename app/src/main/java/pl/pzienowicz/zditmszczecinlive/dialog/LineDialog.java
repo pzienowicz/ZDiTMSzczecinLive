@@ -52,12 +52,22 @@ public class LineDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_line);
 
-        final TableLayout tramNormalLayout = (TableLayout) findViewById(R.id.tramNormalLayout);
-        final TableLayout busNormalLayout = (TableLayout) findViewById(R.id.busNormalLayout);
-        final TableLayout busExpressLayout = (TableLayout) findViewById(R.id.busExpressLayout);
-        final TableLayout busNightLayout = (TableLayout) findViewById(R.id.busNightLayout);
-        final TableLayout busSubstituteLayout = (TableLayout) findViewById(R.id.busSubstituteLayout);
+        final TableLayout tramNormalTable = (TableLayout) findViewById(R.id.tramNormalTable);
+        final TableLayout busNormalTable = (TableLayout) findViewById(R.id.busNormalTable);
+        final TableLayout busExpressTable = (TableLayout) findViewById(R.id.busExpressTable);
+        final TableLayout busNightTable = (TableLayout) findViewById(R.id.busNightTable);
+        final TableLayout busSubstituteTable = (TableLayout) findViewById(R.id.busSubstituteTable);
+        final TableLayout tramSubstituteTable = (TableLayout) findViewById(R.id.tramSubstituteTable);
+        final TableLayout tramTouristicTable = (TableLayout) findViewById(R.id.tramTouristicTable);
 
+        final LinearLayout tramNormalLabel = (LinearLayout) findViewById(R.id.tramNormalLabel);
+        final LinearLayout busNormalLabel = (LinearLayout) findViewById(R.id.busNormalLabel);
+        final LinearLayout busExpressLabel = (LinearLayout) findViewById(R.id.busExpressLabel);
+        final LinearLayout busNightLabel = (LinearLayout) findViewById(R.id.busNightLabel);
+        final LinearLayout busSubstituteLabel = (LinearLayout) findViewById(R.id.busSubstituteLabel);
+        final LinearLayout tramSubstituteLabel = (LinearLayout) findViewById(R.id.tramSubstituteLabel);
+        final LinearLayout tramTouristicLabel = (LinearLayout) findViewById(R.id.tramTouristicLabel);
+        
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         TextView clearFilterText = (TextView) findViewById(R.id.clearFilterText);
@@ -95,11 +105,13 @@ public class LineDialog extends Dialog {
                 progressBarHolder.setVisibility(View.GONE);
 
                 if(response.isSuccessful()) {
-                    drawLinesTable(filterLines(response.body(), "tdz"), tramNormalLayout);
-                    drawLinesTable(filterLines(response.body(), "adz"), busNormalLayout);
-                    drawLinesTable(filterLines(response.body(), "adp"), busExpressLayout);
-                    drawLinesTable(filterLines(response.body(), "anz"), busNightLayout);
-                    drawLinesTable(filterLines(response.body(), "ada"), busSubstituteLayout);
+                    drawLinesTable(filterLines(response.body(), "tdz"), tramNormalTable, tramNormalLabel);
+                    drawLinesTable(filterLines(response.body(), "adz"), busNormalTable, busNormalLabel);
+                    drawLinesTable(filterLines(response.body(), "adp"), busExpressTable, busExpressLabel);
+                    drawLinesTable(filterLines(response.body(), "anz"), busNightTable, busNightLabel);
+                    drawLinesTable(filterLines(response.body(), "ada"), busSubstituteTable, busSubstituteLabel);
+                    drawLinesTable(filterLines(response.body(), "tda"), tramSubstituteTable, tramSubstituteLabel);
+                    drawLinesTable(filterLines(response.body(), "tdt"), tramTouristicTable, tramTouristicLabel);
                 } else {
                     Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show();
                 }
@@ -124,8 +136,14 @@ public class LineDialog extends Dialog {
         return temp;
     }
 
-    private void drawLinesTable(List<Line> lines, TableLayout layout)
+    private void drawLinesTable(List<Line> lines, TableLayout layout, LinearLayout label)
     {
+        if(lines.isEmpty()) {
+            layout.setVisibility(View.GONE);
+            label.setVisibility(View.GONE);
+            return;
+        }
+
         int iterator = 0;
 
         int linesPerRow = Config.LINES_PER_ROW;

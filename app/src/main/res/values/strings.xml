@@ -12,6 +12,8 @@
     <string name="clear_filter">Pokaż wszystkie</string>
 
     <string name="normal_tram_lines">Linie tramwajowe dzienne zwykłe</string>
+    <string name="substitute_tram_lines">Linie tramwajowe dzienne zastępcze</string>
+    <string name="touristic_tram_lines">Linie tramwajowe dzienne turystyczne</string>
     <string name="normal_bus_lines">Linie autobusowe dzienne zwykłe</string>
     <string name="special_bus_lines">Linie autobusowe dzienne pospieszne</string>
     <string name="night_bus_lines">Linie autobusowe nocne</string>
