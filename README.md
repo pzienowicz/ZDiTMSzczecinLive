@@ -1,4 +1,4 @@
-# ZDiTMSzczecinLive
+# Komunikacja Miejska Szczecin
 =============
 
 Prosta aplikacja wyświetlająca informacje o komunikacji miejskiej ZDiTM Szczecin.
@@ -11,7 +11,7 @@ Lokalizacja pojazdów jest przybliżona. Nie są widoczne pojazdy, które nie pr
 Aplikacja nieoficjalna. Korzysta ona z danych podchodzących ze strony http://zditm.szczecin.pl. Proszę mieć na uwadze, że system czasem może nie działać (lub działać wolno) i nie jest to zależne od aplikacji.
 
 
-Download
+Pobierz
 ==========
 
 <a href="https://play.google.com/store/apps/details?id=pl.pzienowicz.zditmszczecinlive">
@@ -29,7 +29,11 @@ Screenshots
 ![alt text](https://lh3.googleusercontent.com/dGNvYSBALl9zsE9LIPXSQUN1r3Fm26jq_z-gA7XlFQlQUPcRbm2s8NNgqzKK2RXT_csO=h410-rw)
 
 
-Contact
+Kontakt
 ==========
 * GitHub
 * E-mail: zienowicz.pawel(at)gmail.com
+
+Nadchodzące zmiany
+==========
+* Widget informujący o autobusach wybranej linii
