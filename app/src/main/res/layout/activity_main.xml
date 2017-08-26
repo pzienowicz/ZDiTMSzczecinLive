@@ -29,6 +29,14 @@
             fab:fab_colorNormal="@color/pink"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/show_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="normal"
+            fab:fab_icon="@drawable/ic_announcement_white_48dp"
+            fab:fab_colorNormal="@color/yellow"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/show_lines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

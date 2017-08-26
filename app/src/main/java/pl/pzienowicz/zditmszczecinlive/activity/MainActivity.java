@@ -34,6 +34,7 @@ import java.util.TimerTask;
 import pl.pzienowicz.zditmszczecinlive.Config;
 import pl.pzienowicz.zditmszczecinlive.Functions;
 import pl.pzienowicz.zditmszczecinlive.R;
+import pl.pzienowicz.zditmszczecinlive.dialog.InfoDialog;
 import pl.pzienowicz.zditmszczecinlive.dialog.LineDialog;
 import pl.pzienowicz.zditmszczecinlive.dialog.SettingsDialog;
 
@@ -74,6 +75,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             public void onClick(View view) {
                 sharedPreferences.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, currentUrl).apply();
                 Snackbar.make(findViewById(R.id.swiperefresh), R.string.set_favourite, Snackbar.LENGTH_LONG).show();
+                floatingActionsMenu.collapse();
+            }
+        });
+
+        FloatingActionButton showInfoBtn = (FloatingActionButton) findViewById(R.id.show_info);
+        showInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InfoDialog dialog = new InfoDialog(MainActivity.this);
+                dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                dialog.show();
                 floatingActionsMenu.collapse();
             }
         });
