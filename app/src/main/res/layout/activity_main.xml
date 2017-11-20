@@ -19,35 +19,50 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="10dp"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/set_favourite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_icon="@drawable/ic_favorite_white_48dp"
+            fab:fab_size="mini"
+            fab:fab_title="Zapisz jako ulubione"
             fab:fab_colorNormal="@color/pink"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/show_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_size="normal"
+            fab:fab_size="mini"
+            fab:fab_title="Informacje"
             fab:fab_icon="@drawable/ic_announcement_white_48dp"
             fab:fab_colorNormal="@color/yellow"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/show_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="mini"
+            fab:fab_title="Wirtualna tablica"
+            fab:fab_icon="@drawable/ic_web_white_24dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/show_lines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_size="normal"
+            fab:fab_size="mini"
+            fab:fab_title="Lista linii"
             fab:fab_icon="@drawable/ic_directions_bus_white_48dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_size="normal"
+            fab:fab_size="mini"
+            fab:fab_title="Ustawienia"
             fab:fab_icon="@drawable/ic_settings_white_48dp"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

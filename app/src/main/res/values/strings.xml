@@ -33,4 +33,10 @@
     <string name="from_date">Od %s</string>
     <string name="to_date">do %s</string>
     <string name="contact_us">Napisz do nas</string>
+
+    <string name="type_bus_stop_number">Podaj numer przystanku</string>
+    <string name="bus_stop_description">Znajduje się on na wiacie przystankowej lub słupku.</string>
+    <string name="incorrect_bus_stop">Nieprawidłowy numer przystanku</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Anuluj</string>
 </resources>

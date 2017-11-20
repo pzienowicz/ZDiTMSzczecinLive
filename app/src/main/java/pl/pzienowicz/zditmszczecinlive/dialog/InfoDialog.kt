@@ -19,7 +19,6 @@ import pl.pzienowicz.zditmszczecinlive.Functions
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
 import pl.pzienowicz.zditmszczecinlive.model.Info
-import pl.pzienowicz.zditmszczecinlive.model.Line
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
 import retrofit2.Call
 import retrofit2.Callback

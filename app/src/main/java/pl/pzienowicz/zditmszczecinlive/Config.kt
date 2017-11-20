@@ -7,6 +7,7 @@ object Config {
     val URL = "http://www.zditm.szczecin.pl/mapy/przystanki-i-pojazdy"
     val LINE_URL = "http://www.zditm.szczecin.pl/mapy/linia,"
     val BASE_URL = "http://www.zditm.szczecin.pl/"
+    val BUS_STOP_URL = "http://www.zditm.szczecin.pl/pasazer/rozklady-jazdy,tablica,"
     val PREFERENCE_SHOW_DIALOG = "showDialog"
     val PREFERENCE_FAVOURITE_MAP = "favouriteMap"
 

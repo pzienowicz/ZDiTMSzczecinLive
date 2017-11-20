@@ -12,22 +12,13 @@ import java.util.ArrayList
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.model.Info
 
-class InfoListAdapter(context: Context, records: ArrayList<Info>) : BaseAdapter() {
+class InfoListAdapter(private val context: Context, private val records: ArrayList<Info>) : BaseAdapter() {
 
-    private val context: Context = context
-    private val records: ArrayList<Info> = records
+    override fun getCount(): Int = records.size
 
-    override fun getCount(): Int {
-        return records.size
-    }
+    override fun getItem(position: Int): Any = records[position]
 
-    override fun getItem(position: Int): Any {
-        return records[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
@@ -35,7 +26,7 @@ class InfoListAdapter(context: Context, records: ArrayList<Info>) : BaseAdapter(
         val info = records[position]
 
         if (convertView == null) {
-            val inflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             row = inflater.inflate(R.layout.row_info, parent, false)
         } else {
             row = convertView

@@ -3,7 +3,6 @@ package pl.pzienowicz.zditmszczecinlive.activity
 import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
@@ -17,9 +16,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
-import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
@@ -34,6 +31,7 @@ import java.util.TimerTask
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.Functions
 import pl.pzienowicz.zditmszczecinlive.R
+import pl.pzienowicz.zditmszczecinlive.dialog.BusStopDialog
 import pl.pzienowicz.zditmszczecinlive.dialog.InfoDialog
 import pl.pzienowicz.zditmszczecinlive.dialog.LineDialog
 import pl.pzienowicz.zditmszczecinlive.dialog.SettingsDialog
@@ -77,6 +75,13 @@ class MainActivity : AppCompatActivity(), LocationListener {
         showInfoBtn.setOnClickListener {
             val dialog = InfoDialog(this@MainActivity)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            dialog.show()
+            floatingActionsMenu.collapse()
+        }
+
+        val dashboardButton = findViewById(R.id.show_dashboard) as FloatingActionButton
+        dashboardButton.setOnClickListener {
+            val dialog = BusStopDialog(this@MainActivity)
             dialog.show()
             floatingActionsMenu.collapse()
         }
