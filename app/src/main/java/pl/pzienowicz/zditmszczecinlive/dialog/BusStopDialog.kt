@@ -5,22 +5,25 @@ import android.content.Context
 import android.content.DialogInterface
 import android.text.InputType
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
+import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 
-class BusStopDialog(context: Context) : Builder(context) {
+class BusStopDialog(context: Context, listener: BusStopSelectedListener, currentBusStop: String?) : Builder(context) {
 
     init {
-
         val txtUrl = EditText(context)
         txtUrl.inputType = InputType.TYPE_CLASS_NUMBER
 
         setTitle(R.string.type_bus_stop_number)
         setMessage(R.string.bus_stop_description)
         setView(txtUrl)
+
+        if(currentBusStop != null) {
+            txtUrl.setText(currentBusStop)
+        }
 
         setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which ->
             val busStopNumber = txtUrl.text.toString()
@@ -31,9 +34,7 @@ class BusStopDialog(context: Context) : Builder(context) {
                 return@OnClickListener
             }
 
-            val boardDialog = ScheduleBoardDialog(context, busStop)
-            boardDialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            boardDialog.show()
+            listener.onBusStopSelected(busStop)
         })
 
         setNegativeButton(R.string.cancel) { dialog, which -> dialog.dismiss() }

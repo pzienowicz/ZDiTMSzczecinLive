@@ -4,4 +4,5 @@ class BusStop {
 
     val id: String? = null
     val numer: String? = null
+    val nazwa: String? = null
 }

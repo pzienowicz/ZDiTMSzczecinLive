@@ -9,15 +9,24 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 16
-        versionName "1.7.0"
+        versionCode 20
+        versionName "1.8.0b"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
     }
+    signingConfigs {
+        release {
+            storeFile file("../../../../../Documents/android_keystore")
+            storePassword "m4rz3ni32"
+            keyAlias "zditmszczecinlive"
+            keyPassword "zditmszczecinlive"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -31,15 +40,20 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support:design:25.4.0'
+    compile 'de.codecrafters.tableview:tableview:2.8.0'
+    compile 'com.anjlab.android.iab.v3:library:1.0.44'
+    implementation "ch.acra:acra-http:5.0.2"
 
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.onesignal:OneSignal:3.3.0@aar'
-    compile 'com.google.android.gms:play-services-gcm:11.6.0'
-    compile 'com.google.android.gms:play-services-location:11.6.0'
+    compile 'com.google.android.gms:play-services-gcm:11.8.0'
+    compile 'com.google.android.gms:play-services-location:11.8.0'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    compile 'org.jsoup:jsoup:1.11.2'
 }
 repositories {
     mavenCentral()

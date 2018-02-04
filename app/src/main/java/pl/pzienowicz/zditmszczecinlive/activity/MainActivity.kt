@@ -31,10 +31,9 @@ import java.util.TimerTask
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.Functions
 import pl.pzienowicz.zditmszczecinlive.R
-import pl.pzienowicz.zditmszczecinlive.dialog.BusStopDialog
-import pl.pzienowicz.zditmszczecinlive.dialog.InfoDialog
-import pl.pzienowicz.zditmszczecinlive.dialog.LineDialog
-import pl.pzienowicz.zditmszczecinlive.dialog.SettingsDialog
+import pl.pzienowicz.zditmszczecinlive.dialog.*
+import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
+import pl.pzienowicz.zditmszczecinlive.widget.AppWidgetAlarm
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
@@ -81,7 +80,11 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         val dashboardButton = findViewById(R.id.show_dashboard) as FloatingActionButton
         dashboardButton.setOnClickListener {
-            val dialog = BusStopDialog(this@MainActivity)
+            val dialog = BusStopDialog(this@MainActivity, BusStopSelectedListener { busStop ->
+                val boardDialog = ScheduleBoardDialog(this@MainActivity, busStop)
+                boardDialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                boardDialog.show()
+            }, null)
             dialog.show()
             floatingActionsMenu.collapse()
         }
@@ -99,6 +102,13 @@ class MainActivity : AppCompatActivity(), LocationListener {
             val dialog = SettingsDialog(context!!)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             dialog.show()
+            floatingActionsMenu.collapse()
+        }
+
+        val widgetsBtn = findViewById(R.id.widgets) as FloatingActionButton
+        widgetsBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, WidgetsActivity::class.java)
+            startActivity(intent)
             floatingActionsMenu.collapse()
         }
 
@@ -155,6 +165,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 }
             }
         }, 0, (30 * 1000).toLong())
+
+        val alarm = AppWidgetAlarm(this)
+        alarm.startAlarm()
     }
 
     private fun refreshSettings() {

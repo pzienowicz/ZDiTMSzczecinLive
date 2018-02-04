@@ -39,4 +39,18 @@
     <string name="incorrect_bus_stop">Nieprawidłowy numer przystanku</string>
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
+    <string name="widgets">Widgety</string>
+    <string name="active_widgets">Aktywne widgety</string>
+    <string name="add_widget">Aby dodać widget, przytrzymaj palec na ekranie głównym telefonu, a następnie wybierz "Widgety".</string>
+
+    <string name="payment_success">Dziękujemy za wsparcie! Widgety odblokowane.</string>
+    <string name="payment_cancel">Mamy nadzieję że zmienisz zdanie :)</string>
+    <string name="payment_error">Wystąpił błąd, spróbuj ponownie lub skontaktuj się z nami</string>
+
+    <string-array name="headers">
+        <item>Lp</item>
+        <item>Numer</item>
+        <item>Przystanek</item>
+        <item/>
+    </string-array>
 </resources>
