@@ -9,19 +9,11 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 20
-        versionName "1.8.0b"
+        versionCode 21
+        versionName "1.8.0"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
-    }
-    signingConfigs {
-        release {
-            storeFile file("../../../../../Documents/android_keystore")
-            storePassword "m4rz3ni32"
-            keyAlias "zditmszczecinlive"
-            keyPassword "zditmszczecinlive"
-        }
     }
     buildTypes {
         release {
