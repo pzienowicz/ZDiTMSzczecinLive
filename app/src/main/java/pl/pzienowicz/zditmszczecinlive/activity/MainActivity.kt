@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 boardDialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 boardDialog.show()
             }, null)
+            dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             dialog.show()
             floatingActionsMenu.collapse()
         }

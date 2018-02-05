@@ -44,7 +44,7 @@ class WidgetProvider : AppWidgetProvider() {
 
         if(busStopId != null) {
             val busStop = BusStops.getInstance(context).getByNumber(busStopId)
-            svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, busStop.numer)
+            svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, busStop!!.numer)
 
             remoteViews.setTextViewText(R.id.busStopTv, busStop.nazwa + " " + busStop.numer!!.substring(3,5))
             remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)

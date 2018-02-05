@@ -1,42 +1,52 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
-import android.app.AlertDialog.Builder
-import android.content.Context
-import android.content.DialogInterface
-import android.text.InputType
+import android.app.Activity
+import android.app.Dialog
+import android.view.Window
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 
-class BusStopDialog(context: Context, listener: BusStopSelectedListener, currentBusStop: String?) : Builder(context) {
+class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, currentBusStop: String?) : Dialog(activity) {
 
     init {
-        val txtUrl = EditText(context)
-        txtUrl.inputType = InputType.TYPE_CLASS_NUMBER
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        setContentView(R.layout.dialog_bus_stop)
 
-        setTitle(R.string.type_bus_stop_number)
-        setMessage(R.string.bus_stop_description)
-        setView(txtUrl)
+        val txtUrl = findViewById(R.id.numberInput) as EditText
 
         if(currentBusStop != null) {
             txtUrl.setText(currentBusStop)
         }
 
-        setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, which ->
+        findViewById(R.id.okBtn).setOnClickListener({
+            dismiss()
+
             val busStopNumber = txtUrl.text.toString()
 
             val busStop = BusStops.getInstance(context).getByNumber(busStopNumber)
             if (busStop == null) {
                 Toast.makeText(context, R.string.incorrect_bus_stop, Toast.LENGTH_LONG).show()
-                return@OnClickListener
+                return@setOnClickListener
             }
 
             listener.onBusStopSelected(busStop)
         })
 
-        setNegativeButton(R.string.cancel) { dialog, which -> dialog.dismiss() }
+        findViewById(R.id.cancelBtn).setOnClickListener({
+            dismiss()
+        })
+
+        findViewById(R.id.scanCodeBtn).setOnClickListener({
+            dismiss()
+
+            val dialog = ScanBusStopDialog(activity, listener)
+            dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            dialog.show()
+        })
     }
 }

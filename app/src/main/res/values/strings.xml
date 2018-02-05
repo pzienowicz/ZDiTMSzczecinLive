@@ -35,10 +35,13 @@
     <string name="contact_us">Napisz do nas</string>
 
     <string name="type_bus_stop_number">Podaj numer przystanku</string>
+    <string name="scan_bus_stop_number">Zeskanuj kod przystanku</string>
     <string name="bus_stop_description">Znajduje się on na wiacie przystankowej lub słupku.</string>
+    <string name="scan_bus_stop_description">Niektóre przystanki posiadają oprócz numeru, specjalny kod QR który można łatwo i szybko zeskanować. Niestety nie wszystkie, ale liczymy, że ZDiTM szybko to zmieni.</string>
     <string name="incorrect_bus_stop">Nieprawidłowy numer przystanku</string>
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
+    <string name="scan_code">Skanuj kod</string>
     <string name="widgets">Widgety</string>
     <string name="active_widgets">Aktywne widgety</string>
     <string name="add_widget">Aby dodać widget, przytrzymaj palec na ekranie głównym telefonu, a następnie wybierz "Widgety".</string>
@@ -46,6 +49,8 @@
     <string name="payment_success">Dziękujemy za wsparcie! Widgety odblokowane.</string>
     <string name="payment_cancel">Mamy nadzieję że zmienisz zdanie :)</string>
     <string name="payment_error">Wystąpił błąd, spróbuj ponownie lub skontaktuj się z nami</string>
+
+    <string name="camera_permission_description">Potrzebujemy tego uprawnienia aby za pomocą aparatu zeskanować kod QR.</string>
 
     <string-array name="headers">
         <item>Lp</item>
