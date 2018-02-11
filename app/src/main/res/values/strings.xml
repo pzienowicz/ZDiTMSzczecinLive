@@ -52,6 +52,9 @@
 
     <string name="camera_permission_description">Potrzebujemy tego uprawnienia aby za pomocą aparatu zeskanować kod QR.</string>
 
+    <string name="refresh_widgets_every">Odświeżaj widgety co</string>
+    <string name="seconds">sekund(y)</string>
+
     <string-array name="headers">
         <item>Lp</item>
         <item>Numer</item>

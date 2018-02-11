@@ -78,17 +78,17 @@ public class LineDialog extends Dialog {
             }
         });
 
-        currentLine = sharedPreferences.getInt(Config.INSTANCE.getPREFERENCE_SELECTED_LINE(), 0);
+        currentLine = sharedPreferences.getInt(Config.PREFERENCE_SELECTED_LINE, 0);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Config.INSTANCE.getBASE_URL())
+                .baseUrl(Config.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         if(!Functions.INSTANCE.isNetworkAvailable(context)) {
             Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(Config.INSTANCE.getINTENT_NO_INTERNET_CONNETION());
+            Intent intent = new Intent(Config.INTENT_NO_INTERNET_CONNETION);
             context.sendBroadcast(intent);
 
             dismiss();
@@ -146,9 +146,9 @@ public class LineDialog extends Dialog {
 
         int iterator = 0;
 
-        int linesPerRow = Config.INSTANCE.getLINES_PER_ROW();
+        int linesPerRow = Config.LINES_PER_ROW;
         if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            linesPerRow = Config.INSTANCE.getZONES_PER_ROW_LANDSCAPE();
+            linesPerRow = Config.ZONES_PER_ROW_LANDSCAPE;
         }
         int rows = (lines.size() % linesPerRow == 0) ? lines.size() / linesPerRow : lines.size() / linesPerRow + 1;
 
@@ -212,10 +212,10 @@ public class LineDialog extends Dialog {
 
     private void changeFilter(int id)
     {
-        sharedPreferences.edit().putInt(Config.INSTANCE.getPREFERENCE_SELECTED_LINE(), id).apply();
+        sharedPreferences.edit().putInt(Config.PREFERENCE_SELECTED_LINE, id).apply();
 
-        Intent intent = new Intent(Config.INSTANCE.getINTENT_LOAD_NEW_URL());
-        intent.putExtra(Config.INSTANCE.getEXTRA_LINE_ID(), id);
+        Intent intent = new Intent(Config.INTENT_LOAD_NEW_URL);
+        intent.putExtra(Config.EXTRA_LINE_ID, id);
         context.sendBroadcast(intent);
         dismiss();
     }

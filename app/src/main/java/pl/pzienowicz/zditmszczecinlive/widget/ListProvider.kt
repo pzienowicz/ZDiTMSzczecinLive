@@ -47,22 +47,25 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
             Log.d(Config.LOG_TAG, doc.text())
 
             val elements = doc.getElementsByTag("tbody")
-            val lines = elements[0].getElementsByTag("tr")
-            for (line in lines) {
-                val lineName = line.getElementsByClass("gmvlinia")
-                val direction = line.getElementsByClass("gmvkierunek")
-                val time = line.getElementsByClass("gmvgodzina")
 
-                try {
-                    tempList.add(WidgetLine(lineName[0].text(), direction[0].text(), time[0].text()))
-                }catch (e: Exception) {
-                    Log.e(Config.LOG_TAG, e.message)
-                    Log.d(Config.LOG_TAG, line.toString())
+            if(elements.size > 0) {
+                val lines = elements[0].getElementsByTag("tr")
+                for (line in lines) {
+                    val lineName = line.getElementsByClass("gmvlinia")
+                    val direction = line.getElementsByClass("gmvkierunek")
+                    val time = line.getElementsByClass("gmvgodzina")
 
-                    val error = line.getElementsByClass("gmvblad")
-                    if(error[0] != null) {
-                        tempList.add(WidgetLine("", error[0].text(), ""))
-                        break
+                    try {
+                        tempList.add(WidgetLine(lineName[0].text(), direction[0].text(), time[0].text()))
+                    }catch (e: Exception) {
+                        Log.e(Config.LOG_TAG, e.message)
+                        Log.d(Config.LOG_TAG, line.toString())
+
+                        val error = line.getElementsByClass("gmvblad")
+                        if(error[0] != null) {
+                            tempList.add(WidgetLine("", error[0].text(), ""))
+                            break
+                        }
                     }
                 }
             }
