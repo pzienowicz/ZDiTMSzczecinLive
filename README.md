@@ -36,4 +36,4 @@ Kontakt
 
 Nadchodzące zmiany
 ==========
-* Skanowanie QR kodów znajdujących się na przystankach.
+* Czekamy na Wasze propozycje!
