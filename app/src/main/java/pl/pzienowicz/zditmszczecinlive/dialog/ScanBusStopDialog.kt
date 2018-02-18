@@ -16,6 +16,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import org.acra.ACRA
 import pl.pzienowicz.zditmszczecinlive.BuildConfig
 
 import pl.pzienowicz.zditmszczecinlive.R
@@ -42,8 +43,16 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
         barcodeView!!.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
                 barcodeView!!.pause()
+
                 val busStopUrl = result!!.text
-                val busStopNumber = busStopUrl.substring(60)
+                var busStopNumber = ""
+
+                try {
+                    busStopNumber = busStopUrl.substring(60)
+                } catch (e: StringIndexOutOfBoundsException) {
+                    ACRA.getErrorReporter().putCustomData("url", busStopUrl)
+                    ACRA.getErrorReporter().handleException(e)
+                }
 
                 if(BuildConfig.DEBUG) {
                     Toast.makeText(activity, busStopUrl, Toast.LENGTH_LONG).show()

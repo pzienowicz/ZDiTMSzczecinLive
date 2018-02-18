@@ -94,6 +94,10 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
     override fun getViewAt(position: Int): RemoteViews {
         val remoteView = RemoteViews(context.packageName, R.layout.row_widget_line)
 
+        if(this.count <= position) {
+            return remoteView
+        }
+
         val line = listItemList[position]
         remoteView.setTextViewText(R.id.lineNumberTv, line.lineNumber)
         remoteView.setTextViewText(R.id.directionTv, line.direction)
