@@ -21,7 +21,9 @@ import pl.pzienowicz.zditmszczecinlive.BuildConfig
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
+import pl.pzienowicz.zditmszczecinlive.exception.IncorrectBusStopException
 import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
+import pl.pzienowicz.zditmszczecinlive.model.BusStop
 
 class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedListener) : Dialog(activity) {
 
@@ -45,23 +47,34 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                 barcodeView!!.pause()
 
                 val busStopUrl = result!!.text
+                var busStopId = ""
                 var busStopNumber = ""
-
-                try {
-                    busStopNumber = busStopUrl.substring(60)
-                } catch (e: StringIndexOutOfBoundsException) {
-                    ACRA.getErrorReporter().putCustomData("url", busStopUrl)
-                    ACRA.getErrorReporter().handleException(e)
-                }
+                var busStop: BusStop? = null
 
                 if(BuildConfig.DEBUG) {
                     Toast.makeText(activity, busStopUrl, Toast.LENGTH_LONG).show()
                 }
 
-                val busStop = BusStops.getInstance(context).getById(busStopNumber)
+                try {
+                    busStopId = busStopUrl.substring(60)
+                    busStop = BusStops.getInstance(context).getById(busStopId)
+                } catch (e: StringIndexOutOfBoundsException) {
+                    try {
+                        busStopNumber = busStopUrl.substring(26)
+                        busStop = BusStops.getInstance(context).getByNumber(busStopNumber)
+                    } catch (e: StringIndexOutOfBoundsException) {
+
+                    }
+                }
+
                 if (busStop == null) {
                     Toast.makeText(context, R.string.incorrect_bus_stop, Toast.LENGTH_LONG).show()
                     barcodeView!!.resume()
+
+                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
+                    ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
+                    ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
+                    ACRA.getErrorReporter().handleException(IncorrectBusStopException())
                     return
                 }
 

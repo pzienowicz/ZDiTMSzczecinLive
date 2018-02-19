@@ -31,7 +31,7 @@ class BusStops(context: Context) {
 
         for (busStop in list) {
             stops.put(busStop.numer!!, busStop)
-            stopsById.put(busStop.id!!, busStop)
+            stopsById[busStop.id!!] = busStop
         }
     }
 
@@ -40,7 +40,7 @@ class BusStops(context: Context) {
     }
 
     fun getById(id: String): BusStop? {
-        return stopsById.get(id)
+        return stopsById[id]
     }
 
     companion object {
