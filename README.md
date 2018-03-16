@@ -11,6 +11,15 @@ Lokalizacja pojazdów jest przybliżona. Nie są widoczne pojazdy, które nie pr
 Aplikacja nieoficjalna. Korzysta ona z danych podchodzących ze strony http://zditm.szczecin.pl. Proszę mieć na uwadze, że system czasem może nie działać (lub działać wolno) i nie jest to zależne od aplikacji.
 
 
+Główne funkcje
+==========
+* Wyświetlanie aktualnego położenia taboru komunikacji miejskiej
+* Lokalizacja wszystkich przystanków wraz z tablicą odjazdów
+* Wirtualna tablica odjazdów
+* Aktualne zmiany w rozkładach jazdy
+* Widgety na ekranie telefonu wyświetlające rozkłady konkretnych przystanków
+
+
 Pobierz
 ==========
 
