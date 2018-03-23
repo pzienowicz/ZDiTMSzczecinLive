@@ -11,10 +11,10 @@ object Config {
     const val LICENSEE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwUacKgf7yYA3XFsPCYAM70Bje6pYsfm5nJ6NKbFTDL+mVD5kF1mVWoGT0XJoitIkZFpIQmcz3cudDMpwIQ4Cfs6r+v2am0TruHDo8hbtvdlIrrrqQM23V4j5xtyd2X4zt1NXVNLx9ZYFL+kDa5q/MQ4wuLqP/12+m9OhmKl98p9CRwgpaUXW973M3fhmXoyQ5sD4q+XAWBl1rXpBnKrcd9nD9mhSGPa/Qndc8onMypOVgNdPwQa0uMpy9XnPVLXgSOmHP8WZK6W+pvtH5ojbln10C5zWUNIyOYmUC2Wj5t/wl0bL4ATiWayXa3IYC+VdyLvLHtOprPTcyj7Rhg11qQIDAQAB"
     const val PRODUCT_WIDGETS_UNLOCK = "widgets_unlock"
 
-    const val URL = "http://www.zditm.szczecin.pl/mapy/przystanki-i-pojazdy"
-    const val LINE_URL = "http://www.zditm.szczecin.pl/mapy/linia,"
-    const val BASE_URL = "http://www.zditm.szczecin.pl/"
-    const val BUS_STOP_URL = "http://www.zditm.szczecin.pl/pasazer/rozklady-jazdy,tablica,"
+    const val URL = "https://www.zditm.szczecin.pl/mapy/przystanki-i-pojazdy"
+    const val LINE_URL = "https://www.zditm.szczecin.pl/mapy/linia,"
+    const val BASE_URL = "https://www.zditm.szczecin.pl/"
+    const val BUS_STOP_URL = "https://www.zditm.szczecin.pl/pasazer/rozklady-jazdy,tablica,"
     const val PREFERENCE_SHOW_DIALOG = "showDialog"
     const val PREFERENCE_FAVOURITE_MAP = "favouriteMap"
 

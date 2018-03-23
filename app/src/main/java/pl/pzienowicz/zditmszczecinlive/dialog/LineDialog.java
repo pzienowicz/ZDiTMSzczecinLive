@@ -28,12 +28,11 @@ import pl.pzienowicz.zditmszczecinlive.Config;
 import pl.pzienowicz.zditmszczecinlive.Functions;
 import pl.pzienowicz.zditmszczecinlive.R;
 import pl.pzienowicz.zditmszczecinlive.model.Line;
+import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient;
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LineDialog extends Dialog {
 
@@ -80,11 +79,6 @@ public class LineDialog extends Dialog {
 
         currentLine = sharedPreferences.getInt(Config.PREFERENCE_SELECTED_LINE, 0);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Config.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
         if(!Functions.INSTANCE.isNetworkAvailable(context)) {
             Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show();
 
@@ -97,7 +91,7 @@ public class LineDialog extends Dialog {
 
         progressBarHolder.setVisibility(View.VISIBLE);
 
-        ZDiTMService service = retrofit.create(ZDiTMService.class);
+        ZDiTMService service = RetrofitClient.INSTANCE.getRetrofit().create(ZDiTMService.class);
         Call<List<Line>> lines = service.listLines();
         lines.enqueue(new Callback<List<Line>>() {
             @Override

@@ -42,7 +42,7 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
         val tempList: ArrayList<WidgetLine> = ArrayList()
 
         try {
-            val doc = Jsoup.connect("http://www.zditm.szczecin.pl/json/tablica.inc.php?slupek=" + busStopId).get()
+            val doc = Jsoup.connect(Config.BASE_URL + "json/tablica.inc.php?slupek=" + busStopId).timeout(60000).validateTLSCertificates(false).get()
 
             Log.d(Config.LOG_TAG, doc.text())
 

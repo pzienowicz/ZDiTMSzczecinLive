@@ -19,12 +19,11 @@ import pl.pzienowicz.zditmszczecinlive.Functions
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
 import pl.pzienowicz.zditmszczecinlive.model.Info
+import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class InfoDialog(context: Context) : Dialog(context) {
 
@@ -44,11 +43,6 @@ class InfoDialog(context: Context) : Dialog(context) {
         val listView = findViewById(R.id.listView) as ListView
         listView.adapter = adapter
 
-        val retrofit = Retrofit.Builder()
-                .baseUrl(Config.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
         if (!Functions.isNetworkAvailable(context)) {
             Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
 
@@ -59,7 +53,7 @@ class InfoDialog(context: Context) : Dialog(context) {
         } else {
             progressBarHolder!!.visibility = View.VISIBLE
 
-            val service = retrofit.create(ZDiTMService::class.java)
+            val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
             val lines = service.listInfo()
             lines.enqueue(object : Callback<List<Info>> {
                 override fun onResponse(call: Call<List<Info>>, response: Response<List<Info>>) {

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.http.SslError
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
@@ -17,6 +18,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
+import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
@@ -117,6 +119,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
         myWebView!!.settings.javaScriptEnabled = true
         myWebView!!.setWebViewClient(object : WebViewClient() {
             override fun onPageFinished(view: WebView, url: String) {}
+            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                handler?.proceed()
+            }
         })
 
         val filter = IntentFilter()
@@ -256,7 +261,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         sharedPreferences!!.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, false).apply()
                         sharedPreferences!!.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, false).apply()
                     }
-                    locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this@MainActivity)
+                    locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this@MainActivity)
                 } else {
                     sharedPreferences!!.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, false).apply()
                     sharedPreferences!!.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, false).apply()
