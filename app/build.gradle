@@ -2,15 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 27
-        versionName "1.9.5"
+        versionCode 28
+        versionName "1.10.0"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
@@ -27,26 +32,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:design:25.4.0'
-    compile 'de.codecrafters.tableview:tableview:2.8.0'
-    compile 'com.anjlab.android.iab.v3:library:1.0.44'
-    compile 'com.journeyapps:zxing-android-embedded:3.5.0'
-    implementation "ch.acra:acra-http:5.0.2"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'de.codecrafters.tableview:tableview:2.8.0'
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
+    implementation "ch.acra:acra-http:5.1.1"
     implementation 'com.karumi:dexter:4.2.0'
 
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.onesignal:OneSignal:3.3.0@aar'
-    compile 'com.google.android.gms:play-services-gcm:11.8.0'
-    compile 'com.google.android.gms:play-services-location:11.8.0'
-    compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.onesignal:OneSignal:3.5.8@aar'
+    implementation 'com.google.android.gms:play-services-gcm:12.0.1'
+    implementation 'com.google.android.gms:play-services-location:12.0.1'
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    compile 'org.jsoup:jsoup:1.11.2'
+    implementation 'org.jsoup:jsoup:1.11.2'
 }
 repositories {
     mavenCentral()
