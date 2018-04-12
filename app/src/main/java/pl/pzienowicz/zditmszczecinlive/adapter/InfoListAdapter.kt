@@ -32,13 +32,13 @@ class InfoListAdapter(private val context: Context, private val records: ArrayLi
             row = convertView
         }
 
-        val infoTextView = row.findViewById(R.id.infoText) as TextView
+        val infoTextView = row.findViewById<TextView>(R.id.infoText)
         infoTextView.text = info.description
 
-        val fromDateTv = row.findViewById(R.id.fromDate) as TextView
+        val fromDateTv = row.findViewById<TextView>(R.id.fromDate)
         fromDateTv.text = context!!.getString(R.string.from_date, info.fromDate)
 
-        val toDateTv = row.findViewById(R.id.toDate) as TextView
+        val toDateTv = row.findViewById<TextView>(R.id.toDate)
         if (info.to != null) {
             toDateTv.visibility = View.VISIBLE
             toDateTv.text = context.getString(R.string.to_date, info.toDate)

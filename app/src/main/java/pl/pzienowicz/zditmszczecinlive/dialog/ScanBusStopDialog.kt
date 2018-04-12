@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.support.design.widget.Snackbar
 import android.view.Window
+import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
@@ -35,13 +36,13 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
 
         checkPermission()
 
-        findViewById(R.id.cancelBtn).setOnClickListener({
+        findViewById<Button>(R.id.cancelBtn).setOnClickListener({
             dismiss()
         })
     }
 
     private fun initBarcodeView() {
-        barcodeView = findViewById(R.id.zxing_barcode_scanner) as CompoundBarcodeView
+        barcodeView = findViewById(R.id.zxing_barcode_scanner)
         barcodeView!!.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
                 barcodeView!!.pause()

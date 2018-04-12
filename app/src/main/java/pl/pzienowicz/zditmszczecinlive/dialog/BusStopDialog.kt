@@ -3,6 +3,7 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 import android.app.Activity
 import android.app.Dialog
 import android.view.Window
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -17,13 +18,13 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_bus_stop)
 
-        val txtUrl = findViewById(R.id.numberInput) as EditText
+        val txtUrl = findViewById<EditText>(R.id.numberInput)
 
         if(currentBusStop != null) {
             txtUrl.setText(currentBusStop)
         }
 
-        findViewById(R.id.okBtn).setOnClickListener({
+        findViewById<Button>(R.id.okBtn).setOnClickListener({
             dismiss()
 
             val busStopNumber = txtUrl.text.toString()
@@ -37,11 +38,11 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
             listener.onBusStopSelected(busStop)
         })
 
-        findViewById(R.id.cancelBtn).setOnClickListener({
+        findViewById<Button>(R.id.cancelBtn).setOnClickListener({
             dismiss()
         })
 
-        findViewById(R.id.scanCodeBtn).setOnClickListener({
+        findViewById<Button>(R.id.scanCodeBtn).setOnClickListener({
             dismiss()
 
             val dialog = ScanBusStopDialog(activity, listener)

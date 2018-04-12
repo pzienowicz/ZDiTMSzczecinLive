@@ -42,7 +42,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         adapter = WidgetTableDataAdapter(this, records)
         bp = BillingProcessor(this, Config.LICENSEE_KEY, this)
 
-        val tableView = findViewById(R.id.tableView) as TableView<*>
+        val tableView = findViewById<TableView<*>>(R.id.tableView)
 
         val columnModel = TableColumnWeightModel(4)
         columnModel.setColumnWeight(0, 1)

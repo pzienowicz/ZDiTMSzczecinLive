@@ -37,10 +37,10 @@ class InfoDialog(context: Context) : Dialog(context) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_info)
 
-        noInfoTv = findViewById(R.id.noInfoTv) as TextView
-        progressBarHolder = findViewById(R.id.progressBarHolder) as FrameLayout
+        noInfoTv = findViewById(R.id.noInfoTv)
+        progressBarHolder = findViewById(R.id.progressBarHolder)
         adapter = InfoListAdapter(context, records)
-        val listView = findViewById(R.id.listView) as ListView
+        val listView = findViewById<ListView>(R.id.listView)
         listView.adapter = adapter
 
         if (!Functions.isNetworkAvailable(context)) {
@@ -79,7 +79,7 @@ class InfoDialog(context: Context) : Dialog(context) {
                 }
             })
 
-            val contactUsBtn = findViewById(R.id.contactUsBtn) as Button
+            val contactUsBtn = findViewById<Button>(R.id.contactUsBtn)
             contactUsBtn.setOnClickListener {
                 val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "zienowicz.pawel@gmail.com", null))
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Reklama - Komunikacja Miejska Szczecin")

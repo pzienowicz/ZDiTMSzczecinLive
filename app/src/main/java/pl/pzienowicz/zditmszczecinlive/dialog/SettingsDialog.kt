@@ -21,7 +21,7 @@ class SettingsDialog(context: Context) : Dialog(context) {
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val locationCheckbox = findViewById(R.id.locationCheckbox) as CheckBox
+        val locationCheckbox = findViewById<CheckBox>(R.id.locationCheckbox)
         locationCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
             preferences.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, isChecked).apply()
             val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
@@ -30,7 +30,7 @@ class SettingsDialog(context: Context) : Dialog(context) {
 
         locationCheckbox.isChecked = preferences.getBoolean(Config.PREFERENCE_USE_LOCATION, true)
 
-        val zoomMapCheckbox = findViewById(R.id.zoomMapCheckbox) as CheckBox
+        val zoomMapCheckbox = findViewById<CheckBox>(R.id.zoomMapCheckbox)
         zoomMapCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
             preferences.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, isChecked).apply()
             val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
@@ -39,7 +39,7 @@ class SettingsDialog(context: Context) : Dialog(context) {
 
         zoomMapCheckbox.isChecked = preferences.getBoolean(Config.PREFERENCE_ZOOM_MAP, true)
 
-        val refreshWidgetsCheckbox = findViewById(R.id.refreshWidgetsCheckbox) as CheckBox
+        val refreshWidgetsCheckbox = findViewById<CheckBox>(R.id.refreshWidgetsCheckbox)
         refreshWidgetsCheckbox.setOnCheckedChangeListener({ checkbox, isChecked ->
             preferences.edit().putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, isChecked).apply()
             val intent = Intent(Config.ACTION_AUTO_UPDATE)
@@ -48,7 +48,7 @@ class SettingsDialog(context: Context) : Dialog(context) {
 
         refreshWidgetsCheckbox.isChecked = preferences.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)
 
-        val widgetsRefreshText = findViewById(R.id.widgetsRefresh) as EditText
+        val widgetsRefreshText = findViewById<EditText>(R.id.widgetsRefresh)
         widgetsRefreshText.setText(preferences.getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30"))
         widgetsRefreshText.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {

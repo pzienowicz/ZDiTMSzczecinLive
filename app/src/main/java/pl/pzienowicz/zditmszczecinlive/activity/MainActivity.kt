@@ -1,6 +1,7 @@
 package pl.pzienowicz.zditmszczecinlive.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.net.http.SslError
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private var zoomMap = false
     private var currentUrl = Config.URL
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         OneSignal.startInit(this).init()
 
@@ -63,16 +66,16 @@ class MainActivity : AppCompatActivity(), LocationListener {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         sharedPreferences!!.edit().putInt(Config.PREFERENCE_SELECTED_LINE, 0).apply()
 
-        val floatingActionsMenu = findViewById(R.id.multiple_actions) as FloatingActionsMenu
+        val floatingActionsMenu = findViewById<FloatingActionsMenu>(R.id.multiple_actions)
 
-        val setFavouriteBtn = findViewById(R.id.set_favourite) as FloatingActionButton
+        val setFavouriteBtn = findViewById<FloatingActionButton>(R.id.set_favourite)
         setFavouriteBtn.setOnClickListener {
             sharedPreferences!!.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, currentUrl).apply()
             Snackbar.make(findViewById(R.id.swiperefresh), R.string.set_favourite, Snackbar.LENGTH_LONG).show()
             floatingActionsMenu.collapse()
         }
 
-        val showInfoBtn = findViewById(R.id.show_info) as FloatingActionButton
+        val showInfoBtn = findViewById<FloatingActionButton>(R.id.show_info)
         showInfoBtn.setOnClickListener {
             val dialog = InfoDialog(this@MainActivity)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -80,7 +83,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
             floatingActionsMenu.collapse()
         }
 
-        val dashboardButton = findViewById(R.id.show_dashboard) as FloatingActionButton
+        val dashboardButton = findViewById<FloatingActionButton>(R.id.show_dashboard)
         dashboardButton.setOnClickListener {
             val dialog = BusStopDialog(this@MainActivity, BusStopSelectedListener { busStop ->
                 val boardDialog = ScheduleBoardDialog(this@MainActivity, busStop)
@@ -92,7 +95,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
             floatingActionsMenu.collapse()
         }
 
-        val actionButton = findViewById(R.id.show_lines) as FloatingActionButton
+        val actionButton = findViewById<FloatingActionButton>(R.id.show_lines)
         actionButton.setOnClickListener {
             val dialog = LineDialog(context)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -100,7 +103,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
             floatingActionsMenu.collapse()
         }
 
-        val settingsButton = findViewById(R.id.settings) as FloatingActionButton
+        val settingsButton = findViewById<FloatingActionButton>(R.id.settings)
         settingsButton.setOnClickListener {
             val dialog = SettingsDialog(context!!)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -108,21 +111,23 @@ class MainActivity : AppCompatActivity(), LocationListener {
             floatingActionsMenu.collapse()
         }
 
-        val widgetsBtn = findViewById(R.id.widgets) as FloatingActionButton
+        val widgetsBtn = findViewById<FloatingActionButton>(R.id.widgets)
         widgetsBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, WidgetsActivity::class.java)
             startActivity(intent)
             floatingActionsMenu.collapse()
         }
 
-        myWebView = findViewById(R.id.webView) as WebView
+        val forumBtn = findViewById<FloatingActionButton>(R.id.forum)
+        forumBtn.setOnClickListener {
+            val facebookIntent = Intent(Intent.ACTION_VIEW)
+            facebookIntent.data = Uri.parse(Config.FB_GROUP_URL)
+            startActivity(facebookIntent)
+            floatingActionsMenu.collapse()
+        }
+
+        myWebView = findViewById(R.id.webView)
         myWebView!!.settings.javaScriptEnabled = true
-        myWebView!!.setWebViewClient(object : WebViewClient() {
-            override fun onPageFinished(view: WebView, url: String) {}
-            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                handler?.proceed()
-            }
-        })
 
         val filter = IntentFilter()
         filter.addAction(Config.INTENT_LOAD_NEW_URL)
@@ -206,6 +211,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         myWebView!!.saveState(outState)
+        return super.onSaveInstanceState(outState)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -297,6 +303,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     companion object {
-        private val MY_PERMISSIONS_REQUEST_LOCATION = 1443
+        private const val MY_PERMISSIONS_REQUEST_LOCATION = 1443
     }
 }
