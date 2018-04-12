@@ -74,5 +74,13 @@
             fab:fab_icon="@drawable/ic_widgets_white_48dp"
             fab:fab_colorNormal="@color/green"/>
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/forum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="mini"
+            fab:fab_title="Dyskusje (oraz awarie i opóźnienia)"
+            fab:fab_icon="@drawable/ic_forum_white_24dp"/>
+
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>

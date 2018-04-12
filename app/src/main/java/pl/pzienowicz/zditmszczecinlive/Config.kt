@@ -18,6 +18,8 @@ object Config {
     const val PREFERENCE_SHOW_DIALOG = "showDialog"
     const val PREFERENCE_FAVOURITE_MAP = "favouriteMap"
 
+    const val FB_GROUP_URL = "https://www.facebook.com/groups/1241981472572028"
+
     const val LINES_PER_ROW = 5
     const val ZONES_PER_ROW_LANDSCAPE = 9
 
