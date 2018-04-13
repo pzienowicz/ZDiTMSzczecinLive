@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId "pl.pzienowicz.zditmszczecinlive"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 25
-        versionCode 28
-        versionName "1.10.0"
+        versionCode 29
+        versionName "1.10.1"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
@@ -46,7 +46,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.onesignal:OneSignal:3.5.8@aar'
+    implementation 'com.onesignal:OneSignal:3.8.3@aar'
     implementation 'com.google.android.gms:play-services-gcm:12.0.1'
     implementation 'com.google.android.gms:play-services-location:12.0.1'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
