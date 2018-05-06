@@ -17,7 +17,13 @@ class AppWidgetAlarm(private val mContext: Context) {
     fun startAlarm() {
         val widgetsEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Config.PREFERENCE_WIDGETS_REFRESH,true)
         val seconds = PreferenceManager.getDefaultSharedPreferences(mContext).getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30")
-        val secondsInt = seconds.toInt()
+        val secondsInt: Int
+
+        try {
+            secondsInt = seconds.toInt()
+        } catch(e: NumberFormatException) {
+            return
+        }
 
         if(!widgetsEnabled || secondsInt == 0) {
             return
@@ -31,14 +37,10 @@ class AppWidgetAlarm(private val mContext: Context) {
 
         val am = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmType = AlarmManager.RTC_WAKEUP
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
-        }
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            am.setExact(alarmType, calendar.timeInMillis, pendingIntent)
-        }
-        else {
-            am.set(alarmType, calendar.timeInMillis, pendingIntent)
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> am.setExact(alarmType, calendar.timeInMillis, pendingIntent)
+            else -> am.set(alarmType, calendar.timeInMillis, pendingIntent)
         }
     }
 
