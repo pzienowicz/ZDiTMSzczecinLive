@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private fun refreshSettings() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        if (sharedPreferences!!.getBoolean(Config.PREFERENCE_USE_LOCATION, true)) {
+        if (Functions.isGpsProviderAvailable(this) && sharedPreferences!!.getBoolean(Config.PREFERENCE_USE_LOCATION, true)) {
             if (ActivityCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this@MainActivity)
             } else {

@@ -72,10 +72,10 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                     Toast.makeText(context, R.string.incorrect_bus_stop, Toast.LENGTH_LONG).show()
                     barcodeView!!.resume()
 
-                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
-                    ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
-                    ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
-                    ACRA.getErrorReporter().handleException(IncorrectBusStopException())
+//                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
+//                    ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
+//                    ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
+//                    ACRA.getErrorReporter().handleException(IncorrectBusStopException())
                     return
                 }
 
