@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swiperefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="15dp">
 
     <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
+        android:text="@string/add_widget"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/black"
-        android:text="@string/add_widget" />
+        android:textStyle="italic" />
 
     <TextView
-        android:layout_marginTop="20dp"
+        android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:text="@string/active_widgets"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/black"
-        android:text="@string/active_widgets" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tableView"
+        app:layout_constraintStart_toStartOf="@+id/tableView"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <de.codecrafters.tableview.TableView
-        android:layout_marginTop="5dp"
-        xmlns:table="http://schemas.android.com/apk/res-auto"
         android:id="@+id/tableView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        table:tableView_headerColor="@color/colorPrimary"
-        table:tableView_columnCount="3" />
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:tableView_columnCount="3"
+        app:tableView_headerColor="@color/colorPrimary" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
