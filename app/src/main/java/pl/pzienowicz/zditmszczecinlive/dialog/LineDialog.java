@@ -51,31 +51,28 @@ public class LineDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_line);
 
-        final TableLayout tramNormalTable = (TableLayout) findViewById(R.id.tramNormalTable);
-        final TableLayout busNormalTable = (TableLayout) findViewById(R.id.busNormalTable);
-        final TableLayout busExpressTable = (TableLayout) findViewById(R.id.busExpressTable);
-        final TableLayout busNightTable = (TableLayout) findViewById(R.id.busNightTable);
-        final TableLayout busSubstituteTable = (TableLayout) findViewById(R.id.busSubstituteTable);
-        final TableLayout tramSubstituteTable = (TableLayout) findViewById(R.id.tramSubstituteTable);
-        final TableLayout tramTouristicTable = (TableLayout) findViewById(R.id.tramTouristicTable);
+        final TableLayout tramNormalTable = findViewById(R.id.tramNormalTable);
+        final TableLayout busNormalTable = findViewById(R.id.busNormalTable);
+        final TableLayout busExpressTable = findViewById(R.id.busExpressTable);
+        final TableLayout busNightTable = findViewById(R.id.busNightTable);
+        final TableLayout busSubstituteTable = findViewById(R.id.busSubstituteTable);
+        final TableLayout tramSubstituteTable = findViewById(R.id.tramSubstituteTable);
+        final TableLayout tramTouristicTable = findViewById(R.id.tramTouristicTable);
+        final TableLayout busTouristicTable = findViewById(R.id.busTouristicTable);
 
-        final LinearLayout tramNormalLabel = (LinearLayout) findViewById(R.id.tramNormalLabel);
-        final LinearLayout busNormalLabel = (LinearLayout) findViewById(R.id.busNormalLabel);
-        final LinearLayout busExpressLabel = (LinearLayout) findViewById(R.id.busExpressLabel);
-        final LinearLayout busNightLabel = (LinearLayout) findViewById(R.id.busNightLabel);
-        final LinearLayout busSubstituteLabel = (LinearLayout) findViewById(R.id.busSubstituteLabel);
-        final LinearLayout tramSubstituteLabel = (LinearLayout) findViewById(R.id.tramSubstituteLabel);
-        final LinearLayout tramTouristicLabel = (LinearLayout) findViewById(R.id.tramTouristicLabel);
+        final LinearLayout tramNormalLabel = findViewById(R.id.tramNormalLabel);
+        final LinearLayout busNormalLabel = findViewById(R.id.busNormalLabel);
+        final LinearLayout busExpressLabel = findViewById(R.id.busExpressLabel);
+        final LinearLayout busNightLabel = findViewById(R.id.busNightLabel);
+        final LinearLayout busSubstituteLabel = findViewById(R.id.busSubstituteLabel);
+        final LinearLayout tramSubstituteLabel = findViewById(R.id.tramSubstituteLabel);
+        final LinearLayout tramTouristicLabel = findViewById(R.id.tramTouristicLabel);
+        final LinearLayout busTouristicLabel = findViewById(R.id.busTouristicLabel);
         
-        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+        progressBarHolder = findViewById(R.id.progressBarHolder);
 
-        TextView clearFilterText = (TextView) findViewById(R.id.clearFilterText);
-        clearFilterText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeFilter(0);
-            }
-        });
+        TextView clearFilterText = findViewById(R.id.clearFilterText);
+        clearFilterText.setOnClickListener(view -> changeFilter(0));
 
         currentLine = sharedPreferences.getInt(Config.PREFERENCE_SELECTED_LINE, 0);
 
@@ -106,6 +103,7 @@ public class LineDialog extends Dialog {
                     drawLinesTable(filterLines(response.body(), "ada"), busSubstituteTable, busSubstituteLabel);
                     drawLinesTable(filterLines(response.body(), "tda"), tramSubstituteTable, tramSubstituteLabel);
                     drawLinesTable(filterLines(response.body(), "tdt"), tramTouristicTable, tramTouristicLabel);
+                    drawLinesTable(filterLines(response.body(), "adt"), busTouristicTable, busTouristicLabel);
                 } else {
                     Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show();
                 }
