@@ -95,7 +95,7 @@ public class LineDialog extends Dialog {
             public void onResponse(Call<List<Line>> call, Response<List<Line>> response) {
                 progressBarHolder.setVisibility(View.GONE);
 
-                if(response.isSuccessful()) {
+                if(response.isSuccessful() && response.body() != null) {
                     drawLinesTable(filterLines(response.body(), "tdz"), tramNormalTable, tramNormalLabel);
                     drawLinesTable(filterLines(response.body(), "adz"), busNormalTable, busNormalLabel);
                     drawLinesTable(filterLines(response.body(), "adp"), busExpressTable, busExpressLabel);

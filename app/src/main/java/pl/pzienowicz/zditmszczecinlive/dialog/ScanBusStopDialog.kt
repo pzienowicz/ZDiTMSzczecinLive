@@ -36,9 +36,9 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
 
         checkPermission()
 
-        findViewById<Button>(R.id.cancelBtn).setOnClickListener({
+        findViewById<Button>(R.id.cancelBtn).setOnClickListener {
             dismiss()
-        })
+        }
     }
 
     private fun initBarcodeView() {

@@ -13,7 +13,16 @@ import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.model.WidgetLine
 import org.jsoup.Jsoup
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import pl.pzienowicz.zditmszczecinlive.Config
+import pl.pzienowicz.zditmszczecinlive.model.Board
+import pl.pzienowicz.zditmszczecinlive.model.Line
+import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
+import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 import java.lang.Exception
 
@@ -41,46 +50,64 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
 
         val tempList: ArrayList<WidgetLine> = ArrayList()
 
-        try {
-            val doc = Jsoup.connect(Config.BASE_URL + "json/tablica.inc.php?slupek=" + busStopId).get()
+        val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
+        val board = service.getBoard(busStopId)
+        board.enqueue(object : Callback<Board> {
+            override fun onResponse(call: Call<Board>, response: Response<Board>) {
 
-            Log.d(Config.LOG_TAG, doc.text())
-
-            val elements = doc.getElementsByTag("tbody")
-
-            if(elements.size > 0) {
-                val lines = elements[0].getElementsByTag("tr")
-                for (line in lines) {
-                    val lineName = line.getElementsByClass("gmvlinia")
-                    val direction = line.getElementsByClass("gmvkierunek")
-                    val time = line.getElementsByClass("gmvgodzina")
+                if(response.isSuccessful() && response.body() != null) {
 
                     try {
-                        tempList.add(WidgetLine(lineName[0].text(), direction[0].text(), time[0].text()))
-                    }catch (e: Exception) {
-                        Log.e(Config.LOG_TAG, e.message)
-                        Log.d(Config.LOG_TAG, line.toString())
+                        val board = response.body()
+                        val doc = Jsoup.parse(board!!.text)
 
-                        val error = line.getElementsByClass("gmvblad")
-                        if(error[0] != null) {
-                            tempList.add(WidgetLine("", error[0].text(), ""))
-                            break
+                        Log.d(Config.LOG_TAG, doc.text())
+
+                        val elements = doc.getElementsByTag("tbody")
+
+                        if (elements.size > 0) {
+                            val lines = elements[0].getElementsByTag("tr")
+                            for (line in lines) {
+                                val lineName = line.getElementsByClass("gmvlinia")
+                                val direction = line.getElementsByClass("gmvkierunek")
+                                val time = line.getElementsByClass("gmvgodzina")
+
+                                try {
+                                    tempList.add(WidgetLine(lineName[0].text(), direction[0].text(), time[0].text()))
+                                } catch (e: Exception) {
+                                    Log.e(Config.LOG_TAG, e.message)
+                                    Log.d(Config.LOG_TAG, line.toString())
+
+                                    val error = line.getElementsByClass("gmvblad")
+                                    if(error != null && !error.isEmpty() && error[0] != null) {
+                                        tempList.add(WidgetLine("", error[0].text(), ""))
+                                        break
+                                    } else {
+                                        tempList.add(WidgetLine("", "Wystąpił błąd, pracujemy już nad tym", ""))
+                                    }
+                                }
+                            }
                         }
+
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        tempList.add(WidgetLine("", "Wystąpił błąd, pracujemy już nad tym", ""))
+                        //Log.e(Config.LOG_TAG, e.message)
                     }
+
+                    listItemList.clear()
+                    listItemList.addAll(tempList)
+
+                    val intent = Intent(Config.INTENT_WIDGET_DATA_LOADED)
+                    context.sendBroadcast(intent)
                 }
             }
 
-        } catch (e: IOException) {
-            e.printStackTrace()
-
-            //Log.e(Config.LOG_TAG, e.message)
-        }
-
-        listItemList.clear()
-        listItemList.addAll(tempList)
-
-        val intent = Intent(Config.INTENT_WIDGET_DATA_LOADED)
-        context.sendBroadcast(intent)
+            override fun onFailure(call: Call<Board>, t: Throwable) {
+                tempList.add(WidgetLine("", "Wystąpił błąd, pracujemy już nad tym", ""))
+            }
+        })
     }
 
     override fun onDestroy() {}
