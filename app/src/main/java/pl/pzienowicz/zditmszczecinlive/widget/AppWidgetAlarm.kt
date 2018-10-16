@@ -8,6 +8,7 @@ import pl.pzienowicz.zditmszczecinlive.Config
 import java.util.*
 import android.os.Build
 import android.preference.PreferenceManager
+import android.util.Log
 
 class AppWidgetAlarm(private val mContext: Context) {
 
@@ -42,6 +43,8 @@ class AppWidgetAlarm(private val mContext: Context) {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> am.setExact(alarmType, calendar.timeInMillis, pendingIntent)
             else -> am.set(alarmType, calendar.timeInMillis, pendingIntent)
         }
+
+        Log.d(Config.LOG_TAG, "alarm set: " + calendar.timeInMillis)
     }
 
     fun stopAlarm() {

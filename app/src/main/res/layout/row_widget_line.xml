@@ -18,7 +18,17 @@
         android:layout_height="wrap_content"
         android:textColor="@color/orange"
         android:gravity="center"
-        android:id="@+id/directionTv"/>
+        android:id="@+id/directionTv"
+        android:singleLine="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:ellipsize="marquee">
+
+        <requestFocus android:focusable="true" android:focusableInTouchMode="true"
+            android:duplicateParentState="true" />
+    </TextView>
 
     <TextView
         android:layout_width="0dp"

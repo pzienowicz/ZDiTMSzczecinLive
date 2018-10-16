@@ -19,7 +19,6 @@ import android.content.ComponentName
 class WidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager?, appWidgetIds: IntArray?) {
-
         for (widget in appWidgetIds!!) {
             val remoteViews = updateWidgetListView(context, widget)
             appWidgetManager!!.notifyAppWidgetViewDataChanged(widget, R.id.listView)
@@ -50,12 +49,6 @@ class WidgetProvider : AppWidgetProvider() {
             remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
             remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)
             remoteViews.setRemoteAdapter(appWidgetId, R.id.listView, svcIntent)
-
-            val intent = Intent(context, javaClass)
-            intent.action = Config.ACTION_AUTO_UPDATE
-
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            remoteViews.setOnClickPendingIntent(R.id.refreshBtn, pendingIntent)
         } else {
             remoteViews.setViewVisibility(R.id.inputLayout, View.VISIBLE)
             remoteViews.setViewVisibility(R.id.listView, View.GONE)
@@ -68,13 +61,19 @@ class WidgetProvider : AppWidgetProvider() {
             remoteViews.setOnClickPendingIntent(R.id.setBusStopBtn, pendingIntent)
         }
 
+        val intent = Intent(context, javaClass)
+        intent.action = Config.ACTION_AUTO_UPDATE
+
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        remoteViews.setOnClickPendingIntent(R.id.refreshBtn, pendingIntent)
+
         return remoteViews
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        Log.e(Config.LOG_TAG, intent.action)
+        Log.e(Config.LOG_TAG, "action: " + intent.action)
 
         when(intent.action) {
             Config.CLICK_WIDGET_BUTTON -> {

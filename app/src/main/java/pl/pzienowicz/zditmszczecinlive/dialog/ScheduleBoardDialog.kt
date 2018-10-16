@@ -22,6 +22,9 @@ class ScheduleBoardDialog(context: Context, busStop: BusStop) : Dialog(context) 
         setContentView(R.layout.dialog_board)
 
         val webView = findViewById<WebView>(R.id.webView)
+        webView.webViewClient = object : WebViewClient() {
+
+        }
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(Config.BUS_STOP_URL + busStop.id)
 

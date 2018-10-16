@@ -23,8 +23,12 @@ import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import android.content.Intent
 import android.support.design.widget.Snackbar
+import android.util.Log
 import com.anjlab.android.iab.v3.Constants
 import pl.pzienowicz.zditmszczecinlive.BuildConfig
+import android.content.ComponentName
+
+
 
 
 class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
@@ -98,8 +102,12 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
             val intent = Intent(Config.INTENT_REFRESH_WIDGETS_LIST)
             sendBroadcast(intent)
 
-            val intent2 = Intent(Config.ACTION_AUTO_UPDATE)
+            val intent2 = Intent(this, WidgetProvider::class.java)
+            intent2.action = Config.ACTION_AUTO_UPDATE
+            intent2.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
             sendBroadcast(intent2)
+
+            Log.d(Config.LOG_TAG, "events sent!")
         }, null)
         dialog.show()
     }

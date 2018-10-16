@@ -83,16 +83,20 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
                                         tempList.add(WidgetLine("", error[0].text(), ""))
                                         break
                                     } else {
-                                        tempList.add(WidgetLine("", "Wystąpił błąd, pracujemy już nad tym", ""))
+                                        tempList.add(WidgetLine("", context.getString(R.string.error_occurred), ""))
                                     }
                                 }
                             }
                         }
 
+                        if(board.message != null) {
+                            tempList.add(WidgetLine("", board.message, ""))
+                        }
+
 
                     } catch (e: IOException) {
                         e.printStackTrace()
-                        tempList.add(WidgetLine("", "Wystąpił błąd, pracujemy już nad tym", ""))
+                        tempList.add(WidgetLine("", context.getString(R.string.error_occurred), ""))
                         //Log.e(Config.LOG_TAG, e.message)
                     }
 
@@ -105,7 +109,7 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
             }
 
             override fun onFailure(call: Call<Board>, t: Throwable) {
-                tempList.add(WidgetLine("", "Wystąpił błąd, pracujemy już nad tym", ""))
+                tempList.add(WidgetLine("", context.getString(R.string.error_occurred), ""))
             }
         })
     }
@@ -119,13 +123,22 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
     override fun hasStableIds(): Boolean = false
 
     override fun getViewAt(position: Int): RemoteViews {
-        val remoteView = RemoteViews(context.packageName, R.layout.row_widget_line)
+        var remoteView = RemoteViews(context.packageName, R.layout.row_widget_line)
 
         if(this.count <= position) {
             return remoteView
         }
 
         val line = listItemList[position]
+
+        if(line.lineNumber == "") {
+            remoteView.setViewVisibility(R.id.lineNumberTv, View.GONE)
+            remoteView.setViewVisibility(R.id.timeLeftTv, View.GONE)
+        } else {
+            remoteView.setViewVisibility(R.id.lineNumberTv, View.VISIBLE)
+            remoteView.setViewVisibility(R.id.timeLeftTv, View.VISIBLE)
+        }
+
         remoteView.setTextViewText(R.id.lineNumberTv, line.lineNumber)
         remoteView.setTextViewText(R.id.directionTv, line.direction)
         remoteView.setTextViewText(R.id.timeLeftTv, line.timeLeft)

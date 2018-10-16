@@ -24,7 +24,7 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
             txtUrl.setText(currentBusStop)
         }
 
-        findViewById<Button>(R.id.okBtn).setOnClickListener({
+        findViewById<Button>(R.id.okBtn).setOnClickListener {
             dismiss()
 
             val busStopNumber = txtUrl.text.toString()
@@ -36,18 +36,18 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
             }
 
             listener.onBusStopSelected(busStop)
-        })
+        }
 
-        findViewById<Button>(R.id.cancelBtn).setOnClickListener({
+        findViewById<Button>(R.id.cancelBtn).setOnClickListener {
             dismiss()
-        })
+        }
 
-        findViewById<Button>(R.id.scanCodeBtn).setOnClickListener({
+        findViewById<Button>(R.id.scanCodeBtn).setOnClickListener {
             dismiss()
 
             val dialog = ScanBusStopDialog(activity, listener)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             dialog.show()
-        })
+        }
     }
 }
