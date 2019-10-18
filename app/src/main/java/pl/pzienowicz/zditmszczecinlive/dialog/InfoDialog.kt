@@ -32,8 +32,9 @@ class InfoDialog(context: Context) : Dialog(context) {
     private var noInfoTv: TextView? = null
     private val records = ArrayList<Info>()
 
-    init {
+    private val ads = HashMap<Int, String>()
 
+    init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_info)
 
@@ -84,6 +85,17 @@ class InfoDialog(context: Context) : Dialog(context) {
                 val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "zienowicz.pawel@gmail.com", null))
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Reklama - Komunikacja Miejska Szczecin")
                 context.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
+            }
+
+            ads[R.id.ad1Button] = "http://latamy.szczecin.pl"
+            ads[R.id.ad2Button] = "https://play.google.com/store/apps/details?id=app.fliper"
+
+            for ((key, value) in ads) {
+                findViewById<Button>(key).setOnClickListener {
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.data = Uri.parse(value)
+                    context.startActivity(i)
+                }
             }
         }
     }

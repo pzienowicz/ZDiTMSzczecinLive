@@ -29,11 +29,15 @@
     <string name="changes">Zmiany w rozkładach jazdy</string>
     <string name="no_changes">Brak aktualności</string>
     <string name="ad">Reklama</string>
-    <string name="ad_text">Chciałbyś zobaczyć tu swoją reklamę? Potrzebujesz w szybki sposób dotrzeć do mieszkańców Szczecina?</string>
+    <string name="ad_text">Chciałbyś zobaczyć tu swoją reklamę?</string>
+    <string name="ad_latamy"><b>latamy.szczecin.pl</b> - profesjonalne nagrania z drona</string>
+    <string name="ad_flipero"><b>Flipero.pl</b> - darmowa profesjonalna wyszukiwarka mieszkań</string>
 
     <string name="from_date">Od %s</string>
     <string name="to_date">do %s</string>
     <string name="contact_us">Napisz do nas</string>
+    <string name="check">Sprawdź</string>
+    <string name="download">Pobierz</string>
 
     <string name="type_bus_stop_number">Podaj numer przystanku</string>
     <string name="scan_bus_stop_number">Zeskanuj kod przystanku</string>
