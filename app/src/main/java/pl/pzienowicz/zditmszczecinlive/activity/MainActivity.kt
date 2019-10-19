@@ -130,7 +130,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
         myWebView = findViewById(R.id.webView)
         myWebView!!.settings.javaScriptEnabled = true
         myWebView!!.webViewClient = object : WebViewClient() {
-
+            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                handler!!.proceed()
+            }
         }
 
         val filter = IntentFilter()
