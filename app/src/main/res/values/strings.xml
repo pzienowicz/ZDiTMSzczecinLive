@@ -15,6 +15,7 @@
     <string name="substitute_tram_lines">Linie tramwajowe dzienne zastępcze</string>
     <string name="touristic_tram_lines">Linie tramwajowe dzienne turystyczne</string>
     <string name="normal_bus_lines">Linie autobusowe dzienne zwykłe</string>
+    <string name="normal_bus_lines_on_demand">Linie autobusowe dzienne zwykłe - transport na żądanie</string>
     <string name="special_bus_lines">Linie autobusowe dzienne pospieszne</string>
     <string name="night_bus_lines">Linie autobusowe nocne</string>
     <string name="substitute_bus_lines">Linie autobusowe dzienne zastępcze</string>

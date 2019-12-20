@@ -59,6 +59,7 @@ public class LineDialog extends Dialog {
         final TableLayout tramSubstituteTable = findViewById(R.id.tramSubstituteTable);
         final TableLayout tramTouristicTable = findViewById(R.id.tramTouristicTable);
         final TableLayout busTouristicTable = findViewById(R.id.busTouristicTable);
+        final TableLayout busNormalOnDemandTable = findViewById(R.id.busNormalOnDemandTable);
 
         final LinearLayout tramNormalLabel = findViewById(R.id.tramNormalLabel);
         final LinearLayout busNormalLabel = findViewById(R.id.busNormalLabel);
@@ -68,6 +69,7 @@ public class LineDialog extends Dialog {
         final LinearLayout tramSubstituteLabel = findViewById(R.id.tramSubstituteLabel);
         final LinearLayout tramTouristicLabel = findViewById(R.id.tramTouristicLabel);
         final LinearLayout busTouristicLabel = findViewById(R.id.busTouristicLabel);
+        final LinearLayout busNormalOnDemandLabel = findViewById(R.id.busNormalOnDemandLabel);
         
         progressBarHolder = findViewById(R.id.progressBarHolder);
 
@@ -104,6 +106,7 @@ public class LineDialog extends Dialog {
                     drawLinesTable(filterLines(response.body(), "tda"), tramSubstituteTable, tramSubstituteLabel);
                     drawLinesTable(filterLines(response.body(), "tdt"), tramTouristicTable, tramTouristicLabel);
                     drawLinesTable(filterLines(response.body(), "adt"), busTouristicTable, busTouristicLabel);
+                    drawLinesTable(filterLines(response.body(), "adz1"), busNormalOnDemandTable, busNormalOnDemandLabel);
                 } else {
                     Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show();
                 }
