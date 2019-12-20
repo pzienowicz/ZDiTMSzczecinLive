@@ -14,8 +14,8 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 39
-        versionName "1.11.7"
+        versionCode 40
+        versionName "1.12.0"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
@@ -35,7 +35,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:design:27.1.1'
     implementation 'de.codecrafters.tableview:tableview:2.8.0'
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-gcm:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'org.jsoup:jsoup:1.11.2'
