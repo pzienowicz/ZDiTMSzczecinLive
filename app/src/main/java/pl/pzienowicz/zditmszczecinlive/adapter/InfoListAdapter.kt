@@ -42,6 +42,8 @@ class InfoListAdapter(private val context: Context, private val records: ArrayLi
         if (info.to != null) {
             toDateTv.visibility = View.VISIBLE
             toDateTv.text = context.getString(R.string.to_date, info.toDate)
+        } else {
+            toDateTv.visibility = View.GONE
         }
 
         return row
