@@ -21,7 +21,10 @@ object Config {
     const val FB_GROUP_URL = "https://www.facebook.com/groups/1241981472572028"
 
     const val LINES_PER_ROW = 5
-    const val ZONES_PER_ROW_LANDSCAPE = 9
+    const val LINES_PER_ROW_LANDSCAPE = 9
+
+    const val CAMERAS_PER_ROW = 2
+    const val CAMERAS_PER_ROW_LANDSCAPE = 3
 
     const val PREFERENCE_SELECTED_LINE = "selectedLine"
     const val INTENT_LOAD_NEW_URL = "loadNewUrl"

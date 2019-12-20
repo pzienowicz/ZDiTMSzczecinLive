@@ -140,7 +140,7 @@ public class LineDialog extends Dialog {
 
         int linesPerRow = Config.LINES_PER_ROW;
         if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            linesPerRow = Config.ZONES_PER_ROW_LANDSCAPE;
+            linesPerRow = Config.LINES_PER_ROW_LANDSCAPE;
         }
         int rows = (lines.size() % linesPerRow == 0) ? lines.size() / linesPerRow : lines.size() / linesPerRow + 1;
 
@@ -178,12 +178,7 @@ public class LineDialog extends Dialog {
                         tv.setTextColor(context.getResources().getColor(R.color.red));
                     }
 
-                    cellLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            changeFilter(view.getId());
-                        }
-                    });
+                    cellLayout.setOnClickListener(view -> changeFilter(view.getId()));
 
                     tv.setText(lines.get(iterator).getName());
 

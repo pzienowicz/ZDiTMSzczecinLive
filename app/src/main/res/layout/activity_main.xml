@@ -58,6 +58,14 @@
             fab:fab_icon="@drawable/ic_directions_bus_white_48dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/show_cameras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="mini"
+            fab:fab_title="Kamery miejskie"
+            fab:fab_icon="@drawable/baseline_live_tv_white_24"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

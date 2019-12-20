@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
@@ -99,6 +98,14 @@ class MainActivity : AppCompatActivity(), LocationListener {
         val actionButton = findViewById<FloatingActionButton>(R.id.show_lines)
         actionButton.setOnClickListener {
             val dialog = LineDialog(context)
+            dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            dialog.show()
+            floatingActionsMenu.collapse()
+        }
+
+        val camerasButton = findViewById<FloatingActionButton>(R.id.show_cameras)
+        camerasButton.setOnClickListener {
+            val dialog = CamerasDialog(context!!)
             dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             dialog.show()
             floatingActionsMenu.collapse()
