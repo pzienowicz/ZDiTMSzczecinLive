@@ -83,14 +83,14 @@
                     android:layout_weight="2"
                     android:layout_height="match_parent"
                     android:padding="5dp"
-                    android:text="@string/ad_flipero"/>
+                    android:text="@string/ad_flats"/>
 
                 <Button
                     android:id="@+id/ad2Button"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/download"/>
+                    android:text="@string/call"/>
             </LinearLayout>
 
             <View

@@ -6,14 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.view.Window
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
-
-import java.util.ArrayList
-
+import android.widget.*
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.Functions
 import pl.pzienowicz.zditmszczecinlive.R
@@ -31,8 +24,6 @@ class InfoDialog(context: Context) : Dialog(context) {
     private var adapter: InfoListAdapter? = null
     private var noInfoTv: TextView? = null
     private val records = ArrayList<Info>()
-
-    private val ads = HashMap<Int, String>()
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -87,15 +78,16 @@ class InfoDialog(context: Context) : Dialog(context) {
                 context.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
             }
 
-            ads[R.id.ad1Button] = "http://latamy.szczecin.pl"
-            ads[R.id.ad2Button] = "https://play.google.com/store/apps/details?id=app.fliper"
+            findViewById<Button>(R.id.ad1Button).setOnClickListener {
+                val i = Intent(Intent.ACTION_VIEW)
+                i.data = Uri.parse("http://latamy.szczecin.pl")
+                context.startActivity(i)
+            }
 
-            for ((key, value) in ads) {
-                findViewById<Button>(key).setOnClickListener {
-                    val i = Intent(Intent.ACTION_VIEW)
-                    i.data = Uri.parse(value)
-                    context.startActivity(i)
-                }
+            findViewById<Button>(R.id.ad2Button).setOnClickListener {
+                val callIntent = Intent(Intent.ACTION_DIAL)
+                callIntent.data = Uri.parse("tel:509207723")
+                context.startActivity(callIntent)
             }
         }
     }

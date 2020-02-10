@@ -14,8 +14,8 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 41
-        versionName "1.12.2"
+        versionCode 42
+        versionName "1.12.3"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
@@ -35,8 +35,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.android.support:appcompat-v7:27.1.0'
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     implementation 'de.codecrafters.tableview:tableview:2.8.0'
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
     implementation 'com.journeyapps:zxing-android-embedded:3.5.0'

@@ -40,11 +40,11 @@ class SettingsDialog(context: Context) : Dialog(context) {
         zoomMapCheckbox.isChecked = preferences.getBoolean(Config.PREFERENCE_ZOOM_MAP, true)
 
         val refreshWidgetsCheckbox = findViewById<CheckBox>(R.id.refreshWidgetsCheckbox)
-        refreshWidgetsCheckbox.setOnCheckedChangeListener({ checkbox, isChecked ->
+        refreshWidgetsCheckbox.setOnCheckedChangeListener { checkbox, isChecked ->
             preferences.edit().putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, isChecked).apply()
             val intent = Intent(Config.ACTION_AUTO_UPDATE)
             context.sendBroadcast(intent)
-        })
+        }
 
         refreshWidgetsCheckbox.isChecked = preferences.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)
 
