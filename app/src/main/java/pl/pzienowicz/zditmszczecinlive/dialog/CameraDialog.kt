@@ -3,9 +3,7 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.net.http.SslError
 import android.view.Window
-import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
@@ -20,11 +18,7 @@ class CameraDialog(context: Context, camera: Camera) : Dialog(context) {
         setContentView(R.layout.dialog_camera)
 
         val webView = findViewById<WebView>(R.id.webView)
-        webView.webViewClient = object : WebViewClient() {
-            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                handler!!.proceed()
-            }
-        }
+        webView.webViewClient = object : WebViewClient() {}
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(camera.url)
 
