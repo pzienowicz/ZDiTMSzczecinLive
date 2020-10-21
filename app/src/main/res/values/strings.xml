@@ -12,6 +12,7 @@
     <string name="clear_filter">Pokaż wszystkie</string>
 
     <string name="normal_tram_lines">Linie tramwajowe dzienne zwykłe</string>
+    <string name="extra_tram_lines">Linie tramwajowe dzienne dodatkowe</string>
     <string name="substitute_tram_lines">Linie tramwajowe dzienne zastępcze</string>
     <string name="touristic_tram_lines">Linie tramwajowe dzienne turystyczne</string>
     <string name="normal_bus_lines">Linie autobusowe dzienne zwykłe</string>
@@ -19,6 +20,7 @@
     <string name="special_bus_lines">Linie autobusowe dzienne pospieszne</string>
     <string name="night_bus_lines">Linie autobusowe nocne</string>
     <string name="substitute_bus_lines">Linie autobusowe dzienne zastępcze</string>
+    <string name="extra_bus_lines">Linie autobusowe dzienne dodatkowe</string>
     <string name="touristic_bus_lines">Linie autobusowe dzienne turystyczne</string>
 
     <string name="set_favourite">Ustawiono jako mapę domyślną - będzie ona widoczna od razu po włączeniu aplikacji.</string>

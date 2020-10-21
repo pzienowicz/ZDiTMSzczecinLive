@@ -60,6 +60,8 @@ public class LineDialog extends Dialog {
         final TableLayout tramTouristicTable = findViewById(R.id.tramTouristicTable);
         final TableLayout busTouristicTable = findViewById(R.id.busTouristicTable);
         final TableLayout busNormalOnDemandTable = findViewById(R.id.busNormalOnDemandTable);
+        final TableLayout tramExtraTable = findViewById(R.id.tramExtraTable);
+        final TableLayout busExtraTable = findViewById(R.id.busExtraTable);
 
         final LinearLayout tramNormalLabel = findViewById(R.id.tramNormalLabel);
         final LinearLayout busNormalLabel = findViewById(R.id.busNormalLabel);
@@ -70,6 +72,8 @@ public class LineDialog extends Dialog {
         final LinearLayout tramTouristicLabel = findViewById(R.id.tramTouristicLabel);
         final LinearLayout busTouristicLabel = findViewById(R.id.busTouristicLabel);
         final LinearLayout busNormalOnDemandLabel = findViewById(R.id.busNormalOnDemandLabel);
+        final LinearLayout tramExtraLabel = findViewById(R.id.tramExtraLabel);
+        final LinearLayout busExtraLabel = findViewById(R.id.busExtraLabel);
         
         progressBarHolder = findViewById(R.id.progressBarHolder);
 
@@ -107,6 +111,8 @@ public class LineDialog extends Dialog {
                     drawLinesTable(filterLines(response.body(), "tdt"), tramTouristicTable, tramTouristicLabel);
                     drawLinesTable(filterLines(response.body(), "adt"), busTouristicTable, busTouristicLabel);
                     drawLinesTable(filterLines(response.body(), "adz1"), busNormalOnDemandTable, busNormalOnDemandLabel);
+                    drawLinesTable(filterLines(response.body(), "tdd"), tramExtraTable, tramExtraLabel);
+                    drawLinesTable(filterLines(response.body(), "add"), busExtraTable, busExtraLabel);
                 } else {
                     Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show();
                 }
