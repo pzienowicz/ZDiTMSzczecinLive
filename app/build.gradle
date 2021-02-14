@@ -14,8 +14,8 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 44
-        versionName "1.13.0"
+        versionCode 45
+        versionName "1.13.1"
 
         manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
                                 onesignal_google_project_number: "406176751256"]
@@ -43,9 +43,9 @@ dependencies {
     implementation "ch.acra:acra-http:5.3.0"
     implementation 'com.karumi:dexter:4.2.0'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.onesignal:OneSignal:3.8.4@aar'
     implementation 'com.google.android.gms:play-services-gcm:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
