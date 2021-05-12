@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.content.pm.PackageManager
 
-
-
 object Functions {
 
     fun isNetworkAvailable(context: Context): Boolean {

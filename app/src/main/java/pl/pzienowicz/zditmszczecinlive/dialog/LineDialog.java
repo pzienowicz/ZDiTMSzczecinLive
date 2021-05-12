@@ -1,6 +1,5 @@
 package pl.pzienowicz.zditmszczecinlive.dialog;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -37,11 +36,11 @@ import retrofit2.Response;
 
 public class LineDialog extends Dialog {
 
-    private Context context = null;
-    private SharedPreferences sharedPreferences = null;
-    private Map<Integer, Line> linesMap = new HashMap<>();
-    private int currentLine = 0;
-    private FrameLayout progressBarHolder = null;
+    private final Context context;
+    private final SharedPreferences sharedPreferences;
+    private final Map<Integer, Line> linesMap = new HashMap<>();
+    private final int currentLine;
+    private final FrameLayout progressBarHolder;
 
     public LineDialog(final Context context) {
         super(context);

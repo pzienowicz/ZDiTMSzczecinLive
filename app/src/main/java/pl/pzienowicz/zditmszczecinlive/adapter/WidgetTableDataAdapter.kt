@@ -21,18 +21,12 @@ class WidgetTableDataAdapter(context: Context, data: List<Widget>) : TableDataAd
         textView.setTextColor(resources.getColor(R.color.black))
 
         when (columnIndex) {
-            0 -> {
-                textView.text = (rowIndex+1).toString()
+            0 -> textView.text = (rowIndex+1).toString()
+            1 -> if(widget.busStop != null) {
+                textView.text = widget.busStop.numer
             }
-            1 -> {
-                if(widget.busStop != null) {
-                    textView.text = widget.busStop.numer
-                }
-            }
-            2 -> {
-                if(widget.busStop != null) {
-                    textView.text = widget.busStop.nazwa
-                }
+            2 -> if(widget.busStop != null) {
+                textView.text = widget.busStop.nazwa
             }
             3 -> {
                 val imageView = ImageView(context)

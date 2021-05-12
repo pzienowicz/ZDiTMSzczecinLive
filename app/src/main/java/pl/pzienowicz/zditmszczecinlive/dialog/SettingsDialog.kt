@@ -3,12 +3,12 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Window
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.preference.PreferenceManager
 
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R

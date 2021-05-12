@@ -6,7 +6,6 @@ import android.content.Context
 import android.widget.RemoteViews
 import android.content.Intent
 import android.net.Uri
-import android.preference.PreferenceManager
 import android.view.View
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
@@ -15,6 +14,7 @@ import android.app.PendingIntent
 import android.util.Log
 import pl.pzienowicz.zditmszczecinlive.activity.WidgetsActivity
 import android.content.ComponentName
+import androidx.preference.PreferenceManager
 
 class WidgetProvider : AppWidgetProvider() {
 

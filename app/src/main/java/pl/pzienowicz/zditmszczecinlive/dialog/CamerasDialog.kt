@@ -17,8 +17,8 @@ class CamerasDialog(context: Context) : Dialog(context) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_cameras)
 
-        val camerasContainer = findViewById<TableLayout>(R.id.camerasContainer)
-        draw(camerasContainer)
+        findViewById<TableLayout>(R.id.camerasContainer)
+            .also { draw(it) }
     }
 
     private fun draw(camerasContainer: TableLayout)
@@ -29,7 +29,11 @@ class CamerasDialog(context: Context) : Dialog(context) {
         if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             linesPerRow = Config.CAMERAS_PER_ROW_LANDSCAPE
         }
-        val rows: Int = if (cameras.size % linesPerRow == 0) cameras.size / linesPerRow else cameras.size / linesPerRow + 1
+        val rows: Int = if (cameras.size % linesPerRow == 0) {
+            cameras.size / linesPerRow
+        } else {
+            cameras.size / linesPerRow + 1
+        }
         var iterator = 0
 
         for (i in 1..rows) {

@@ -3,7 +3,6 @@ package pl.pzienowicz.zditmszczecinlive.widget
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.preference.PreferenceManager
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 
@@ -14,10 +13,9 @@ import pl.pzienowicz.zditmszczecinlive.model.WidgetLine
 import org.jsoup.Jsoup
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.preference.PreferenceManager
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.model.Board
-import pl.pzienowicz.zditmszczecinlive.model.Line
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
 import retrofit2.Call
@@ -30,10 +28,6 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
 
     private val listItemList = ArrayList<WidgetLine>()
     private val appWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-
-    init {
-
-    }
 
     override fun onCreate() {
         Log.d(Config.LOG_TAG, "ListProvider:onCreate")
@@ -75,7 +69,7 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
                                 try {
                                     tempList.add(WidgetLine(lineName[0].text(), direction[0].text(), time[0].text()))
                                 } catch (e: Exception) {
-                                    Log.e(Config.LOG_TAG, e.message)
+                                    Log.e(Config.LOG_TAG, e.message ?: "Unknown error")
                                     Log.d(Config.LOG_TAG, line.toString())
 
                                     val error = line.getElementsByClass("gmvblad")

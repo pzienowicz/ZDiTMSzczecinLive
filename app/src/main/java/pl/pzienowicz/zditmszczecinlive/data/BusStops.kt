@@ -30,7 +30,7 @@ class BusStops(context: Context) {
         }
 
         for (busStop in list) {
-            stops.put(busStop.numer!!, busStop)
+            stops[busStop.numer!!] = busStop
             stopsById[busStop.id!!] = busStop
         }
     }

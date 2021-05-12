@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager
 import android.content.*
 import android.graphics.Color
 import android.os.Bundle
-import android.preference.PreferenceManager
 import de.codecrafters.tableview.TableView
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter
 import pl.pzienowicz.zditmszczecinlive.Config
@@ -26,6 +25,7 @@ import com.anjlab.android.iab.v3.Constants
 import pl.pzienowicz.zditmszczecinlive.BuildConfig
 import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 
 class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {

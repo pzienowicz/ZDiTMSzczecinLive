@@ -73,20 +73,23 @@ class InfoDialog(context: Context) : Dialog(context) {
 
             val contactUsBtn = findViewById<Button>(R.id.contactUsBtn)
             contactUsBtn.setOnClickListener {
-                val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "zienowicz.pawel@gmail.com", null))
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Reklama - Komunikacja Miejska Szczecin")
+                val emailIntent = Intent(
+                    Intent.ACTION_SENDTO,
+                    Uri.fromParts("mailto", context.getString(R.string.owner_email), null)
+                )
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.email_title))
                 context.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
             }
 
             findViewById<Button>(R.id.ad1Button).setOnClickListener {
                 val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse("http://latamy.szczecin.pl")
+                i.data = Uri.parse(context.getString(R.string.latamy_url))
                 context.startActivity(i)
             }
 
             findViewById<Button>(R.id.ad2Button).setOnClickListener {
                 val callIntent = Intent(Intent.ACTION_DIAL)
-                callIntent.data = Uri.parse("tel:509207723")
+                callIntent.data = Uri.parse(context.getString(R.string.owner_phone))
                 context.startActivity(callIntent)
             }
         }

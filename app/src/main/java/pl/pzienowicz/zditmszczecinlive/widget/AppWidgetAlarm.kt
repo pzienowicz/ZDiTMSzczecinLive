@@ -7,8 +7,8 @@ import android.content.Intent
 import pl.pzienowicz.zditmszczecinlive.Config
 import java.util.*
 import android.os.Build
-import android.preference.PreferenceManager
 import android.util.Log
+import androidx.preference.PreferenceManager
 
 class AppWidgetAlarm(private val mContext: Context) {
 
