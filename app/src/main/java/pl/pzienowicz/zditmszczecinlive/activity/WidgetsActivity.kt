@@ -5,7 +5,6 @@ import android.content.*
 import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
 import de.codecrafters.tableview.TableView
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter
 import pl.pzienowicz.zditmszczecinlive.Config
@@ -22,14 +21,12 @@ import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import android.content.Intent
-import android.support.design.widget.Snackbar
 import android.util.Log
 import com.anjlab.android.iab.v3.Constants
 import pl.pzienowicz.zditmszczecinlive.BuildConfig
 import android.content.ComponentName
-
-
-
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 
 class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
@@ -70,7 +67,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
             override fun onReceive(context: Context?, intent: Intent?) {
                 when(intent!!.action) {
                     Config.INTENT_OPEN_BUSSTOP_EDIT -> {
-                        openBusStopDialog(intent.extras.getString("widgetId"))
+                        openBusStopDialog(intent.extras?.getString("widgetId"))
                     }
                     Config.INTENT_REFRESH_WIDGETS_LIST -> {
                         reloadWidgets()
@@ -83,7 +80,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         widgetId = intent.getStringExtra(Config.EXTRA_WIDGET_ID)
     }
 
-    private fun openBusStopDialog(widgetId: String) {
+    private fun openBusStopDialog(widgetId: String?) {
 
         if(!BuildConfig.DEBUG && !bp!!.isPurchased(Config.PRODUCT_WIDGETS_UNLOCK)) {
             this.widgetId = widgetId

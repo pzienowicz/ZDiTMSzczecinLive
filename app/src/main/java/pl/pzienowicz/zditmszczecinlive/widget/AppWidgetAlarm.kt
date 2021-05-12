@@ -17,7 +17,7 @@ class AppWidgetAlarm(private val mContext: Context) {
 
     fun startAlarm() {
         val widgetsEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Config.PREFERENCE_WIDGETS_REFRESH,true)
-        val seconds = PreferenceManager.getDefaultSharedPreferences(mContext).getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30")
+        val seconds = PreferenceManager.getDefaultSharedPreferences(mContext).getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30") ?: "30"
         val secondsInt: Int
 
         try {

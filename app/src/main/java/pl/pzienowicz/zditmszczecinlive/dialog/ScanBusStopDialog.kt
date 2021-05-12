@@ -3,10 +3,10 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 import android.Manifest
 import android.app.Activity
 import android.app.Dialog
-import android.support.design.widget.Snackbar
 import android.view.Window
 import android.widget.Button
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -17,12 +17,10 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import org.acra.ACRA
 import pl.pzienowicz.zditmszczecinlive.BuildConfig
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
-import pl.pzienowicz.zditmszczecinlive.exception.IncorrectBusStopException
 import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 

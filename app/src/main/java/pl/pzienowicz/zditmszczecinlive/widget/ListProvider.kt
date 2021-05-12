@@ -46,7 +46,7 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
         Log.d(Config.LOG_TAG, "ListProvider:onDataSetChanged")
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val busStopId = preferences.getString(Config.WIDGET_PREFIX + appWidgetId, null)
+        val busStopId = preferences.getString(Config.WIDGET_PREFIX + appWidgetId, null) ?: return
 
         val tempList: ArrayList<WidgetLine> = ArrayList()
 
@@ -55,7 +55,7 @@ class ListProvider(val context: Context, intent: Intent) : RemoteViewsService.Re
         board.enqueue(object : Callback<Board> {
             override fun onResponse(call: Call<Board>, response: Response<Board>) {
 
-                if(response.isSuccessful() && response.body() != null) {
+                if(response.isSuccessful && response.body() != null) {
 
                     try {
                         val board = response.body()
