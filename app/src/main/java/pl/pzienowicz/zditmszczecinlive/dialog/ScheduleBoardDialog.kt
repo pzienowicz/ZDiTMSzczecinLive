@@ -3,9 +3,7 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.net.http.SslError
 import android.view.Window
-import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
@@ -22,9 +20,7 @@ class ScheduleBoardDialog(context: Context, busStop: BusStop) : Dialog(context) 
         setContentView(R.layout.dialog_board)
 
         val webView = findViewById<WebView>(R.id.webView)
-        webView.webViewClient = object : WebViewClient() {
-
-        }
+        webView.webViewClient = object : WebViewClient() {}
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(Config.BUS_STOP_URL + busStop.id)
 

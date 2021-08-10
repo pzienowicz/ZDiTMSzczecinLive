@@ -22,9 +22,7 @@ class BusStops(context: Context) {
         try {
             val `in` = context.resources.openRawResource(R.raw.slupki)
             val reader = InputStreamReader(`in`, "UTF-8")
-            list = Gson().fromJson(reader, object : TypeToken<ArrayList<BusStop>>() {
-
-            }.type)
+            list = Gson().fromJson(reader, object : TypeToken<ArrayList<BusStop>>() {}.type)
         } catch (e: IOException) {
             e.printStackTrace()
         }

@@ -46,7 +46,7 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
             dismiss()
 
             val dialog = ScanBusStopDialog(activity, listener)
-            dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            dialog.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             dialog.show()
         }
     }

@@ -43,7 +43,7 @@ class InfoDialog(context: Context) : Dialog(context) {
 
             dismiss()
         } else {
-            progressBarHolder!!.visibility = View.VISIBLE
+            progressBarHolder?.visibility = View.VISIBLE
 
             val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
             val lines = service.listInfo()
