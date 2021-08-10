@@ -56,13 +56,8 @@ class SettingsDialog(context: Context) : Dialog(context) {
                 val intent = Intent(Config.ACTION_AUTO_UPDATE)
                 context.sendBroadcast(intent)
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 }
