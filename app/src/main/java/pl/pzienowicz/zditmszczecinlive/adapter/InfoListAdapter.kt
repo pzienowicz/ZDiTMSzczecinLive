@@ -10,9 +10,13 @@ import android.widget.TextView
 import java.util.ArrayList
 
 import pl.pzienowicz.zditmszczecinlive.R
+import pl.pzienowicz.zditmszczecinlive.inflater
 import pl.pzienowicz.zditmszczecinlive.model.Info
 
-class InfoListAdapter(private val context: Context, private val records: ArrayList<Info>) : BaseAdapter() {
+class InfoListAdapter(
+    private val context: Context,
+    private val records: ArrayList<Info>
+    ) : BaseAdapter() {
 
     override fun getCount(): Int = records.size
 
@@ -22,15 +26,9 @@ class InfoListAdapter(private val context: Context, private val records: ArrayLi
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        val row: View
         val info = records[position]
-
-        if (convertView == null) {
-            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            row = inflater.inflate(R.layout.row_info, parent, false)
-        } else {
-            row = convertView
-        }
+        val row: View = convertView
+            ?: context.inflater.inflate(R.layout.row_info, parent, false)
 
         val infoTextView = row.findViewById<TextView>(R.id.infoText)
         infoTextView.text = info.description

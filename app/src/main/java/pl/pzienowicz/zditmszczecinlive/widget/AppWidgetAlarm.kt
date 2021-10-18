@@ -8,7 +8,8 @@ import pl.pzienowicz.zditmszczecinlive.Config
 import java.util.*
 import android.os.Build
 import android.util.Log
-import androidx.preference.PreferenceManager
+import pl.pzienowicz.zditmszczecinlive.alarmManager
+import pl.pzienowicz.zditmszczecinlive.prefs
 
 class AppWidgetAlarm(private val mContext: Context) {
 
@@ -16,8 +17,8 @@ class AppWidgetAlarm(private val mContext: Context) {
     private val INTERVAL_MILLIS = 1000
 
     fun startAlarm() {
-        val widgetsEnabled = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Config.PREFERENCE_WIDGETS_REFRESH,true)
-        val seconds = PreferenceManager.getDefaultSharedPreferences(mContext).getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30") ?: "30"
+        val widgetsEnabled = mContext.prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH,true)
+        val seconds = mContext.prefs.getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30") ?: "30"
         val secondsInt: Int
 
         try {
@@ -34,13 +35,17 @@ class AppWidgetAlarm(private val mContext: Context) {
         calendar.add(Calendar.MILLISECOND, secondsInt * INTERVAL_MILLIS)
 
         val alarmIntent = Intent(Config.ACTION_AUTO_UPDATE)
-        val pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(
+            mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT
+        )
 
         val am = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmType = AlarmManager.RTC_WAKEUP
         when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> am.setExact(alarmType, calendar.timeInMillis, pendingIntent)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                -> am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                -> am.setExact(alarmType, calendar.timeInMillis, pendingIntent)
             else -> am.set(alarmType, calendar.timeInMillis, pendingIntent)
         }
 
@@ -49,9 +54,9 @@ class AppWidgetAlarm(private val mContext: Context) {
 
     fun stopAlarm() {
         val alarmIntent = Intent(Config.ACTION_AUTO_UPDATE)
-        val pendingIntent = PendingIntent.getBroadcast(mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        val alarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(pendingIntent)
+        val pendingIntent = PendingIntent.getBroadcast(
+            mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT
+        )
+        mContext.alarmManager.cancel(pendingIntent)
     }
 }

@@ -27,13 +27,14 @@ import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
+import pl.pzienowicz.zditmszczecinlive.prefs
 
 class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
-    private var adapter: WidgetTableDataAdapter? = null
+    private lateinit var adapter: WidgetTableDataAdapter
+    private lateinit var bcr: BroadcastReceiver
+    private lateinit var bp: BillingProcessor
     private val records = ArrayList<Widget>()
-    private var bcr: BroadcastReceiver? = null
-    private var bp: BillingProcessor? = null
     private var widgetId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +52,10 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         columnModel.setColumnWeight(2, 5)
         columnModel.setColumnWeight(3, 1)
 
-        val headerAdapter = SimpleTableHeaderAdapter(this, *resources.getStringArray(R.array.headers))
+        val headerAdapter = SimpleTableHeaderAdapter(
+            this,
+            *resources.getStringArray(R.array.headers)
+        )
         headerAdapter.setTextColor(Color.parseColor("#FFFFFF"))
 
         tableView.columnModel = columnModel
@@ -82,19 +86,18 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
     private fun openBusStopDialog(widgetId: String?) {
 
-        if(!BuildConfig.DEBUG && !bp!!.isPurchased(Config.PRODUCT_WIDGETS_UNLOCK)) {
+        if(!BuildConfig.DEBUG && !bp.isPurchased(Config.PRODUCT_WIDGETS_UNLOCK)) {
             this.widgetId = widgetId
-            bp!!.purchase(this, Config.PRODUCT_WIDGETS_UNLOCK)
+            bp.purchase(this, Config.PRODUCT_WIDGETS_UNLOCK)
             return
         }
 
 //        bp!!.consumePurchase(Config.PRODUCT_WIDGETS_UNLOCK)
 //        return
 
-        val dialog = BusStopDialog(this@WidgetsActivity, BusStopSelectedListener { busStop ->
+        val dialog = BusStopDialog(this@WidgetsActivity, { busStop ->
 
-            val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-            preferences.edit().putString(Config.WIDGET_PREFIX + widgetId, busStop.numer).apply()
+            prefs.edit().putString(Config.WIDGET_PREFIX + widgetId, busStop.numer).apply()
 
             val intent = Intent(Config.INTENT_REFRESH_WIDGETS_LIST)
             sendBroadcast(intent)
@@ -110,19 +113,14 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!bp!!.handleActivityResult(requestCode, resultCode, data)) {
+        if (!bp.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
     override fun onDestroy() {
-        if(bcr != null) {
-            unregisterReceiver(bcr)
-        }
-
-        if (bp != null) {
-            bp!!.release()
-        }
+        unregisterReceiver(bcr)
+        bp.release()
 
         super.onDestroy()
     }
@@ -147,7 +145,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
             records.add(Widget(appWidgetId.toString(), busStop))
         }
 
-        adapter!!.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     override fun onBillingInitialized() {
@@ -156,14 +154,14 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         }
     }
 
-    override fun onPurchaseHistoryRestored() {
-
-    }
+    override fun onPurchaseHistoryRestored() {}
 
     override fun onProductPurchased(productId: String, details: TransactionDetails?) {
-        Snackbar
-                .make(findViewById(R.id.swiperefresh), R.string.payment_success, Snackbar.LENGTH_LONG)
-                .show()
+        Snackbar.make(
+            findViewById(R.id.swiperefresh),
+            R.string.payment_success,
+            Snackbar.LENGTH_LONG
+        ).show()
 
         if(widgetId != null) {
             openBusStopDialog(widgetId!!)
@@ -172,13 +170,17 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {
         if(errorCode ==  Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
-            Snackbar
-                    .make(findViewById(R.id.swiperefresh), R.string.payment_cancel, Snackbar.LENGTH_LONG)
-                    .show()
+            Snackbar.make(
+                findViewById(R.id.swiperefresh),
+                R.string.payment_cancel,
+                Snackbar.LENGTH_LONG
+            ).show()
         } else {
-            Snackbar
-                    .make(findViewById(R.id.swiperefresh), R.string.payment_error, Snackbar.LENGTH_LONG)
-                    .show()
+            Snackbar.make(
+                findViewById(R.id.swiperefresh),
+                R.string.payment_error,
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 }

@@ -20,8 +20,8 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
 
         val txtUrl = findViewById<EditText>(R.id.numberInput)
 
-        if(currentBusStop != null) {
-            txtUrl.setText(currentBusStop)
+        currentBusStop?.let {
+            txtUrl.setText(it)
         }
 
         findViewById<Button>(R.id.okBtn).setOnClickListener {

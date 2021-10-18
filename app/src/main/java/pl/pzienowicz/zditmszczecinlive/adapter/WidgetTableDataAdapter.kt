@@ -6,19 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 
 import de.codecrafters.tableview.TableDataAdapter
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.Widget
 
-class WidgetTableDataAdapter(context: Context, data: List<Widget>) : TableDataAdapter<Widget>(context, data) {
+class WidgetTableDataAdapter(context: Context, data: List<Widget>)
+    : TableDataAdapter<Widget>(context, data) {
 
-    override fun getCellView(rowIndex: Int, columnIndex: Int, parentView: ViewGroup): View? {
+    override fun getCellView(rowIndex: Int, columnIndex: Int, parentView: ViewGroup): View {
         val widget = getRowData(rowIndex)
         val textView = TextView(context)
         textView.setPadding(20, 20, 20, 20)
-        textView.setTextColor(resources.getColor(R.color.black))
+        textView.setTextColor(ContextCompat.getColor(context, R.color.black))
 
         when (columnIndex) {
             0 -> textView.text = (rowIndex+1).toString()

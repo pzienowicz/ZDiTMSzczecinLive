@@ -26,7 +26,7 @@ import pl.pzienowicz.zditmszczecinlive.model.BusStop
 
 class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedListener) : Dialog(activity) {
 
-    var barcodeView: CompoundBarcodeView? = null
+    private lateinit var barcodeView: CompoundBarcodeView
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -41,9 +41,9 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
 
     private fun initBarcodeView() {
         barcodeView = findViewById(R.id.zxing_barcode_scanner)
-        barcodeView!!.decodeContinuous(object : BarcodeCallback {
+        barcodeView.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
-                barcodeView!!.pause()
+                barcodeView.pause()
 
                 val busStopUrl = result!!.text
                 var busStopId = ""
@@ -68,7 +68,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
 
                 if (busStop == null) {
                     Toast.makeText(context, R.string.incorrect_bus_stop, Toast.LENGTH_LONG).show()
-                    barcodeView!!.resume()
+                    barcodeView.resume()
 
 //                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
 //                    ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
@@ -83,7 +83,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
 
             override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}
         })
-        barcodeView!!.resume()
+        barcodeView.resume()
     }
 
     private fun checkPermission() {
