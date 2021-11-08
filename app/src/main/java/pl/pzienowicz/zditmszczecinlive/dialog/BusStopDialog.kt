@@ -5,14 +5,18 @@ import android.app.Dialog
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
-import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
+import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.setFullWidth
+import pl.pzienowicz.zditmszczecinlive.showToast
 
-class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, currentBusStop: String?) : Dialog(activity) {
+class BusStopDialog(
+    activity: Activity,
+    onSelected: (busStop: BusStop) -> Unit,
+    currentBusStop: String?
+) : Dialog(activity) {
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -31,11 +35,10 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
 
             val busStop = BusStops.getInstance(context).getByNumber(busStopNumber)
             if (busStop == null) {
-                Toast.makeText(context, R.string.incorrect_bus_stop, Toast.LENGTH_LONG).show()
+                context.showToast(R.string.incorrect_bus_stop)
                 return@setOnClickListener
             }
-
-            listener.onBusStopSelected(busStop)
+            onSelected(busStop)
         }
 
         findViewById<Button>(R.id.cancelBtn).setOnClickListener {
@@ -45,8 +48,8 @@ class BusStopDialog(activity: Activity, listener: BusStopSelectedListener, curre
         findViewById<Button>(R.id.scanCodeBtn).setOnClickListener {
             dismiss()
 
-            val dialog = ScanBusStopDialog(activity, listener)
-            dialog.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            val dialog = ScanBusStopDialog(activity, onSelected)
+            dialog.setFullWidth()
             dialog.show()
         }
     }

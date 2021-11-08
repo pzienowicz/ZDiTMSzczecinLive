@@ -12,6 +12,7 @@ import android.net.ConnectivityManager
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
@@ -52,6 +53,10 @@ fun Activity.showBar(
             setAction(actionText, action)
         }
     }.show()
+}
+
+fun Context.showToast(@StringRes text: Int) {
+    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
 }
 
 val Context.isNetworkAvailable

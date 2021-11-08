@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.view.Window
 import android.widget.Button
-import android.widget.Toast
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -19,11 +18,14 @@ import com.karumi.dexter.listener.single.PermissionListener
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
-import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 import pl.pzienowicz.zditmszczecinlive.showBar
+import pl.pzienowicz.zditmszczecinlive.showToast
 
-class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedListener) : Dialog(activity) {
+class ScanBusStopDialog(
+    val activity: Activity,
+    val onSelected: (busStop: BusStop) -> Unit
+) : Dialog(activity) {
 
     private lateinit var barcodeView: CompoundBarcodeView
 
@@ -60,7 +62,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                 }
 
                 if (busStop == null) {
-                    Toast.makeText(context, R.string.incorrect_bus_stop, Toast.LENGTH_LONG).show()
+                    context.showToast(R.string.incorrect_bus_stop)
                     barcodeView.resume()
 
 //                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
@@ -71,7 +73,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                 }
 
                 dismiss()
-                listener.onBusStopSelected(busStop)
+                onSelected(busStop)
             }
 
             override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}

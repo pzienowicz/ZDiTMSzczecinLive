@@ -25,12 +25,26 @@ class LineDialog(context: Context) : Dialog(context) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_line)
 
+        val types = setOf(
+            "tdz" to Pair(tramNormalTable, tramExtraLabel),
+            "adz" to Pair(busNormalTable, busNormalLabel),
+            "adp" to Pair(busExpressTable, busExpressLabel),
+            "anz" to Pair(busNightTable, busNightLabel),
+            "ada" to Pair(busSubstituteTable, busSubstituteLabel),
+            "tda" to Pair(tramSubstituteTable, tramSubstituteLabel),
+            "tdt" to Pair(tramTouristicTable, tramTouristicLabel),
+            "adt" to Pair(busTouristicTable, busTouristicLabel),
+            "adz1" to Pair(busNormalOnDemandTable, busNormalOnDemandLabel),
+            "tdd" to Pair(tramExtraTable, tramExtraLabel),
+            "add" to Pair(busExpressTable, busExpressLabel)
+        )
+
         clearFilterText.setOnClickListener { changeFilter(0) }
 
         currentLine = context.prefs.getInt(Config.PREFERENCE_SELECTED_LINE, 0)
 
         if (!context.isNetworkAvailable) {
-            Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
+            context.showToast(R.string.no_internet)
             val intent = Intent(Config.INTENT_NO_INTERNET_CONNETION)
             context.sendBroadcast(intent)
             dismiss()
@@ -45,69 +59,20 @@ class LineDialog(context: Context) : Dialog(context) {
                 progressBarHolder.visibility = View.GONE
 
                 if (response.isSuccessful && response.body() != null) {
-                    drawLinesTable(
-                        filterLines(response.body(), "tdz"),
-                        tramNormalTable,
-                        tramNormalLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "adz"),
-                        busNormalTable,
-                        busNormalLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "adp"),
-                        busExpressTable,
-                        busExpressLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "anz"),
-                        busNightTable,
-                        busNightLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "ada"),
-                        busSubstituteTable,
-                        busSubstituteLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "tda"),
-                        tramSubstituteTable,
-                        tramSubstituteLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "tdt"),
-                        tramTouristicTable,
-                        tramTouristicLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "adt"),
-                        busTouristicTable,
-                        busTouristicLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "adz1"),
-                        busNormalOnDemandTable,
-                        busNormalOnDemandLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "tdd"),
-                        tramExtraTable,
-                        tramExtraLabel
-                    )
-                    drawLinesTable(
-                        filterLines(response.body(), "add"),
-                        busExtraTable,
-                        busExtraLabel
-                    )
+                    types.forEach {
+                        drawLinesTable(
+                            filterLines(response.body(), it.first),
+                            it.second
+                        )
+                    }
                 } else {
-                    Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show()
+                    context.showToast(R.string.lines_request_error)
                 }
             }
 
             override fun onFailure(call: Call<List<Line>?>, t: Throwable) {
                 progressBarHolder.visibility = View.GONE
-                Toast.makeText(context, R.string.lines_request_error, Toast.LENGTH_LONG).show()
+                context.showToast(R.string.lines_request_error)
             }
         })
     }
@@ -116,10 +81,10 @@ class LineDialog(context: Context) : Dialog(context) {
         return lines?.filter { it.type == type } ?: emptyList()
     }
 
-    private fun drawLinesTable(lines: List<Line>, layout: TableLayout, label: LinearLayout) {
+    private fun drawLinesTable(lines: List<Line>, pair: Pair<TableLayout, LinearLayout>) {
         if (lines.isEmpty()) {
-            layout.visibility = View.GONE
-            label.visibility = View.GONE
+            pair.first.visibility = View.GONE
+            pair.second.visibility = View.GONE
             return
         }
 
@@ -183,7 +148,7 @@ class LineDialog(context: Context) : Dialog(context) {
                 row.addView(cellLayout)
                 iterator++
             }
-            layout.addView(row)
+            pair.first.addView(row)
         }
     }
 

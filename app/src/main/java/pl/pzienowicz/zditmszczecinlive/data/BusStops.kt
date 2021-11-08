@@ -34,7 +34,7 @@ class BusStops(context: Context) {
     }
 
     fun getByNumber(number: String): BusStop? {
-        return stops.get(number)
+        return stops[number]
     }
 
     fun getById(id: String): BusStop? {

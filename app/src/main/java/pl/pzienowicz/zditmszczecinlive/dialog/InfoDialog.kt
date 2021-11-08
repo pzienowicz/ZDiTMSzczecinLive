@@ -14,6 +14,7 @@ import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
 import pl.pzienowicz.zditmszczecinlive.model.Info
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
+import pl.pzienowicz.zditmszczecinlive.showToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,7 +37,7 @@ class InfoDialog(context: Context) : Dialog(context) {
         listView.adapter = adapter
 
         if (!context.isNetworkAvailable) {
-            Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
+            context.showToast(R.string.no_internet)
 
             val intent = Intent(Config.INTENT_NO_INTERNET_CONNETION)
             context.sendBroadcast(intent)
@@ -60,14 +61,14 @@ class InfoDialog(context: Context) : Dialog(context) {
                             noInfoTv!!.visibility = View.VISIBLE
                         }
                     } else {
-                        Toast.makeText(context, R.string.info_request_error, Toast.LENGTH_LONG).show()
+                        context.showToast(R.string.info_request_error)
                     }
                 }
 
                 override fun onFailure(call: Call<List<Info>>, t: Throwable) {
                     progressBarHolder!!.visibility = View.GONE
                     t.printStackTrace()
-                    Toast.makeText(context, R.string.info_request_error, Toast.LENGTH_LONG).show()
+                    context.showToast(R.string.info_request_error)
                 }
             })
 
