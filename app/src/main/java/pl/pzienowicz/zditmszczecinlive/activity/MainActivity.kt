@@ -22,7 +22,6 @@ import androidx.core.app.ActivityCompat
 
 import com.getbase.floatingactionbutton.FloatingActionButton
 import com.getbase.floatingactionbutton.FloatingActionsMenu
-import com.google.android.material.snackbar.Snackbar
 import com.onesignal.OneSignal
 import pl.pzienowicz.zditmszczecinlive.*
 
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         supportActionBar?.hide()
 
         prefs.edit().putInt(Config.PREFERENCE_SELECTED_LINE, 0).apply()
@@ -58,11 +56,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         val setFavouriteBtn = findViewById<FloatingActionButton>(R.id.set_favourite)
         setFavouriteBtn.setOnClickListener {
             prefs.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, currentUrl).apply()
-            Snackbar.make(
-                findViewById(R.id.swiperefresh),
-                R.string.set_favourite,
-                Snackbar.LENGTH_LONG
-            ).show()
+            showBar(R.string.set_favourite)
             floatingActionsMenu.collapse()
         }
 
@@ -112,7 +106,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         val widgetsBtn = findViewById<FloatingActionButton>(R.id.widgets)
         widgetsBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, WidgetsActivity::class.java)
+            val intent = Intent(this, WidgetsActivity::class.java)
             startActivity(intent)
             floatingActionsMenu.collapse()
         }
@@ -185,8 +179,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private fun refreshSettings() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        if (Functions.isGpsProviderAvailable(this)
-            && prefs.getBoolean(Config.PREFERENCE_USE_LOCATION, true)) {
+        if (isGpsProviderAvailable && prefs.getBoolean(Config.PREFERENCE_USE_LOCATION, true)) {
             if (
                 ActivityCompat.checkSelfPermission(
                     this,
@@ -234,7 +227,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun loadPage() {
-        if (Functions.isNetworkAvailable(this)) {
+        if (isNetworkAvailable) {
             val favouriteMap = prefs.getString(Config.PREFERENCE_FAVOURITE_MAP, Config.URL)
 
             myWebView.loadUrl(favouriteMap)
@@ -296,12 +289,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
 
     private fun showNoInternetSnackbar() {
-        Snackbar.make(
-            findViewById(R.id.swiperefresh),
-            R.string.no_internet,
-            Snackbar.LENGTH_INDEFINITE
-        ).setAction(R.string.refresh) { loadPage() }
-            .show()
+        showBar(R.string.no_internet, R.string.refresh) { loadPage() }
     }
 
     override fun onLocationChanged(location: Location?) {

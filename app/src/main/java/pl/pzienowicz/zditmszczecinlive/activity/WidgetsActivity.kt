@@ -6,8 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import de.codecrafters.tableview.TableView
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter
-import pl.pzienowicz.zditmszczecinlive.Config
-import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.WidgetTableDataAdapter
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.data.Widget
@@ -16,18 +14,15 @@ import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 import java.util.ArrayList
 import de.codecrafters.tableview.model.TableColumnWeightModel
 import pl.pzienowicz.zditmszczecinlive.dialog.BusStopDialog
-import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import android.content.Intent
 import android.util.Log
 import com.anjlab.android.iab.v3.Constants
-import pl.pzienowicz.zditmszczecinlive.BuildConfig
 import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import com.google.android.material.snackbar.Snackbar
-import pl.pzienowicz.zditmszczecinlive.prefs
+import pl.pzienowicz.zditmszczecinlive.*
 
 class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
@@ -157,11 +152,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     override fun onPurchaseHistoryRestored() {}
 
     override fun onProductPurchased(productId: String, details: TransactionDetails?) {
-        Snackbar.make(
-            findViewById(R.id.swiperefresh),
-            R.string.payment_success,
-            Snackbar.LENGTH_LONG
-        ).show()
+        showBar(R.string.payment_success)
 
         if(widgetId != null) {
             openBusStopDialog(widgetId!!)
@@ -170,17 +161,9 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
     override fun onBillingError(errorCode: Int, error: Throwable?) {
         if(errorCode ==  Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
-            Snackbar.make(
-                findViewById(R.id.swiperefresh),
-                R.string.payment_cancel,
-                Snackbar.LENGTH_LONG
-            ).show()
+            showBar( R.string.payment_cancel)
         } else {
-            Snackbar.make(
-                findViewById(R.id.swiperefresh),
-                R.string.payment_error,
-                Snackbar.LENGTH_LONG
-            ).show()
+            showBar(R.string.payment_error)
         }
     }
 }

@@ -2,7 +2,6 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.app.Dialog
 import android.content.Context
-import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.Window
 import android.widget.*
@@ -10,6 +9,8 @@ import com.squareup.picasso.Picasso
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.Cameras
+import pl.pzienowicz.zditmszczecinlive.isLandscape
+import pl.pzienowicz.zditmszczecinlive.setFullWidth
 
 class CamerasDialog(context: Context) : Dialog(context) {
 
@@ -26,7 +27,7 @@ class CamerasDialog(context: Context) : Dialog(context) {
         val cameras = Cameras.all
 
         var linesPerRow = Config.CAMERAS_PER_ROW
-        if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (context.isLandscape) {
             linesPerRow = Config.CAMERAS_PER_ROW_LANDSCAPE
         }
         val rows: Int = if (cameras.size % linesPerRow == 0) {
@@ -38,7 +39,10 @@ class CamerasDialog(context: Context) : Dialog(context) {
 
         for (i in 1..rows) {
             val row = TableRow(context)
-            row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
+            row.layoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+            )
 
             for (j in 1..linesPerRow) {
                 val cellLayout = LayoutInflater.from(context).inflate(R.layout.view_camera, null)
@@ -54,7 +58,7 @@ class CamerasDialog(context: Context) : Dialog(context) {
                         dismiss()
 
                         val dialog = CameraDialog(context, camera)
-                        dialog.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        dialog.setFullWidth()
                         dialog.show()
                     }
                 }

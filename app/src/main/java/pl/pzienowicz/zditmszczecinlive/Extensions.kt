@@ -1,15 +1,20 @@
 package pl.pzienowicz.zditmszczecinlive
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.view.LayoutInflater
-import android.view.Window
+import android.view.View
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
+import com.google.android.material.snackbar.Snackbar
 
 val Context.prefs: SharedPreferences
     get() = PreferenceManager.getDefaultSharedPreferences(this)
@@ -32,3 +37,28 @@ fun Dialog.setFullWidth() {
         LinearLayout.LayoutParams.WRAP_CONTENT
     )
 }
+
+fun Activity.showBar(
+    @StringRes text: Int,
+    @StringRes actionText: Int? = null,
+    action: View.OnClickListener? = null
+) {
+    Snackbar.make(
+        findViewById(R.id.swiperefresh),
+        text,
+        Snackbar.LENGTH_LONG
+    ).apply {
+        if (actionText != null) {
+            setAction(actionText, action)
+        }
+    }.show()
+}
+
+val Context.isNetworkAvailable
+    get() = connectivityManager.activeNetworkInfo != null
+
+val Context.isGpsProviderAvailable
+    get() = packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION)
+
+val Context.isLandscape
+    get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE

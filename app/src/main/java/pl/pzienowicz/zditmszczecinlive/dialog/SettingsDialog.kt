@@ -20,7 +20,7 @@ class SettingsDialog(context: Context) : Dialog(context) {
         setContentView(R.layout.dialog_settings)
         
         val locationCheckbox = findViewById<CheckBox>(R.id.locationCheckbox)
-        locationCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+        locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
             context.prefs.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, isChecked).apply()
             val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
             context.sendBroadcast(intent)

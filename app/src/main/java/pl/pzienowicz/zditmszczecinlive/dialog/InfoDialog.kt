@@ -8,9 +8,9 @@ import android.view.View
 import android.view.Window
 import android.widget.*
 import pl.pzienowicz.zditmszczecinlive.Config
-import pl.pzienowicz.zditmszczecinlive.Functions
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
+import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
 import pl.pzienowicz.zditmszczecinlive.model.Info
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
@@ -35,7 +35,7 @@ class InfoDialog(context: Context) : Dialog(context) {
         val listView = findViewById<ListView>(R.id.listView)
         listView.adapter = adapter
 
-        if (!Functions.isNetworkAvailable(context)) {
+        if (!context.isNetworkAvailable) {
             Toast.makeText(context, R.string.no_internet, Toast.LENGTH_LONG).show()
 
             val intent = Intent(Config.INTENT_NO_INTERNET_CONNETION)

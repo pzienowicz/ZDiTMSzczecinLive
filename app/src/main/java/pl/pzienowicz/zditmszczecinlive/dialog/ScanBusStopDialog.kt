@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.view.Window
 import android.widget.Button
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -17,12 +16,12 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import pl.pzienowicz.zditmszczecinlive.BuildConfig
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.listener.BusStopSelectedListener
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.showBar
 
 class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedListener) : Dialog(activity) {
 
@@ -46,13 +45,9 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                 barcodeView.pause()
 
                 val busStopUrl = result!!.text
-                var busStopId = ""
-                var busStopNumber = ""
+                var busStopId: String
+                var busStopNumber: String
                 var busStop: BusStop? = null
-
-                if(BuildConfig.DEBUG) {
-                    Toast.makeText(activity, busStopUrl, Toast.LENGTH_LONG).show()
-                }
 
                 try {
                     busStopId = busStopUrl.substring(60)
@@ -61,9 +56,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                     try {
                         busStopNumber = busStopUrl.substring(26)
                         busStop = BusStops.getInstance(context).getByNumber(busStopNumber)
-                    } catch (e: StringIndexOutOfBoundsException) {
-
-                    }
+                    } catch (e: StringIndexOutOfBoundsException) { }
                 }
 
                 if (busStop == null) {
@@ -88,7 +81,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
 
     private fun checkPermission() {
         Dexter
-                .withActivity(activity)
+                .withContext(activity)
                 .withPermission(Manifest.permission.CAMERA)
                 .withListener(object : PermissionListener {
                     override fun onPermissionRationaleShouldBeShown(permission: PermissionRequest?, token: PermissionToken?) {
@@ -100,7 +93,7 @@ class ScanBusStopDialog(val activity: Activity, val listener: BusStopSelectedLis
                     }
 
                     override fun onPermissionDenied(response: PermissionDeniedResponse) {
-                        Snackbar.make(activity.findViewById(R.id.swiperefresh), R.string.camera_permission_description, Snackbar.LENGTH_LONG).show()
+                        activity.showBar(R.string.camera_permission_description)
                         dismiss()
                     }
                 })

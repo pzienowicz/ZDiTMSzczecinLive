@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
@@ -39,7 +40,7 @@ dependencies {
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation "ch.acra:acra-http:5.7.0"
-    implementation 'com.karumi:dexter:4.2.0'
+    implementation 'com.karumi:dexter:6.2.3'
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
