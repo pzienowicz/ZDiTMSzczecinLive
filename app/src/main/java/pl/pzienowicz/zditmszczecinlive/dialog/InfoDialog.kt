@@ -6,10 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.view.Window
-import android.widget.*
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
+import pl.pzienowicz.zditmszczecinlive.databinding.DialogInfoBinding
 import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
 import pl.pzienowicz.zditmszczecinlive.model.Info
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
@@ -21,20 +21,17 @@ import retrofit2.Response
 
 class InfoDialog(context: Context) : Dialog(context) {
 
-    private var progressBarHolder: FrameLayout? = null
     private var adapter: InfoListAdapter? = null
-    private var noInfoTv: TextView? = null
     private val records = ArrayList<Info>()
+    private var binding: DialogInfoBinding
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_info)
+        binding = DialogInfoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        noInfoTv = findViewById(R.id.noInfoTv)
-        progressBarHolder = findViewById(R.id.progressBarHolder)
         adapter = InfoListAdapter(context, records)
-        val listView = findViewById<ListView>(R.id.listView)
-        listView.adapter = adapter
+        binding.listView.adapter = adapter
 
         if (!context.isNetworkAvailable) {
             context.showToast(R.string.no_internet)
@@ -44,13 +41,13 @@ class InfoDialog(context: Context) : Dialog(context) {
 
             dismiss()
         } else {
-            progressBarHolder?.visibility = View.VISIBLE
+            binding.progressBarHolder.visibility = View.VISIBLE
 
             val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
             val lines = service.listInfo()
             lines.enqueue(object : Callback<List<Info>> {
                 override fun onResponse(call: Call<List<Info>>, response: Response<List<Info>>) {
-                    progressBarHolder!!.visibility = View.GONE
+                    binding.progressBarHolder.visibility = View.GONE
 
                     if (response.isSuccessful) {
                         records.clear()
@@ -58,7 +55,7 @@ class InfoDialog(context: Context) : Dialog(context) {
                         adapter!!.notifyDataSetChanged()
 
                         if (records.isEmpty()) {
-                            noInfoTv!!.visibility = View.VISIBLE
+                            binding.noInfoTv.visibility = View.VISIBLE
                         }
                     } else {
                         context.showToast(R.string.info_request_error)
@@ -66,14 +63,13 @@ class InfoDialog(context: Context) : Dialog(context) {
                 }
 
                 override fun onFailure(call: Call<List<Info>>, t: Throwable) {
-                    progressBarHolder!!.visibility = View.GONE
+                    binding.progressBarHolder.visibility = View.GONE
                     t.printStackTrace()
                     context.showToast(R.string.info_request_error)
                 }
             })
 
-            val contactUsBtn = findViewById<Button>(R.id.contactUsBtn)
-            contactUsBtn.setOnClickListener {
+            binding.contactUsBtn.setOnClickListener {
                 val emailIntent = Intent(
                     Intent.ACTION_SENDTO,
                     Uri.fromParts("mailto", context.getString(R.string.owner_email), null)
@@ -82,13 +78,13 @@ class InfoDialog(context: Context) : Dialog(context) {
                 context.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
             }
 
-            findViewById<Button>(R.id.ad1Button).setOnClickListener {
+            binding.ad1Button.setOnClickListener {
                 val i = Intent(Intent.ACTION_VIEW)
                 i.data = Uri.parse(context.getString(R.string.latamy_url))
                 context.startActivity(i)
             }
 
-            findViewById<Button>(R.id.ad2Button).setOnClickListener {
+            binding.ad2Button.setOnClickListener {
                 val callIntent = Intent(Intent.ACTION_DIAL)
                 callIntent.data = Uri.parse(context.getString(R.string.owner_phone))
                 context.startActivity(callIntent)

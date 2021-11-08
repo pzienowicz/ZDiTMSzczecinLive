@@ -15,15 +15,13 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
-import com.getbase.floatingactionbutton.FloatingActionButton
-import com.getbase.floatingactionbutton.FloatingActionsMenu
 import com.onesignal.OneSignal
 import pl.pzienowicz.zditmszczecinlive.*
+import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 
 import java.util.Timer
 import java.util.TimerTask
@@ -35,41 +33,42 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     private lateinit var myWebView: WebView
     private var bcr: BroadcastReceiver? = null
-    private var locationManager: LocationManager? = null
     private var currentLocation: Location? = null
     private lateinit var myTimer: Timer
     private var zoomMap = false
     private var currentUrl = Config.URL
+
+//    private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         OneSignal.startInit(this).init()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val floatingActionsMenu = binding.multipleActions
 
         prefs.edit().putInt(Config.PREFERENCE_SELECTED_LINE, 0).apply()
 
-        val floatingActionsMenu = findViewById<FloatingActionsMenu>(R.id.multiple_actions)
-
-        val setFavouriteBtn = findViewById<FloatingActionButton>(R.id.set_favourite)
-        setFavouriteBtn.setOnClickListener {
+        binding.setFavourite.setOnClickListener {
             prefs.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, currentUrl).apply()
             showBar(R.string.set_favourite)
             floatingActionsMenu.collapse()
         }
 
-        val showInfoBtn = findViewById<FloatingActionButton>(R.id.show_info)
-        showInfoBtn.setOnClickListener {
+        binding.showInfo.setOnClickListener {
             val dialog = InfoDialog(this)
             dialog.setFullWidth()
             dialog.show()
             floatingActionsMenu.collapse()
         }
 
-        val dashboardButton = findViewById<FloatingActionButton>(R.id.show_dashboard)
-        dashboardButton.setOnClickListener {
+        binding.showDashboard.setOnClickListener {
             val dialog = BusStopDialog(this, { busStop ->
                 val boardDialog = ScheduleBoardDialog(this, busStop)
                 boardDialog.setFullWidth()
@@ -80,46 +79,41 @@ class MainActivity : AppCompatActivity(), LocationListener {
             floatingActionsMenu.collapse()
         }
 
-        val actionButton = findViewById<FloatingActionButton>(R.id.show_lines)
-        actionButton.setOnClickListener {
+        binding.showLines.setOnClickListener {
             val dialog = LineDialog(this)
             dialog.setFullWidth()
             dialog.show()
             floatingActionsMenu.collapse()
         }
 
-        val camerasButton = findViewById<FloatingActionButton>(R.id.show_cameras)
-        camerasButton.setOnClickListener {
+        binding.showCameras.setOnClickListener {
             val dialog = CamerasDialog(this)
             dialog.setFullWidth()
             dialog.show()
             floatingActionsMenu.collapse()
         }
 
-        val settingsButton = findViewById<FloatingActionButton>(R.id.settings)
-        settingsButton.setOnClickListener {
+        binding.settings.setOnClickListener {
             val dialog = SettingsDialog(this)
             dialog.setFullWidth()
             dialog.show()
             floatingActionsMenu.collapse()
         }
 
-        val widgetsBtn = findViewById<FloatingActionButton>(R.id.widgets)
-        widgetsBtn.setOnClickListener {
+        binding.widgets.setOnClickListener {
             val intent = Intent(this, WidgetsActivity::class.java)
             startActivity(intent)
             floatingActionsMenu.collapse()
         }
 
-        val forumBtn = findViewById<FloatingActionButton>(R.id.forum)
-        forumBtn.setOnClickListener {
+        binding.forum.setOnClickListener {
             val facebookIntent = Intent(Intent.ACTION_VIEW)
             facebookIntent.data = Uri.parse(Config.FB_GROUP_URL)
             startActivity(facebookIntent)
             floatingActionsMenu.collapse()
         }
 
-        myWebView = findViewById(R.id.webView)
+        myWebView = binding.webView
         myWebView.settings.javaScriptEnabled = true
         myWebView.webViewClient = object : WebViewClient() {}
 
@@ -177,8 +171,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun refreshSettings() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
         if (isGpsProviderAvailable && prefs.getBoolean(Config.PREFERENCE_USE_LOCATION, true)) {
             if (
                 ActivityCompat.checkSelfPermission(
@@ -186,7 +178,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                locationManager?.requestLocationUpdates(
+                locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 0, 0f, this
                 )
             } else {
@@ -197,10 +189,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 )
             }
         } else {
-            if (locationManager != null) {
-                locationManager!!.removeUpdates(this)
-                locationManager = null
-            }
+            locationManager.removeUpdates(this)
             currentLocation = null
         }
 
@@ -230,7 +219,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         if (isNetworkAvailable) {
             val favouriteMap = prefs.getString(Config.PREFERENCE_FAVOURITE_MAP, Config.URL)
 
-            myWebView.loadUrl(favouriteMap)
+            myWebView.loadUrl(favouriteMap!!)
             showInitDialog()
         } else {
             showNoInternetSnackbar()
@@ -273,7 +262,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         prefs.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, false).apply()
                         prefs.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, false).apply()
                     }
-                    locationManager?.requestLocationUpdates(
+                    locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
                         0,
                         0f,
@@ -292,10 +281,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
         showBar(R.string.no_internet, R.string.refresh) { loadPage() }
     }
 
-    override fun onLocationChanged(location: Location?) {
-        location?.let {
-            currentLocation = it
-        }
+    override fun onLocationChanged(it: Location) {
+        currentLocation = it
     }
 
     override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {}

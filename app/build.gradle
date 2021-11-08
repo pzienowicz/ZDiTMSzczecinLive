@@ -1,14 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    compileSdkVersion 31
+    buildToolsVersion '30.0.2'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     defaultConfig {
@@ -34,24 +37,24 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 
     implementation 'de.codecrafters.tableview:tableview:2.8.0'
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
-    implementation "ch.acra:acra-http:5.7.0"
+    implementation "ch.acra:acra-http:5.8.4"
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.onesignal:OneSignal:3.15.7@aar'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'org.jsoup:jsoup:1.11.2'
+    implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
 }

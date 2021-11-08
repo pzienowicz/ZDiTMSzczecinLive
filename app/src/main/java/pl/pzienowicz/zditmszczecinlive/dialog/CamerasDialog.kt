@@ -9,17 +9,20 @@ import com.squareup.picasso.Picasso
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.Cameras
+import pl.pzienowicz.zditmszczecinlive.databinding.DialogCamerasBinding
 import pl.pzienowicz.zditmszczecinlive.isLandscape
 import pl.pzienowicz.zditmszczecinlive.setFullWidth
 
 class CamerasDialog(context: Context) : Dialog(context) {
 
+    private var binding: DialogCamerasBinding
+
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_cameras)
+        binding = DialogCamerasBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        findViewById<TableLayout>(R.id.camerasContainer)
-            .also { draw(it) }
+        draw(binding.camerasContainer)
     }
 
     private fun draw(camerasContainer: TableLayout)

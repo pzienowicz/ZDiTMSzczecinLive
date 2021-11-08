@@ -4,27 +4,27 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.view.Window
-import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.ImageButton
-import pl.pzienowicz.zditmszczecinlive.R
+import pl.pzienowicz.zditmszczecinlive.databinding.DialogCameraBinding
 import pl.pzienowicz.zditmszczecinlive.model.Camera
 
 @SuppressLint("SetJavaScriptEnabled")
 class CameraDialog(context: Context, camera: Camera) : Dialog(context) {
 
+    private var binding: DialogCameraBinding
+
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_camera)
+        binding = DialogCameraBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        findViewById<WebView>(R.id.webView)
+        binding.webView
             .apply {
                 webViewClient = object : WebViewClient() {}
                 settings.javaScriptEnabled = true
                 loadUrl(camera.url)
             }
 
-        findViewById<ImageButton>(R.id.closeBtn)
-            .setOnClickListener { dismiss() }
+        binding.closeBtn.setOnClickListener { dismiss() }
     }
 }

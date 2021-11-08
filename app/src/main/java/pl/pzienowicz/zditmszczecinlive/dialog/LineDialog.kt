@@ -9,8 +9,8 @@ import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.dialog_line.*
 import pl.pzienowicz.zditmszczecinlive.*
+import pl.pzienowicz.zditmszczecinlive.databinding.DialogLineBinding
 import pl.pzienowicz.zditmszczecinlive.model.Line
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient.getRetrofit
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
@@ -20,26 +20,28 @@ import retrofit2.Response
 
 class LineDialog(context: Context) : Dialog(context) {
     private val currentLine: Int
+    private var binding: DialogLineBinding
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_line)
+        binding = DialogLineBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val types = setOf(
-            "tdz" to Pair(tramNormalTable, tramExtraLabel),
-            "adz" to Pair(busNormalTable, busNormalLabel),
-            "adp" to Pair(busExpressTable, busExpressLabel),
-            "anz" to Pair(busNightTable, busNightLabel),
-            "ada" to Pair(busSubstituteTable, busSubstituteLabel),
-            "tda" to Pair(tramSubstituteTable, tramSubstituteLabel),
-            "tdt" to Pair(tramTouristicTable, tramTouristicLabel),
-            "adt" to Pair(busTouristicTable, busTouristicLabel),
-            "adz1" to Pair(busNormalOnDemandTable, busNormalOnDemandLabel),
-            "tdd" to Pair(tramExtraTable, tramExtraLabel),
-            "add" to Pair(busExpressTable, busExpressLabel)
+            "tdz" to Pair(binding.tramNormalTable, binding.tramExtraLabel),
+            "adz" to Pair(binding.busNormalTable, binding.busNormalLabel),
+            "adp" to Pair(binding.busExpressTable, binding.busExpressLabel),
+            "anz" to Pair(binding.busNightTable, binding.busNightLabel),
+            "ada" to Pair(binding.busSubstituteTable, binding.busSubstituteLabel),
+            "tda" to Pair(binding.tramSubstituteTable, binding.tramSubstituteLabel),
+            "tdt" to Pair(binding.tramTouristicTable, binding.tramTouristicLabel),
+            "adt" to Pair(binding.busTouristicTable, binding.busTouristicLabel),
+            "adz1" to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
+            "tdd" to Pair(binding.tramExtraTable, binding.tramExtraLabel),
+            "add" to Pair(binding.busExpressTable, binding.busExpressLabel)
         )
 
-        clearFilterText.setOnClickListener { changeFilter(0) }
+        binding.clearFilterText.setOnClickListener { changeFilter(0) }
 
         currentLine = context.prefs.getInt(Config.PREFERENCE_SELECTED_LINE, 0)
 
@@ -50,13 +52,13 @@ class LineDialog(context: Context) : Dialog(context) {
             dismiss()
         }
 
-        progressBarHolder.visibility = View.VISIBLE
+        binding.progressBarHolder.visibility = View.VISIBLE
 
         val service = getRetrofit().create(ZDiTMService::class.java)
         val lines = service.listLines()
         lines.enqueue(object : Callback<List<Line>?> {
             override fun onResponse(call: Call<List<Line>?>, response: Response<List<Line>?>) {
-                progressBarHolder.visibility = View.GONE
+                binding.progressBarHolder.visibility = View.GONE
 
                 if (response.isSuccessful && response.body() != null) {
                     types.forEach {
@@ -71,7 +73,7 @@ class LineDialog(context: Context) : Dialog(context) {
             }
 
             override fun onFailure(call: Call<List<Line>?>, t: Throwable) {
-                progressBarHolder.visibility = View.GONE
+                binding.progressBarHolder.visibility = View.GONE
                 context.showToast(R.string.lines_request_error)
             }
         })

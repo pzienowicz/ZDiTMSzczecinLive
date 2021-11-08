@@ -4,11 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.view.Window
-import android.widget.Button
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
-import com.journeyapps.barcodescanner.CompoundBarcodeView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -18,6 +16,7 @@ import com.karumi.dexter.listener.single.PermissionListener
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
+import pl.pzienowicz.zditmszczecinlive.databinding.DialogScanBusStopBinding
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 import pl.pzienowicz.zditmszczecinlive.showBar
 import pl.pzienowicz.zditmszczecinlive.showToast
@@ -27,24 +26,29 @@ class ScanBusStopDialog(
     val onSelected: (busStop: BusStop) -> Unit
 ) : Dialog(activity) {
 
-    private lateinit var barcodeView: CompoundBarcodeView
+    private var binding: DialogScanBusStopBinding
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.dialog_scan_bus_stop)
+        binding = DialogScanBusStopBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         checkPermission()
 
-        findViewById<Button>(R.id.cancelBtn).setOnClickListener {
+        binding.cancelBtn.setOnClickListener {
             dismiss()
         }
     }
 
+    override fun dismiss() {
+        binding.zxingBarcodeScanner.pause()
+        super.dismiss()
+    }
+
     private fun initBarcodeView() {
-        barcodeView = findViewById(R.id.zxing_barcode_scanner)
-        barcodeView.decodeContinuous(object : BarcodeCallback {
+        binding.zxingBarcodeScanner.decodeContinuous(object : BarcodeCallback {
             override fun barcodeResult(result: BarcodeResult?) {
-                barcodeView.pause()
+                binding.zxingBarcodeScanner.pause()
 
                 val busStopUrl = result!!.text
                 var busStopId: String
@@ -63,7 +67,7 @@ class ScanBusStopDialog(
 
                 if (busStop == null) {
                     context.showToast(R.string.incorrect_bus_stop)
-                    barcodeView.resume()
+                    binding.zxingBarcodeScanner.resume()
 
 //                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
 //                    ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
@@ -78,7 +82,7 @@ class ScanBusStopDialog(
 
             override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}
         })
-        barcodeView.resume()
+        binding.zxingBarcodeScanner.resume()
     }
 
     private fun checkPermission() {

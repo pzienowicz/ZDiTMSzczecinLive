@@ -23,6 +23,7 @@ import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import pl.pzienowicz.zditmszczecinlive.*
+import pl.pzienowicz.zditmszczecinlive.databinding.ActivityWidgetsBinding
 
 class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
@@ -32,14 +33,17 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
     private val records = ArrayList<Widget>()
     private var widgetId: String? = null
 
+    private lateinit var binding: ActivityWidgetsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_widgets)
+        binding = ActivityWidgetsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         adapter = WidgetTableDataAdapter(this, records)
         bp = BillingProcessor(this, Config.LICENSEE_KEY, this)
 
-        val tableView = findViewById<TableView<*>>(R.id.tableView)
+        val tableView = binding.tableView as TableView<*>
 
         val columnModel = TableColumnWeightModel(4)
         columnModel.setColumnWeight(0, 1)
