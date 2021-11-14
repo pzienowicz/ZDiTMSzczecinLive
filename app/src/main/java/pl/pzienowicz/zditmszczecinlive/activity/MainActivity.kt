@@ -20,11 +20,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
-
-import java.util.Timer
-import java.util.TimerTask
-
 import pl.pzienowicz.zditmszczecinlive.dialog.*
+import pl.pzienowicz.zditmszczecinlive.timer.MapTimer
 import pl.pzienowicz.zditmszczecinlive.widget.AppWidgetAlarm
 
 class MainActivity : AppCompatActivity(), LocationListener {
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var myWebView: WebView
     private var bcr: BroadcastReceiver? = null
     private var currentLocation: Location? = null
-    private lateinit var myTimer: Timer
+    private lateinit var mapTimer: MapTimer
     private var zoomMap = false
     private var currentUrl = Config.URL
 
@@ -145,22 +142,22 @@ class MainActivity : AppCompatActivity(), LocationListener {
             loadPage()
         }
 
-        myTimer = Timer()
-        myTimer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                if (currentLocation != null) {
-                    runOnUiThread {
-                        var newUrl = currentUrl + "?lat=" + currentLocation!!.latitude + "&lon=" + currentLocation!!.longitude
-
-                        if (zoomMap) {
-                            newUrl += "&zoom=16"
+        mapTimer = MapTimer {
+            runOnUiThread {
+                currentLocation?.let {
+                    val url = currentUrl
+                        .plus("?lat=" + it.latitude)
+                        .plus("&lon=" + it.longitude)
+                        .apply {
+                            if (zoomMap) {
+                                plus("&zoom=16")
+                            }
                         }
-
-                        myWebView.loadUrl(newUrl)
-                    }
+                    myWebView.loadUrl(url)
                 }
             }
-        }, 0, (30 * 1000).toLong())
+        }
+        mapTimer.start()
 
         val alarm = AppWidgetAlarm(this)
         alarm.startAlarm()
@@ -193,7 +190,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     public override fun onDestroy() {
-        myTimer.cancel()
+        mapTimer.stop()
         unregisterReceiver(bcr)
         super.onDestroy()
     }
