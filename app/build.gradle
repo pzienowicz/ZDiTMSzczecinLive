@@ -20,9 +20,6 @@ android {
         targetSdkVersion 29
         versionCode 47
         versionName "1.13.3"
-
-        manifestPlaceholders = [onesignal_app_id: "657e1b21-8388-425a-82f5-6f6ee1d247e5",
-                                onesignal_google_project_number: "406176751256"]
     }
     buildTypes {
         release {
@@ -49,7 +46,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.onesignal:OneSignal:3.15.7@aar'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.squareup.picasso:picasso:2.71828'

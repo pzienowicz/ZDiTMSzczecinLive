@@ -18,8 +18,6 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-
-import com.onesignal.OneSignal
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 
@@ -43,8 +41,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
-        OneSignal.startInit(this).init()
-
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
 
