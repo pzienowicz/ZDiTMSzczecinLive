@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun refreshSettings() {
-        if (isGpsProviderAvailable && prefs.getBoolean(Config.PREFERENCE_USE_LOCATION, true)) {
+        if (isGpsProviderAvailable && prefs.useLocation) {
             if (
                 ActivityCompat.checkSelfPermission(
                     this,
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
             currentLocation = null
         }
 
-        zoomMap = prefs.getBoolean(Config.PREFERENCE_ZOOM_MAP, true)
+        zoomMap = prefs.zoomMap
     }
 
     public override fun onDestroy() {
@@ -213,9 +213,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     private fun loadPage() {
         if (isNetworkAvailable) {
-            val favouriteMap = prefs.getString(Config.PREFERENCE_FAVOURITE_MAP, Config.URL)
-
-            myWebView.loadUrl(favouriteMap!!)
+            myWebView.loadUrl(prefs.favouriteMap)
             showInitDialog()
         } else {
             showNoInternetSnackbar()
@@ -223,7 +221,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun showInitDialog() {
-        if (!prefs.getBoolean(Config.PREFERENCE_SHOW_DIALOG, true)) {
+        if (!prefs.showInitDialog) {
             return
         }
 
@@ -234,7 +232,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 .setCancelable(false)
                 .setPositiveButton(R.string.close) { dialog, id -> dialog.cancel() }
                 .setNegativeButton(R.string.do_not_show_more) { dialog, id ->
-                    prefs.edit().putBoolean(Config.PREFERENCE_SHOW_DIALOG, false).apply()
+                    prefs.showInitDialog = false
                     dialog.cancel()
                 }
 
@@ -255,8 +253,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED
                     ) {
-                        prefs.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, false).apply()
-                        prefs.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, false).apply()
+                        prefs.zoomMap = false
+                        prefs.useLocation = false
                     }
                     locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
@@ -265,8 +263,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         this
                     )
                 } else {
-                    prefs.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, false).apply()
-                    prefs.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, false).apply()
+                    prefs.zoomMap = false
+                    prefs.useLocation = false
                 }
             }
         }

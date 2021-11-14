@@ -14,11 +14,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
-
-val Context.prefs: SharedPreferences
-    get() = PreferenceManager.getDefaultSharedPreferences(this)
 
 val Context.inflater: LayoutInflater
     get() = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

@@ -21,36 +21,33 @@ class SettingsDialog(context: Context) : Dialog(context) {
         setContentView(binding.root)
 
         binding.locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            context.prefs.edit().putBoolean(Config.PREFERENCE_USE_LOCATION, isChecked).apply()
+            context.prefs.useLocation = isChecked
             val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
             context.sendBroadcast(intent)
         }
 
-        binding.locationCheckbox.isChecked = context.prefs.getBoolean(Config.PREFERENCE_USE_LOCATION, true)
+        binding.locationCheckbox.isChecked = context.prefs.useLocation
 
         binding.zoomMapCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            context.prefs.edit().putBoolean(Config.PREFERENCE_ZOOM_MAP, isChecked).apply()
+            context.prefs.zoomMap = isChecked
             val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
             context.sendBroadcast(intent)
         }
 
-        binding.zoomMapCheckbox.isChecked = context.prefs.getBoolean(Config.PREFERENCE_ZOOM_MAP, true)
+        binding.zoomMapCheckbox.isChecked = context.prefs.zoomMap
 
         binding.refreshWidgetsCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            context.prefs.edit().putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, isChecked).apply()
+            context.prefs.refreshWidgets = isChecked
             val intent = Intent(Config.ACTION_AUTO_UPDATE)
             context.sendBroadcast(intent)
         }
 
-        binding.refreshWidgetsCheckbox.isChecked = context.prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)
+        binding.refreshWidgetsCheckbox.isChecked = context.prefs.refreshWidgets
 
-        binding.widgetsRefresh.setText(context.prefs.getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30"))
+        binding.widgetsRefresh.setText(context.prefs.refreshWidgetsTime)
         binding.widgetsRefresh.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                context.prefs.edit().putString(
-                    Config.PREFERENCE_WIDGETS_REFRESH_TIME,
-                    binding.widgetsRefresh.text.toString()
-                ).apply()
+                context.prefs.refreshWidgetsTime = binding.widgetsRefresh.text.toString()
                 val intent = Intent(Config.ACTION_AUTO_UPDATE)
                 context.sendBroadcast(intent)
             }

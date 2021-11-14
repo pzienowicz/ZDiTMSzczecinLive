@@ -43,7 +43,7 @@ class LineDialog(context: Context) : Dialog(context) {
 
         binding.clearFilterText.setOnClickListener { changeFilter(0) }
 
-        currentLine = context.prefs.getInt(Config.PREFERENCE_SELECTED_LINE, 0)
+        currentLine = context.prefs.selectedLine
 
         if (!context.isNetworkAvailable) {
             context.showToast(R.string.no_internet)
@@ -155,7 +155,7 @@ class LineDialog(context: Context) : Dialog(context) {
     }
 
     private fun changeFilter(id: Int) {
-        context.prefs.edit().putInt(Config.PREFERENCE_SELECTED_LINE, id).apply()
+        context.prefs.selectedLine = id
         val intent = Intent(Config.INTENT_LOAD_NEW_URL)
         intent.putExtra(Config.EXTRA_LINE_ID, id)
         context.sendBroadcast(intent)

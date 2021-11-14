@@ -21,7 +21,6 @@ import android.util.Log
 import com.anjlab.android.iab.v3.Constants
 import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityWidgetsBinding
 
@@ -46,10 +45,12 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         val tableView = binding.tableView as TableView<*>
 
         val columnModel = TableColumnWeightModel(4)
-        columnModel.setColumnWeight(0, 1)
-        columnModel.setColumnWeight(1, 2)
-        columnModel.setColumnWeight(2, 5)
-        columnModel.setColumnWeight(3, 1)
+            .apply {
+                setColumnWeight(0, 1)
+                setColumnWeight(1, 2)
+                setColumnWeight(2, 5)
+                setColumnWeight(3, 1)
+            }
 
         val headerAdapter = SimpleTableHeaderAdapter(
             this,
@@ -96,7 +97,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
         val dialog = BusStopDialog(this@WidgetsActivity, { busStop ->
 
-            prefs.edit().putString(Config.WIDGET_PREFIX + widgetId, busStop.numer).apply()
+            prefs.putString(Config.WIDGET_PREFIX + widgetId, busStop.numer)
 
             val intent = Intent(Config.INTENT_REFRESH_WIDGETS_LIST)
             sendBroadcast(intent)
@@ -132,9 +133,7 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         records.clear()
 
         appWidgetIds.forEach { appWidgetId ->
-
-            val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-            val busStopId = preferences.getString(Config.WIDGET_PREFIX + appWidgetId, null)
+            val busStopId = prefs.getString(Config.WIDGET_PREFIX + appWidgetId)
             var busStop: BusStop? = null
 
             if(busStopId != null) {

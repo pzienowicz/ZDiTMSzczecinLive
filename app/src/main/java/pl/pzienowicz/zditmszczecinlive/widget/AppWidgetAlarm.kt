@@ -17,8 +17,8 @@ class AppWidgetAlarm(private val mContext: Context) {
     private val INTERVAL_MILLIS = 1000
 
     fun startAlarm() {
-        val widgetsEnabled = mContext.prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH,true)
-        val seconds = mContext.prefs.getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30") ?: "30"
+        val widgetsEnabled = mContext.prefs.refreshWidgets
+        val seconds = mContext.prefs.refreshWidgetsTime
         val secondsInt: Int
 
         try {
