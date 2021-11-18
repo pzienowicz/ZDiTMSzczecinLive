@@ -18,9 +18,9 @@ android {
     defaultConfig {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 15
-        targetSdkVersion 29
-        versionCode 48
-        versionName "1.14.0"
+        targetSdkVersion 30
+        versionCode 49
+        versionName "1.14.1"
     }
     buildTypes {
         release {
