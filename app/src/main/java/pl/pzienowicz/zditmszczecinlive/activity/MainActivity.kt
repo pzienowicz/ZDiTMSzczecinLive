@@ -2,18 +2,17 @@ package pl.pzienowicz.zditmszczecinlive.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
-import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -26,14 +25,12 @@ import pl.pzienowicz.zditmszczecinlive.widget.AppWidgetAlarm
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
-    private lateinit var myWebView: WebView
     private var bcr: BroadcastReceiver? = null
     private var currentLocation: Location? = null
     private lateinit var mapTimer: MapTimer
     private var zoomMap = false
     private var currentUrl = Config.URL
 
-//    private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -44,100 +41,76 @@ class MainActivity : AppCompatActivity(), LocationListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val floatingActionsMenu = binding.multipleActions
-
-        prefs.edit().putInt(Config.PREFERENCE_SELECTED_LINE, 0).apply()
+        prefs.selectedLine = 0
 
         binding.setFavourite.setOnClickListener {
-            prefs.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, currentUrl).apply()
+            prefs.favouriteMap = currentUrl
             showBar(R.string.set_favourite)
-            floatingActionsMenu.collapse()
+            binding.multipleActions.collapse()
         }
 
         binding.showInfo.setOnClickListener {
-            val dialog = InfoDialog(this)
-            dialog.setFullWidth()
-            dialog.show()
-            floatingActionsMenu.collapse()
+            showDialog(InfoDialog(this))
         }
 
         binding.showDashboard.setOnClickListener {
             val dialog = BusStopDialog(this, { busStop ->
-                val boardDialog = ScheduleBoardDialog(this, busStop)
-                boardDialog.setFullWidth()
-                boardDialog.show()
+                showDialog(ScheduleBoardDialog(this, busStop))
             }, null)
-            dialog.setFullWidth()
-            dialog.show()
-            floatingActionsMenu.collapse()
+            showDialog(dialog)
         }
 
         binding.showLines.setOnClickListener {
-            val dialog = LineDialog(this)
-            dialog.setFullWidth()
-            dialog.show()
-            floatingActionsMenu.collapse()
+            showDialog(LineDialog(this))
         }
 
         binding.showCameras.setOnClickListener {
-            val dialog = CamerasDialog(this)
-            dialog.setFullWidth()
-            dialog.show()
-            floatingActionsMenu.collapse()
+            showDialog(CamerasDialog(this))
         }
 
         binding.settings.setOnClickListener {
-            val dialog = SettingsDialog(this)
-            dialog.setFullWidth()
-            dialog.show()
-            floatingActionsMenu.collapse()
+            showDialog(SettingsDialog(this))
         }
 
         binding.widgets.setOnClickListener {
             val intent = Intent(this, WidgetsActivity::class.java)
             startActivity(intent)
-            floatingActionsMenu.collapse()
+            binding.multipleActions.collapse()
         }
 
         binding.forum.setOnClickListener {
             val facebookIntent = Intent(Intent.ACTION_VIEW)
             facebookIntent.data = Uri.parse(Config.FB_GROUP_URL)
             startActivity(facebookIntent)
-            floatingActionsMenu.collapse()
+            binding.multipleActions.collapse()
         }
 
-        myWebView = binding.webView
-        myWebView.settings.javaScriptEnabled = true
-        myWebView.webViewClient = object : WebViewClient() {}
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.webViewClient = object : WebViewClient() {}
 
-        val filter = IntentFilter().apply {
-            addAction(Config.INTENT_LOAD_NEW_URL)
-            addAction(Config.INTENT_REFRESH_SETTINGS)
-            addAction(Config.INTENT_NO_INTERNET_CONNETION)
-        }
-
-        bcr = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                when (intent.action) {
-                    Config.INTENT_LOAD_NEW_URL -> {
-                        val lineId = intent.getIntExtra(Config.EXTRA_LINE_ID, 0)
-                        currentUrl = if (lineId == 0) {
-                            Config.URL
-                        } else {
-                            Config.LINE_URL + lineId
-                        }
-                        myWebView.loadUrl(currentUrl)
+        bcr = registerReceiver(listOf(
+            Config.INTENT_LOAD_NEW_URL,
+            Config.INTENT_REFRESH_SETTINGS,
+            Config.INTENT_NO_INTERNET_CONNETION
+        )) { intent ->
+            when (intent?.action) {
+                Config.INTENT_LOAD_NEW_URL -> {
+                    val lineId = intent.getIntExtra(Config.EXTRA_LINE_ID, 0)
+                    currentUrl = if (lineId == 0) {
+                        Config.URL
+                    } else {
+                        Config.LINE_URL + lineId
                     }
-                    Config.INTENT_REFRESH_SETTINGS -> refreshSettings()
-                    Config.INTENT_NO_INTERNET_CONNETION -> showNoInternetSnackbar()
+                    binding.webView.loadUrl(currentUrl)
                 }
+                Config.INTENT_REFRESH_SETTINGS -> refreshSettings()
+                Config.INTENT_NO_INTERNET_CONNETION -> showNoInternetSnackbar()
             }
         }
-        registerReceiver(bcr, filter)
         refreshSettings()
 
         if (savedInstanceState != null) {
-            myWebView.restoreState(savedInstanceState)
+            binding.webView.restoreState(savedInstanceState)
         } else {
             loadPage()
         }
@@ -153,7 +126,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
                                 plus("&zoom=16")
                             }
                         }
-                    myWebView.loadUrl(url)
+                    Log.d(Config.LOG_TAG, url)
+                    binding.webView.loadUrl(url)
                 }
             }
         }
@@ -161,6 +135,12 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         val alarm = AppWidgetAlarm(this)
         alarm.startAlarm()
+    }
+
+    private fun showDialog(dialog: Dialog) {
+        dialog.setFullWidth()
+        dialog.show()
+        binding.multipleActions.collapse()
     }
 
     private fun refreshSettings() {
@@ -196,7 +176,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        myWebView.saveState(outState)
+        binding.webView.saveState(outState)
         return super.onSaveInstanceState(outState)
     }
 
@@ -210,7 +190,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
     private fun loadPage() {
         if (isNetworkAvailable) {
-            myWebView.loadUrl(prefs.favouriteMap)
+            binding.webView.loadUrl(prefs.favouriteMap)
             showInitDialog()
         } else {
             showNoInternetSnackbar()

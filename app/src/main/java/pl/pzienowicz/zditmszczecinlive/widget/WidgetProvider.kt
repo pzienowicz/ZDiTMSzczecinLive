@@ -28,7 +28,6 @@ class WidgetProvider : AppWidgetProvider() {
     }
 
     private fun updateWidgetListView(context: Context, appWidgetId: Int): RemoteViews {
-
         //which layout to show on widget
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
 
@@ -45,7 +44,9 @@ class WidgetProvider : AppWidgetProvider() {
             val busStop = BusStops.getInstance(context).getByNumber(busStopId)
             svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, busStop!!.numer)
 
-            remoteViews.setTextViewText(R.id.busStopTv, busStop.nazwa + " " + busStop.numer!!.substring(3,5))
+            remoteViews.setTextViewText(
+                R.id.busStopTv, busStop.nazwa + " " + busStop.numer.substring(3,5)
+            )
             remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
             remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)
             remoteViews.setRemoteAdapter(appWidgetId, R.id.listView, svcIntent)
@@ -73,7 +74,7 @@ class WidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
 
-        Log.e(Config.LOG_TAG, "action: " + intent.action)
+        Log.d(Config.LOG_TAG, "action: " + intent.action)
 
         when(intent.action) {
             Config.CLICK_WIDGET_BUTTON -> {
@@ -89,9 +90,7 @@ class WidgetProvider : AppWidgetProvider() {
 
                 onUpdate(context, appWidgetManager, appWidgetIds)
             }
-            Config.INTENT_WIDGET_DATA_LOADED -> {
-
-            }
+            Config.INTENT_WIDGET_DATA_LOADED -> { }
         }
     }
 

@@ -35,6 +35,7 @@ class AppWidgetAlarm(private val mContext: Context) {
         calendar.add(Calendar.MILLISECOND, secondsInt * INTERVAL_MILLIS)
 
         val alarmIntent = Intent(Config.ACTION_AUTO_UPDATE)
+        alarmIntent.setClass(mContext, WidgetProvider::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT
         )

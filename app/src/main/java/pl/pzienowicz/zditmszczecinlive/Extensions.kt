@@ -3,8 +3,7 @@ package pl.pzienowicz.zditmszczecinlive
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.Dialog
-import android.content.Context
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.LocationManager
@@ -63,3 +62,22 @@ val Context.isGpsProviderAvailable
 
 val Context.isLandscape
     get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+fun Context.registerReceiver(
+    actions: List<String>,
+    onReceive: (intent: Intent?) -> Unit
+): BroadcastReceiver {
+    val filter = IntentFilter().apply {
+        actions.forEach {
+            addAction(it)
+        }
+    }
+
+    val bcr = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            onReceive(p1)
+        }
+    }
+    registerReceiver(bcr, filter)
+    return bcr
+}

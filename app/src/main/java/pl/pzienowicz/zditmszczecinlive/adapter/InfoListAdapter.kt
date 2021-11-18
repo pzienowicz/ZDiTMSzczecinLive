@@ -34,7 +34,7 @@ class InfoListAdapter(
         infoTextView.text = info.description
 
         val fromDateTv = row.findViewById<TextView>(R.id.fromDate)
-        fromDateTv.text = context!!.getString(R.string.from_date, info.fromDate)
+        fromDateTv.text = context.getString(R.string.from_date, info.fromDate)
 
         val toDateTv = row.findViewById<TextView>(R.id.toDate)
         if (info.to != null) {
