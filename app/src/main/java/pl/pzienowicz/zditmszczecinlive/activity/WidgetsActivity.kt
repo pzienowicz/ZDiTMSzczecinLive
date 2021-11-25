@@ -14,23 +14,21 @@ import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 import java.util.ArrayList
 import de.codecrafters.tableview.model.TableColumnWeightModel
 import pl.pzienowicz.zditmszczecinlive.dialog.BusStopDialog
-import com.anjlab.android.iab.v3.BillingProcessor
-import com.anjlab.android.iab.v3.TransactionDetails
 import android.content.Intent
 import android.util.Log
-import com.anjlab.android.iab.v3.Constants
 import android.content.ComponentName
 import androidx.appcompat.app.AppCompatActivity
 import pl.pzienowicz.zditmszczecinlive.*
+import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityWidgetsBinding
 
-class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
+class WidgetsActivity : AppCompatActivity() {
 
     private lateinit var adapter: WidgetTableDataAdapter
     private lateinit var bcr: BroadcastReceiver
-    private lateinit var bp: BillingProcessor
     private val records = ArrayList<Widget>()
     private var widgetId: String? = null
+    private lateinit var billingClient: GooglePlayBillingClient
 
     private lateinit var binding: ActivityWidgetsBinding
 
@@ -39,8 +37,23 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         binding = ActivityWidgetsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        widgetId = intent.getStringExtra(Config.EXTRA_WIDGET_ID)
+
         adapter = WidgetTableDataAdapter(this, records)
-        bp = BillingProcessor(this, Config.LICENSEE_KEY, this)
+        billingClient = GooglePlayBillingClient(this,
+            onInitialized = {
+                if(widgetId != null) {
+                    openBusStopDialog(widgetId)
+                }
+            },
+            onPurchased = {
+                showBar(R.string.payment_success)
+
+                if(widgetId != null) {
+                    openBusStopDialog(widgetId)
+                }
+            }
+        )
 
         val tableView = binding.tableView as TableView<*>
 
@@ -64,36 +77,28 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
 
         reloadWidgets()
 
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(Config.INTENT_REFRESH_WIDGETS_LIST)
-        intentFilter.addAction(Config.INTENT_OPEN_BUSSTOP_EDIT)
-        bcr = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                when(intent!!.action) {
-                    Config.INTENT_OPEN_BUSSTOP_EDIT -> {
-                        openBusStopDialog(intent.extras?.getString("widgetId"))
-                    }
-                    Config.INTENT_REFRESH_WIDGETS_LIST -> {
-                        reloadWidgets()
-                    }
+        bcr = registerReceiver(listOf(
+            Config.INTENT_REFRESH_WIDGETS_LIST,
+            Config.INTENT_OPEN_BUSSTOP_EDIT
+        )) { intent ->
+            when (intent?.action) {
+                Config.INTENT_OPEN_BUSSTOP_EDIT -> {
+                    openBusStopDialog(intent.extras?.getString("widgetId"))
+                }
+                Config.INTENT_REFRESH_WIDGETS_LIST -> {
+                    reloadWidgets()
                 }
             }
         }
-        registerReceiver(bcr, intentFilter)
-
-        widgetId = intent.getStringExtra(Config.EXTRA_WIDGET_ID)
     }
 
     private fun openBusStopDialog(widgetId: String?) {
 
-        if(!BuildConfig.DEBUG && !bp.isPurchased(Config.PRODUCT_WIDGETS_UNLOCK)) {
+        if(!billingClient.areWidgetsUnlocked()) {
             this.widgetId = widgetId
-            bp.purchase(this, Config.PRODUCT_WIDGETS_UNLOCK)
+            billingClient.unlockWidgets()
             return
         }
-
-//        bp!!.consumePurchase(Config.PRODUCT_WIDGETS_UNLOCK)
-//        return
 
         val dialog = BusStopDialog(this@WidgetsActivity, { busStop ->
 
@@ -112,15 +117,8 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         dialog.show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!bp.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
     override fun onDestroy() {
         unregisterReceiver(bcr)
-        bp.release()
 
         super.onDestroy()
     }
@@ -144,29 +142,5 @@ class WidgetsActivity : AppCompatActivity(), BillingProcessor.IBillingHandler {
         }
 
         adapter.notifyDataSetChanged()
-    }
-
-    override fun onBillingInitialized() {
-        if(widgetId != null) {
-            openBusStopDialog(widgetId!!)
-        }
-    }
-
-    override fun onPurchaseHistoryRestored() {}
-
-    override fun onProductPurchased(productId: String, details: TransactionDetails?) {
-        showBar(R.string.payment_success)
-
-        if(widgetId != null) {
-            openBusStopDialog(widgetId!!)
-        }
-    }
-
-    override fun onBillingError(errorCode: Int, error: Throwable?) {
-        if(errorCode ==  Constants.BILLING_RESPONSE_RESULT_USER_CANCELED) {
-            showBar( R.string.payment_cancel)
-        } else {
-            showBar(R.string.payment_error)
-        }
     }
 }
