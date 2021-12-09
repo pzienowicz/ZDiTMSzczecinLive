@@ -38,7 +38,7 @@ class LineDialog(context: Context) : Dialog(context) {
             "adt" to Pair(binding.busTouristicTable, binding.busTouristicLabel),
             "adz1" to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
             "tdd" to Pair(binding.tramExtraTable, binding.tramExtraLabel),
-            "add" to Pair(binding.busExpressTable, binding.busExpressLabel)
+            "add" to Pair(binding.busExtraTable, binding.busExtraLabel)
         )
 
         binding.clearFilterText.setOnClickListener { changeFilter(0) }
