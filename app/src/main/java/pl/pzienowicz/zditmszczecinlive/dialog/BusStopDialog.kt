@@ -35,12 +35,14 @@ class BusStopDialog(
 
             val busStopNumber = txtUrl.text.toString()
 
-            val busStop = BusStops.getInstance(context).getByNumber(busStopNumber)
-            if (busStop == null) {
-                context.showToast(R.string.incorrect_bus_stop)
-                return@setOnClickListener
-            }
-            onSelected(busStop)
+            BusStops.getInstance(context)
+                .loadByNumber(busStopNumber, callback = { busStop ->
+                    if (busStop == null) {
+                        context.showToast(R.string.incorrect_bus_stop)
+                        return@loadByNumber
+                    }
+                    onSelected(busStop)
+                })
         }
 
         binding.cancelBtn.setOnClickListener {

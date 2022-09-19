@@ -41,15 +41,16 @@ class WidgetProvider : AppWidgetProvider() {
         val busStopId = preferences.getString(Config.WIDGET_PREFIX + appWidgetId, null)
 
         if(busStopId != null) {
-            val busStop = BusStops.getInstance(context).getByNumber(busStopId)
-            svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, busStop!!.numer)
+            BusStops.getInstance(context).loadByNumber(busStopId) { busStop ->
+                svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, busStop!!.numer)
 
-            remoteViews.setTextViewText(
-                R.id.busStopTv, busStop.nazwa + " " + busStop.numer.substring(3,5)
-            )
-            remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
-            remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)
-            remoteViews.setRemoteAdapter(appWidgetId, R.id.listView, svcIntent)
+                remoteViews.setTextViewText(
+                    R.id.busStopTv, busStop.nazwa + " " + busStop.numer.substring(3, 5)
+                )
+                remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
+                remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)
+                remoteViews.setRemoteAdapter(appWidgetId, R.id.listView, svcIntent)
+            }
         } else {
             remoteViews.setViewVisibility(R.id.inputLayout, View.VISIBLE)
             remoteViews.setViewVisibility(R.id.listView, View.GONE)

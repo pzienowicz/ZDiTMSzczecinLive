@@ -50,34 +50,28 @@ class ScanBusStopDialog(
             override fun barcodeResult(result: BarcodeResult?) {
                 binding.zxingBarcodeScanner.pause()
 
-                val busStopUrl = result!!.text
-                var busStopId: String
-                var busStopNumber: String
-                var busStop: BusStop? = null
-
                 try {
-                    busStopId = busStopUrl.substring(60)
-                    busStop = BusStops.getInstance(context).getById(busStopId)
-                } catch (e: StringIndexOutOfBoundsException) {
-                    try {
-                        busStopNumber = busStopUrl.substring(26)
-                        busStop = BusStops.getInstance(context).getByNumber(busStopNumber)
-                    } catch (e: StringIndexOutOfBoundsException) { }
-                }
+                    val busStopUrl = result!!.text
+                    val busStopId = busStopUrl.substring(60)
+                    val busStopNumber = busStopUrl.substring(26)
 
-                if (busStop == null) {
-                    context.showToast(R.string.incorrect_bus_stop)
-                    binding.zxingBarcodeScanner.resume()
+                    BusStops.getInstance(context)
+                        .loadByIdOrNumber(busStopId, busStopNumber) { busStop ->
+                            if (busStop == null) {
+                                context.showToast(R.string.incorrect_bus_stop)
+                                binding.zxingBarcodeScanner.resume()
 
-//                    ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
-//                    ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
-//                    ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
-//                    ACRA.getErrorReporter().handleException(IncorrectBusStopException())
-                    return
-                }
+//                              ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
+//                              ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
+//                              ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
+//                              ACRA.getErrorReporter().handleException(IncorrectBusStopException())
+                                return@loadByIdOrNumber
+                            }
 
-                dismiss()
-                onSelected(busStop)
+                            dismiss()
+                            onSelected(busStop)
+                        }
+                } catch (e: StringIndexOutOfBoundsException) {}
             }
 
             override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}

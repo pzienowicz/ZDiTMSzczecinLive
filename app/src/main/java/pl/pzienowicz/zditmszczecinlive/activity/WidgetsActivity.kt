@@ -119,7 +119,6 @@ class WidgetsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         unregisterReceiver(bcr)
-
         super.onDestroy()
     }
 
@@ -131,14 +130,12 @@ class WidgetsActivity : AppCompatActivity() {
         records.clear()
 
         appWidgetIds.forEach { appWidgetId ->
-            val busStopId = prefs.getString(Config.WIDGET_PREFIX + appWidgetId)
-            var busStop: BusStop? = null
-
-            if(busStopId != null) {
-                busStop = BusStops.getInstance(this).getByNumber(busStopId)
-            }
-
-            records.add(Widget(appWidgetId.toString(), busStop))
+            prefs.getString(Config.WIDGET_PREFIX + appWidgetId)
+                ?.let {
+                    BusStops.getInstance(this).loadByNumber(it, callback = { busStop ->
+                        records.add(Widget(appWidgetId.toString(), busStop))
+                    })
+                }
         }
 
         adapter.notifyDataSetChanged()

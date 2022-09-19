@@ -2,39 +2,68 @@ package pl.pzienowicz.zditmszczecinlive.data
 
 import android.content.Context
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-
-import java.io.IOException
-import java.io.InputStreamReader
-import java.util.ArrayList
-
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
+import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
+import pl.pzienowicz.zditmszczecinlive.showToast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class BusStops(context: Context) {
+class BusStops(val context: Context) {
 
-    init {
-        try {
-            val `in` = context.resources.openRawResource(R.raw.slupki)
-            val reader = InputStreamReader(`in`, "UTF-8")
-            stops = Gson().fromJson(reader, object : TypeToken<ArrayList<BusStop>>() {}.type)
-        } catch (e: IOException) {
-            e.printStackTrace()
+    private fun load(onLoaded: () -> Unit) {
+        val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
+        val lines = service.listBusStops()
+        lines.enqueue(object : Callback<List<BusStop>> {
+            override fun onResponse(call: Call<List<BusStop>>, response: Response<List<BusStop>>) {
+                if (response.isSuccessful) {
+                    stops.clear()
+                    response.body()?.let { stops.addAll(it) }
+                } else {
+                    context.showToast(R.string.stops_request_error)
+                }
+                onLoaded()
+            }
+
+            override fun onFailure(call: Call<List<BusStop>>, t: Throwable) {
+                context.showToast(R.string.stops_request_error)
+            }
+        })
+    }
+
+    fun loadByNumber(number: String, callback: (BusStop?) -> Unit) {
+        if(stops.isEmpty()) {
+            load(onLoaded = {
+                callback(getByNumber(number))
+            })
+        } else {
+            callback(getByNumber(number))
         }
     }
 
-    fun getByNumber(number: String): BusStop? {
+    fun loadByIdOrNumber(number: String, id: String, callback: (BusStop?) -> Unit) {
+        if(stops.isEmpty()) {
+            load(onLoaded = {
+                callback(getByIdOrNumber(id, number))
+            })
+        } else {
+            callback(getByIdOrNumber(id, number))
+        }
+    }
+
+    private fun getByNumber(number: String): BusStop? {
         return stops.firstOrNull { it.numer == number }
     }
 
-    fun getById(id: String): BusStop? {
-        return stops.firstOrNull { it.id.toString() == id }
+    private fun getByIdOrNumber(id: String, number: String): BusStop? {
+        return stops.firstOrNull { it.id.toString() == id || it.numer == number }
     }
 
     companion object {
         private var mInstance: BusStops? = null
-        private var stops: List<BusStop> = ArrayList()
+        private var stops: MutableList<BusStop> = mutableListOf()
 
         fun getInstance(context: Context): BusStops {
             if (mInstance == null) {
