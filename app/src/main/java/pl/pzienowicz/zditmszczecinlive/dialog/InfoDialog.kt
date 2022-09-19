@@ -21,7 +21,7 @@ import retrofit2.Response
 
 class InfoDialog(context: Context) : Dialog(context) {
 
-    private var adapter: InfoListAdapter? = null
+    private var adapter: InfoListAdapter
     private val records = ArrayList<Info>()
     private var binding: DialogInfoBinding
 
@@ -52,7 +52,7 @@ class InfoDialog(context: Context) : Dialog(context) {
                     if (response.isSuccessful) {
                         records.clear()
                         response.body()?.let { records.addAll(it) }
-                        adapter!!.notifyDataSetChanged()
+                        adapter.notifyDataSetChanged()
 
                         if (records.isEmpty()) {
                             binding.noInfoTv.visibility = View.VISIBLE
