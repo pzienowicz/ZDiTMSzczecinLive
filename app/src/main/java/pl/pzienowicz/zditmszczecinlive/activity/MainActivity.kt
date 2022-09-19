@@ -23,13 +23,14 @@ import pl.pzienowicz.zditmszczecinlive.dialog.*
 import pl.pzienowicz.zditmszczecinlive.timer.MapTimer
 import pl.pzienowicz.zditmszczecinlive.widget.AppWidgetAlarm
 
-class MainActivity : AppCompatActivity(), LocationListener {
+class MainActivity : AppCompatActivity() {
 
     private var bcr: BroadcastReceiver? = null
     private var currentLocation: Location? = null
     private lateinit var mapTimer: MapTimer
     private var zoomMap = false
     private var currentUrl = Config.URL
+    private lateinit var locationListener: LocationListener
 
     private lateinit var binding: ActivityMainBinding
 
@@ -107,6 +108,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 Config.INTENT_NO_INTERNET_CONNETION -> showNoInternetSnackbar()
             }
         }
+
+        locationListener = LocationListener {
+            currentLocation = it
+        }
         refreshSettings()
 
         if (savedInstanceState != null) {
@@ -152,7 +157,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 0, 0f, this
+                    LocationManager.GPS_PROVIDER, 0, 0f, locationListener
                 )
             } else {
                 ActivityCompat.requestPermissions(
@@ -162,7 +167,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 )
             }
         } else {
-            locationManager.removeUpdates(this)
+            locationManager.removeUpdates(locationListener)
             currentLocation = null
         }
 
@@ -237,7 +242,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         LocationManager.GPS_PROVIDER,
                         0,
                         0f,
-                        this
+                        locationListener
                     )
                 } else {
                     prefs.zoomMap = false
@@ -247,18 +252,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
     }
 
-
     private fun showNoInternetSnackbar() {
         showBar(R.string.no_internet, R.string.refresh) { loadPage() }
     }
-
-    override fun onLocationChanged(it: Location) {
-        currentLocation = it
-    }
-
-    override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {}
-    override fun onProviderEnabled(s: String) {}
-    override fun onProviderDisabled(s: String) {}
 
     companion object {
         private const val MY_PERMISSIONS_REQUEST_LOCATION = 1443
