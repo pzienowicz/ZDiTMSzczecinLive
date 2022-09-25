@@ -19,10 +19,12 @@ import androidx.preference.PreferenceManager
 class WidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager?, appWidgetIds: IntArray?) {
-        for (widget in appWidgetIds!!) {
-            val remoteViews = updateWidgetListView(context, widget)
-            appWidgetManager!!.notifyAppWidgetViewDataChanged(widget, R.id.listView)
-            appWidgetManager.updateAppWidget(widget, remoteViews)
+        appWidgetIds?.let {
+            it.forEach { widget ->
+                val remoteViews = updateWidgetListView(context, widget)
+                appWidgetManager?.notifyAppWidgetViewDataChanged(widget, R.id.listView)
+                appWidgetManager?.updateAppWidget(widget, remoteViews)
+            }
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds)
     }
@@ -42,14 +44,17 @@ class WidgetProvider : AppWidgetProvider() {
 
         if(busStopId != null) {
             BusStops.getInstance(context).loadByNumber(busStopId) { busStop ->
-                svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, busStop!!.numer)
+                busStop?.let {
+                    Log.d(Config.LOG_TAG, "busStop: ${busStop.nazwa}")
 
-                remoteViews.setTextViewText(
-                    R.id.busStopTv, busStop.nazwa + " " + busStop.numer.substring(3, 5)
-                )
-                remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
-                remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)
-                remoteViews.setRemoteAdapter(appWidgetId, R.id.listView, svcIntent)
+                    svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, it.numer)
+                    remoteViews.setTextViewText(
+                        R.id.busStopTv, it.nazwa + " " + it.numer.substring(3, 5)
+                    )
+                    remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
+                    remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)
+                    remoteViews.setRemoteAdapter(R.id.listView, svcIntent)
+                }
             }
         } else {
             remoteViews.setViewVisibility(R.id.inputLayout, View.VISIBLE)

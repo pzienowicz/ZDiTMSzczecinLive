@@ -50,28 +50,30 @@ class ScanBusStopDialog(
             override fun barcodeResult(result: BarcodeResult?) {
                 binding.zxingBarcodeScanner.pause()
 
-                try {
-                    val busStopUrl = result!!.text
-                    val busStopId = busStopUrl.substring(60)
-                    val busStopNumber = busStopUrl.substring(26)
+                val busStopUrl = result!!.text
+                var busStopId = ""
+                var busStopNumber = ""
 
-                    BusStops.getInstance(context)
-                        .loadByIdOrNumber(busStopId, busStopNumber) { busStop ->
-                            if (busStop == null) {
-                                context.showToast(R.string.incorrect_bus_stop)
-                                binding.zxingBarcodeScanner.resume()
+                try {
+                    busStopNumber = busStopUrl.substring(26)
+                    busStopId = busStopUrl.substring(60)
+                } catch (e: StringIndexOutOfBoundsException) {}
+
+                BusStops.getInstance(context)
+                    .loadByIdOrNumber(busStopId, busStopNumber) { busStop ->
+                        if (busStop == null) {
+                            context.showToast(R.string.incorrect_bus_stop)
+                            binding.zxingBarcodeScanner.resume()
 
 //                              ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
 //                              ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
 //                              ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
 //                              ACRA.getErrorReporter().handleException(IncorrectBusStopException())
-                                return@loadByIdOrNumber
-                            }
-
-                            dismiss()
-                            onSelected(busStop)
+                            return@loadByIdOrNumber
                         }
-                } catch (e: StringIndexOutOfBoundsException) {}
+                        dismiss()
+                        onSelected(busStop)
+                    }
             }
 
             override fun possibleResultPoints(resultPoints: MutableList<ResultPoint>?) {}

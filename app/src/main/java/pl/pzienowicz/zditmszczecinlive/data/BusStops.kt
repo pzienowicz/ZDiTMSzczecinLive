@@ -43,13 +43,13 @@ class BusStops(val context: Context) {
         }
     }
 
-    fun loadByIdOrNumber(number: String, id: String, callback: (BusStop?) -> Unit) {
+    fun loadByIdOrNumber(id: String, number: String, callback: (BusStop?) -> Unit) {
         if(stops.isEmpty()) {
             load(onLoaded = {
-                callback(getByIdOrNumber(id, number))
+                callback(getById(id) ?: getByNumber(number))
             })
         } else {
-            callback(getByIdOrNumber(id, number))
+            callback(getById(id) ?: getByNumber(number))
         }
     }
 
@@ -57,8 +57,8 @@ class BusStops(val context: Context) {
         return stops.firstOrNull { it.numer == number }
     }
 
-    private fun getByIdOrNumber(id: String, number: String): BusStop? {
-        return stops.firstOrNull { it.id.toString() == id || it.numer == number }
+    private fun getById(id: String): BusStop? {
+        return stops.firstOrNull { it.id.toString() == id }
     }
 
     companion object {
