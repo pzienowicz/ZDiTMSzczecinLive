@@ -130,14 +130,18 @@ class WidgetsActivity : AppCompatActivity() {
         records.clear()
 
         appWidgetIds.forEach { appWidgetId ->
-            prefs.getString(Config.WIDGET_PREFIX + appWidgetId)
-                ?.let {
-                    BusStops.getInstance(this).loadByNumber(it, callback = { busStop ->
-                        records.add(Widget(appWidgetId.toString(), busStop))
-                    })
-                }
-        }
+            Log.d(Config.LOG_TAG, "widgetId: $appWidgetId")
+            val busStopId = prefs.getString(Config.WIDGET_PREFIX + appWidgetId)
 
-        adapter.notifyDataSetChanged()
+            if(busStopId != null) {
+                BusStops.getInstance(this).loadByNumber(busStopId, callback = { busStop ->
+                    records.add(Widget(appWidgetId.toString(), busStop))
+                    adapter.notifyDataSetChanged()
+                })
+            } else {
+                records.add(Widget(appWidgetId.toString(), null))
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 }

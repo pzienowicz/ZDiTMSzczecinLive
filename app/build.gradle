@@ -19,8 +19,8 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 15
         targetSdkVersion 30
-        versionCode 54
-        versionName "1.15.1"
+        versionCode 55
+        versionName "1.15.2"
     }
     buildTypes {
         release {
