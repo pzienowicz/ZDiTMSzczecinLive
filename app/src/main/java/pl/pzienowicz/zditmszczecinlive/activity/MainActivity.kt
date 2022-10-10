@@ -109,8 +109,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        locationListener = LocationListener {
-            currentLocation = it
+        locationListener = object : LocationListener {
+            override fun onLocationChanged(it: Location) {
+                currentLocation = it
+            }
+            override fun onProviderDisabled(provider: String) {}
+            override fun onProviderEnabled(provider: String) {}
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
         }
         refreshSettings()
 
