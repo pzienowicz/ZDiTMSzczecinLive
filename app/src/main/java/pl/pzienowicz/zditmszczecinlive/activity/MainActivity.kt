@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         bcr = registerReceiver(listOf(
             Config.INTENT_LOAD_NEW_URL,
             Config.INTENT_REFRESH_SETTINGS,
-            Config.INTENT_NO_INTERNET_CONNETION
+            Config.INTENT_NO_INTERNET_CONNECTION
         )) { intent ->
             when (intent?.action) {
                 Config.INTENT_LOAD_NEW_URL -> {
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     binding.webView.loadUrl(currentUrl)
                 }
                 Config.INTENT_REFRESH_SETTINGS -> refreshSettings()
-                Config.INTENT_NO_INTERNET_CONNETION -> showNoInternetSnackbar()
+                Config.INTENT_NO_INTERNET_CONNECTION -> showNoInternetSnackbar()
             }
         }
 
@@ -255,6 +255,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun showNoInternetSnackbar() {

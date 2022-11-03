@@ -36,7 +36,7 @@ class InfoDialog(context: Context) : Dialog(context) {
         if (!context.isNetworkAvailable) {
             context.showToast(R.string.no_internet)
 
-            val intent = Intent(Config.INTENT_NO_INTERNET_CONNETION)
+            val intent = Intent(Config.INTENT_NO_INTERNET_CONNECTION)
             context.sendBroadcast(intent)
 
             dismiss()

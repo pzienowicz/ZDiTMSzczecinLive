@@ -9,7 +9,6 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter
 import pl.pzienowicz.zditmszczecinlive.adapter.WidgetTableDataAdapter
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.data.Widget
-import pl.pzienowicz.zditmszczecinlive.model.BusStop
 import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 import java.util.ArrayList
 import de.codecrafters.tableview.model.TableColumnWeightModel
@@ -79,10 +78,10 @@ class WidgetsActivity : AppCompatActivity() {
 
         bcr = registerReceiver(listOf(
             Config.INTENT_REFRESH_WIDGETS_LIST,
-            Config.INTENT_OPEN_BUSSTOP_EDIT
+            Config.INTENT_OPEN_BUS_STOP_EDIT
         )) { intent ->
             when (intent?.action) {
-                Config.INTENT_OPEN_BUSSTOP_EDIT -> {
+                Config.INTENT_OPEN_BUS_STOP_EDIT -> {
                     openBusStopDialog(intent.extras?.getString("widgetId"))
                 }
                 Config.INTENT_REFRESH_WIDGETS_LIST -> {

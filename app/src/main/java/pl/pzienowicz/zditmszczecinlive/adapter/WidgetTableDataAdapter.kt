@@ -34,7 +34,7 @@ class WidgetTableDataAdapter(context: Context, data: List<Widget>)
                 val imageView = ImageView(context)
                 imageView.setImageResource(R.drawable.ic_edit_black_24dp)
                 imageView.setOnClickListener {
-                    val intent = Intent(Config.INTENT_OPEN_BUSSTOP_EDIT)
+                    val intent = Intent(Config.INTENT_OPEN_BUS_STOP_EDIT)
                     intent.putExtra("widgetId", widget.widgetId)
                     context.sendBroadcast(intent)
                 }
