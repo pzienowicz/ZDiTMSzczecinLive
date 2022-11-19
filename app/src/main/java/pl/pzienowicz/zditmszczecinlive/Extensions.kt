@@ -3,11 +3,13 @@ package pl.pzienowicz.zditmszczecinlive
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.Dialog
+import android.app.PendingIntent
 import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.LocationManager
 import android.net.ConnectivityManager
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -26,6 +28,18 @@ val Context.connectivityManager: ConnectivityManager
 
 val Context.locationManager: LocationManager
     get() = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+fun Context.createPendingIntent(
+    requestCode: Int,
+    intent: Intent,
+    flags: Int
+): PendingIntent {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        PendingIntent.getBroadcast(this, requestCode, intent, flags or PendingIntent.FLAG_MUTABLE)
+    } else {
+        PendingIntent.getBroadcast(this, requestCode, intent, flags)
+    }
+}
 
 fun Dialog.setFullWidth() {
     window?.setLayout(

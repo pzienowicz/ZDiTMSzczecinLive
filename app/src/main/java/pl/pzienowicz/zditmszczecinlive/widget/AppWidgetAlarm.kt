@@ -9,6 +9,7 @@ import java.util.*
 import android.os.Build
 import android.util.Log
 import pl.pzienowicz.zditmszczecinlive.alarmManager
+import pl.pzienowicz.zditmszczecinlive.createPendingIntent
 import pl.pzienowicz.zditmszczecinlive.prefs
 
 class AppWidgetAlarm(private val mContext: Context) {
@@ -36,10 +37,7 @@ class AppWidgetAlarm(private val mContext: Context) {
 
         val alarmIntent = Intent(Config.ACTION_AUTO_UPDATE)
         alarmIntent.setClass(mContext, WidgetProvider::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT
-        )
-
+        val pendingIntent = mContext.createPendingIntent(ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         val am = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmType = AlarmManager.RTC_WAKEUP
         when {
@@ -55,9 +53,7 @@ class AppWidgetAlarm(private val mContext: Context) {
 
     fun stopAlarm() {
         val alarmIntent = Intent(Config.ACTION_AUTO_UPDATE)
-        val pendingIntent = PendingIntent.getBroadcast(
-            mContext, ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT
-        )
+        val pendingIntent = mContext.createPendingIntent(ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         mContext.alarmManager.cancel(pendingIntent)
     }
 }

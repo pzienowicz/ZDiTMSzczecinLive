@@ -15,6 +15,7 @@ import android.util.Log
 import pl.pzienowicz.zditmszczecinlive.activity.WidgetsActivity
 import android.content.ComponentName
 import androidx.preference.PreferenceManager
+import pl.pzienowicz.zditmszczecinlive.createPendingIntent
 
 class WidgetProvider : AppWidgetProvider() {
 
@@ -64,14 +65,14 @@ class WidgetProvider : AppWidgetProvider() {
             intent.action = Config.CLICK_WIDGET_BUTTON
             intent.putExtra(Config.EXTRA_WIDGET_ID, appWidgetId.toString())
 
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = context.createPendingIntent(0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             remoteViews.setOnClickPendingIntent(R.id.setBusStopBtn, pendingIntent)
         }
 
         val intent = Intent(context, javaClass)
         intent.action = Config.ACTION_AUTO_UPDATE
 
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = context.createPendingIntent(0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         remoteViews.setOnClickPendingIntent(R.id.refreshBtn, pendingIntent)
 
         return remoteViews
