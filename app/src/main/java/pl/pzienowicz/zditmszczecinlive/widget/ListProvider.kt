@@ -43,9 +43,10 @@ class ListProvider(
         val tempList: ArrayList<WidgetLine> = ArrayList()
 
         val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
-        val boardResponse = service.getBoard(busStopId).execute()
-        if (boardResponse.isSuccessful && boardResponse.body() != null) {
-            try {
+        try {
+            val boardResponse = service.getBoard(busStopId).execute()
+            if (boardResponse.isSuccessful && boardResponse.body() != null) {
+
                 val board = boardResponse.body()
                 val doc = Jsoup.parse(board!!.text!!)
 
@@ -80,18 +81,17 @@ class ListProvider(
                 if(board.message != null) {
                     tempList.add(WidgetLine("", board.message, ""))
                 }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                tempList.add(WidgetLine("", context.getString(R.string.error_occurred), ""))
-                //Log.e(Config.LOG_TAG, e.message)
             }
-
-            listItemList.clear()
-            listItemList.addAll(tempList)
-
-            val intent = Intent(Config.INTENT_WIDGET_DATA_LOADED)
-            context.sendBroadcast(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tempList.add(WidgetLine("", context.getString(R.string.error_occurred), ""))
         }
+
+        listItemList.clear()
+        listItemList.addAll(tempList)
+
+        val intent = Intent(Config.INTENT_WIDGET_DATA_LOADED)
+        context.sendBroadcast(intent)
     }
 
     override fun onDestroy() {}
