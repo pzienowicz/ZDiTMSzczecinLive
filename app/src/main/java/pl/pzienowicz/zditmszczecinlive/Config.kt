@@ -11,7 +11,7 @@ object Config {
     const val BASE_URL = "https://www.zditm.szczecin.pl/"
     const val BUS_STOP_URL = "https://www.zditm.szczecin.pl/pl/pasazer/rozklady-jazdy/tablica/"
     const val PREFERENCE_SHOW_DIALOG = "showDialog"
-    const val PREFERENCE_FAVOURITE_MAP = "favouriteMap"
+    const val PREFERENCE_FAVOURITE_MAP = "favouriteMapNew"
 
     const val FB_GROUP_URL = "https://www.facebook.com/groups/1241981472572028"
 
