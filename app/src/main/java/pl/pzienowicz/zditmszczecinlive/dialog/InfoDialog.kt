@@ -11,6 +11,7 @@ import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogInfoBinding
 import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
+import pl.pzienowicz.zditmszczecinlive.model.Data
 import pl.pzienowicz.zditmszczecinlive.model.Info
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
@@ -45,13 +46,13 @@ class InfoDialog(context: Context) : Dialog(context) {
 
             val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
             val lines = service.listInfo()
-            lines.enqueue(object : Callback<List<Info>> {
-                override fun onResponse(call: Call<List<Info>>, response: Response<List<Info>>) {
+            lines.enqueue(object : Callback<Data<Info>> {
+                override fun onResponse(call: Call<Data<Info>>, response: Response<Data<Info>>) {
                     binding.progressBarHolder.visibility = View.GONE
 
                     if (response.isSuccessful) {
                         records.clear()
-                        response.body()?.let { records.addAll(it) }
+                        response.body()?.let { records.addAll(it.items) }
                         adapter.notifyDataSetChanged()
 
                         if (records.isEmpty()) {
@@ -62,7 +63,7 @@ class InfoDialog(context: Context) : Dialog(context) {
                     }
                 }
 
-                override fun onFailure(call: Call<List<Info>>, t: Throwable) {
+                override fun onFailure(call: Call<Data<Info>>, t: Throwable) {
                     binding.progressBarHolder.visibility = View.GONE
                     t.printStackTrace()
                     context.showToast(R.string.info_request_error)
@@ -76,12 +77,6 @@ class InfoDialog(context: Context) : Dialog(context) {
                 )
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.email_title))
                 context.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
-            }
-
-            binding.ad1Button.setOnClickListener {
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(context.getString(R.string.latamy_url))
-                context.startActivity(i)
             }
 
             binding.ad2Button.setOnClickListener {

@@ -101,7 +101,7 @@ class WidgetsActivity : AppCompatActivity() {
 
         val dialog = BusStopDialog(this@WidgetsActivity, { busStop ->
 
-            prefs.putString(Config.WIDGET_PREFIX + widgetId, busStop.numer)
+            prefs.putString(Config.WIDGET_PREFIX + widgetId, busStop.number)
 
             val intent = Intent(Config.INTENT_REFRESH_WIDGETS_LIST)
             sendBroadcast(intent)

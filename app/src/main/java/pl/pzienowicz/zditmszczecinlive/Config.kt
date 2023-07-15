@@ -6,10 +6,10 @@ object Config {
 
     const val PRODUCT_WIDGETS_UNLOCK = "widgets_unlock"
 
-    const val URL: String = "https://www.zditm.szczecin.pl/mapy/przystanki-i-pojazdy"
-    const val LINE_URL = "https://www.zditm.szczecin.pl/mapy/linia,"
+    const val URL: String = "https://www.zditm.szczecin.pl/pl/mapy/przystanki-i-pojazdy"
+    const val LINE_URL = "https://www.zditm.szczecin.pl/pl/mapy/linia/"
     const val BASE_URL = "https://www.zditm.szczecin.pl/"
-    const val BUS_STOP_URL = "https://www.zditm.szczecin.pl/pasazer/rozklady-jazdy,tablica,"
+    const val BUS_STOP_URL = "https://www.zditm.szczecin.pl/pl/pasazer/rozklady-jazdy/tablica/"
     const val PREFERENCE_SHOW_DIALOG = "showDialog"
     const val PREFERENCE_FAVOURITE_MAP = "favouriteMap"
 

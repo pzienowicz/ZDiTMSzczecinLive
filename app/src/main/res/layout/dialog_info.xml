@@ -57,32 +57,6 @@
                     android:layout_weight="2"
                     android:layout_height="match_parent"
                     android:padding="5dp"
-                    android:text="@string/ad_latamy"/>
-
-                <Button
-                    android:id="@+id/ad1Button"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/check"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorAccent"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:gravity="center"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
                     android:text="@string/ad_flats"/>
 
                 <Button

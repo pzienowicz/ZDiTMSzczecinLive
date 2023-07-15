@@ -46,11 +46,11 @@ class WidgetProvider : AppWidgetProvider() {
         if(busStopId != null) {
             BusStops.getInstance(context).loadByNumber(busStopId) { busStop ->
                 busStop?.let {
-                    Log.d(Config.LOG_TAG, "busStop: ${busStop.nazwa}")
+                    Log.d(Config.LOG_TAG, "busStop: ${busStop.name}")
 
-                    svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, it.numer)
+                    svcIntent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, it.number)
                     remoteViews.setTextViewText(
-                        R.id.busStopTv, it.nazwa + " " + it.numer.substring(3, 5)
+                        R.id.busStopTv, it.name + " " + it.number.substring(3, 5)
                     )
                     remoteViews.setViewVisibility(R.id.listView, View.VISIBLE)
                     remoteViews.setViewVisibility(R.id.inputLayout, View.GONE)

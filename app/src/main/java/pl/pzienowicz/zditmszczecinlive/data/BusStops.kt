@@ -4,6 +4,7 @@ import android.content.Context
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.model.Data
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
 import pl.pzienowicz.zditmszczecinlive.showToast
@@ -16,18 +17,18 @@ class BusStops(val context: Context) {
     private fun load(onLoaded: () -> Unit) {
         val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
         val lines = service.listBusStops()
-        lines.enqueue(object : Callback<List<BusStop>> {
-            override fun onResponse(call: Call<List<BusStop>>, response: Response<List<BusStop>>) {
+        lines.enqueue(object : Callback<Data<BusStop>> {
+            override fun onResponse(call: Call<Data<BusStop>>, response: Response<Data<BusStop>>) {
                 if (response.isSuccessful) {
                     stops.clear()
-                    response.body()?.let { stops.addAll(it) }
+                    response.body()?.let { stops.addAll(it.items) }
                 } else {
                     context.showToast(R.string.stops_request_error)
                 }
                 onLoaded()
             }
 
-            override fun onFailure(call: Call<List<BusStop>>, t: Throwable) {
+            override fun onFailure(call: Call<Data<BusStop>>, t: Throwable) {
                 context.showToast(R.string.stops_request_error)
             }
         })
@@ -54,7 +55,7 @@ class BusStops(val context: Context) {
     }
 
     private fun getByNumber(number: String): BusStop? {
-        return stops.firstOrNull { it.numer == number }
+        return stops.firstOrNull { it.number == number }
     }
 
     private fun getById(id: String): BusStop? {

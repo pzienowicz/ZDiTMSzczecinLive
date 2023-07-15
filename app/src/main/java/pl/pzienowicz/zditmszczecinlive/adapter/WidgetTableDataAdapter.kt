@@ -25,10 +25,10 @@ class WidgetTableDataAdapter(context: Context, data: List<Widget>)
         when (columnIndex) {
             0 -> textView.text = (rowIndex+1).toString()
             1 -> if(widget.busStop != null) {
-                textView.text = widget.busStop.numer
+                textView.text = widget.busStop.number
             }
             2 -> if(widget.busStop != null) {
-                textView.text = widget.busStop.nazwa
+                textView.text = widget.busStop.name
             }
             3 -> {
                 val imageView = ImageView(context)

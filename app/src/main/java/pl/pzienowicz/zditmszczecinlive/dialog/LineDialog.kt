@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogLineBinding
+import pl.pzienowicz.zditmszczecinlive.model.Data
 import pl.pzienowicz.zditmszczecinlive.model.Line
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient.getRetrofit
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
@@ -22,26 +23,33 @@ class LineDialog(context: Context) : Dialog(context) {
     private val currentLine: Int
     private var binding: DialogLineBinding
 
+    data class LineMatch(
+        val vehicleType: String,
+        val type: String,
+        val subtype: String,
+        val onDemand: Boolean
+    )
+
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         binding = DialogLineBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val types = setOf(
-            "tdz" to Pair(binding.tramNormalTable, binding.tramExtraLabel),
-            "adz" to Pair(binding.busNormalTable, binding.busNormalLabel),
-            "adp" to Pair(binding.busExpressTable, binding.busExpressLabel),
-            "anz" to Pair(binding.busNightTable, binding.busNightLabel),
-            "ada" to Pair(binding.busSubstituteTable, binding.busSubstituteLabel),
-            "tda" to Pair(binding.tramSubstituteTable, binding.tramSubstituteLabel),
-            "tdt" to Pair(binding.tramTouristicTable, binding.tramTouristicLabel),
-            "adt" to Pair(binding.busTouristicTable, binding.busTouristicLabel),
-            "adz1" to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
-            "tdd" to Pair(binding.tramExtraTable, binding.tramExtraLabel),
-            "add" to Pair(binding.busExtraTable, binding.busExtraLabel)
+            LineMatch("tram", "day", "normal", false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),
+            LineMatch("bus","day", "normal", false) to Pair(binding.busNormalTable, binding.busNormalLabel),
+            LineMatch("bus", "day", "fast", false) to Pair(binding.busExpressTable, binding.busExpressLabel),
+            LineMatch("bus", "night", "normal", false) to Pair(binding.busNightTable, binding.busNightLabel),
+            LineMatch("bus", "day", "replacement", false) to Pair(binding.busSubstituteTable, binding.busSubstituteLabel),
+            LineMatch("tram", "day", "replacement", false) to Pair(binding.tramSubstituteTable, binding.tramSubstituteLabel),
+            LineMatch("tram", "day", "tourist", false) to Pair(binding.tramTouristicTable, binding.tramTouristicLabel),
+            LineMatch("bus", "day", "tourist", false) to Pair(binding.busTouristicTable, binding.busTouristicLabel),
+            LineMatch("bus", "day", "normal", true) to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
+            LineMatch("tram", "day", "special", false) to Pair(binding.tramExtraTable, binding.tramExtraLabel),
+            LineMatch("bus", "day", "special", false) to Pair(binding.busExtraTable, binding.busExtraLabel)
         )
 
-        binding.clearFilterText.setOnClickListener { changeFilter(0) }
+        binding.clearFilterText.setOnClickListener { changeFilter(null) }
 
         currentLine = context.prefs.selectedLine
 
@@ -56,14 +64,14 @@ class LineDialog(context: Context) : Dialog(context) {
 
         val service = getRetrofit().create(ZDiTMService::class.java)
         val lines = service.listLines()
-        lines.enqueue(object : Callback<List<Line>?> {
-            override fun onResponse(call: Call<List<Line>?>, response: Response<List<Line>?>) {
+        lines.enqueue(object : Callback<Data<Line>?> {
+            override fun onResponse(call: Call<Data<Line>?>, response: Response<Data<Line>?>) {
                 binding.progressBarHolder.visibility = View.GONE
 
                 if (response.isSuccessful && response.body() != null) {
                     types.forEach {
                         drawLinesTable(
-                            filterLines(response.body(), it.first),
+                            filterLines(response.body()?.items, it.first),
                             it.second
                         )
                     }
@@ -72,15 +80,20 @@ class LineDialog(context: Context) : Dialog(context) {
                 }
             }
 
-            override fun onFailure(call: Call<List<Line>?>, t: Throwable) {
+            override fun onFailure(call: Call<Data<Line>?>, t: Throwable) {
                 binding.progressBarHolder.visibility = View.GONE
                 context.showToast(R.string.lines_request_error)
             }
         })
     }
 
-    private fun filterLines(lines: List<Line>?, type: String): List<Line> {
-        return lines?.filter { it.type == type } ?: emptyList()
+    private fun filterLines(lines: List<Line>?, match: LineMatch): List<Line> {
+        return lines?.filter {
+            it.vehicle_type == match.vehicleType &&
+            it.type == match.type &&
+            it.subtype == match.subtype &&
+            it.on_demand == match.onDemand
+        } ?: emptyList()
     }
 
     private fun drawLinesTable(lines: List<Line>, pair: Pair<TableLayout, LinearLayout>) {
@@ -131,7 +144,7 @@ class LineDialog(context: Context) : Dialog(context) {
                     cellLayout.isFocusable = true
                     cellLayout.id = line.id
 
-                    if (line.isChanged()) {
+                    if (line.highlighted) {
                         cellLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
                     } else {
                         cellLayout.setBackgroundResource(R.drawable.selector_line)
@@ -141,8 +154,10 @@ class LineDialog(context: Context) : Dialog(context) {
                         tv.setTextColor(ContextCompat.getColor(context, R.color.red))
                     }
 
-                    cellLayout.setOnClickListener { view: View -> changeFilter(view.id) }
-                    tv.text = line.name
+                    cellLayout.setOnClickListener { view: View ->
+                        changeFilter(lines.first { it.id == view.id })
+                    }
+                    tv.text = line.number
                 } else {
                     tv.setTextColor(ContextCompat.getColor(context, android.R.color.white))
                 }
@@ -154,10 +169,12 @@ class LineDialog(context: Context) : Dialog(context) {
         }
     }
 
-    private fun changeFilter(id: Int) {
-        context.prefs.selectedLine = id
+    private fun changeFilter(line: Line?) {
         val intent = Intent(Config.INTENT_LOAD_NEW_URL)
-        intent.putExtra(Config.EXTRA_LINE_ID, id)
+        line?.let {
+            context.prefs.selectedLine = line.id
+            intent.putExtra(Config.EXTRA_LINE_ID, "${line.id}/${line.number}")
+        }
         context.sendBroadcast(intent)
         dismiss()
     }

@@ -10,14 +10,13 @@ import java.util.ArrayList
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.model.WidgetLine
-import org.jsoup.Jsoup
 import android.util.Log
 import android.view.View
 import androidx.preference.PreferenceManager
 import pl.pzienowicz.zditmszczecinlive.Config
+import pl.pzienowicz.zditmszczecinlive.model.Board
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
-import java.io.IOException
 import java.lang.Exception
 
 class ListProvider(
@@ -48,38 +47,23 @@ class ListProvider(
             if (boardResponse.isSuccessful && boardResponse.body() != null) {
 
                 val board = boardResponse.body()
-                val doc = Jsoup.parse(board!!.text!!)
-
-                Log.d(Config.LOG_TAG, doc.text())
-
-                val elements = doc.getElementsByTag("tbody")
-
-                if (elements.size > 0) {
-                    val lines = elements[0].getElementsByTag("tr")
-                    for (line in lines) {
-                        val lineName = line.getElementsByClass("gmvlinia")
-                        val direction = line.getElementsByClass("gmvkierunek")
-                        val time = line.getElementsByClass("gmvgodzina")
-
-                        try {
-                            tempList.add(WidgetLine(lineName[0].text(), direction[0].text(), time[0].text()))
-                        } catch (e: Exception) {
-                            Log.e(Config.LOG_TAG, e.message ?: "Unknown error")
-                            Log.d(Config.LOG_TAG, line.toString())
-
-                            val error = line.getElementsByClass("gmvblad")
-                            if(!error.isEmpty() && error[0] != null) {
-                                tempList.add(WidgetLine("", error[0].text(), ""))
-                                break
-                            } else {
-                                tempList.add(WidgetLine("", context.getString(R.string.error_occurred), ""))
+                board?.let {
+                    if (!it.departures.isNullOrEmpty()) {
+                        for (departure in it.departures) {
+                            try {
+                                tempList.add(
+                                    WidgetLine(departure.line_number, departure.direction, getTime(departure))
+                                )
+                            } catch (e: Exception) {
+                                Log.e(Config.LOG_TAG, e.message ?: "Unknown error")
+                                Log.d(Config.LOG_TAG, departure.toString())
                             }
                         }
                     }
-                }
 
-                if(board.message != null) {
-                    tempList.add(WidgetLine("", board.message, ""))
+                    it.message?.let { message ->
+                        tempList.add(WidgetLine("", message, ""))
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -129,4 +113,14 @@ class ListProvider(
     override fun getLoadingView(): RemoteViews? = null
 
     override fun getViewTypeCount(): Int = 1
+
+    private fun getTime(departure: Board.Departure): String {
+        departure.time_real?.let {
+            return "za $it min"
+        }
+        departure.time_scheduled?.let {
+            return it
+        }
+        return ""
+    }
 }

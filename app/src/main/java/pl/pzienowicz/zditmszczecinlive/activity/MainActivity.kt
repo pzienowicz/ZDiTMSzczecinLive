@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.webView.settings.javaScriptEnabled = true
+        binding.webView.settings.domStorageEnabled = true
         binding.webView.webViewClient = object : WebViewClient() {}
 
         bcr = registerReceiver(listOf(
@@ -96,12 +97,13 @@ class MainActivity : AppCompatActivity() {
         )) { intent ->
             when (intent?.action) {
                 Config.INTENT_LOAD_NEW_URL -> {
-                    val lineId = intent.getIntExtra(Config.EXTRA_LINE_ID, 0)
-                    currentUrl = if (lineId == 0) {
+                    val lineId = intent.getStringExtra(Config.EXTRA_LINE_ID)
+                    currentUrl = if (lineId.isNullOrEmpty()) {
                         Config.URL
                     } else {
                         Config.LINE_URL + lineId
                     }
+                    Log.d(Config.LOG_TAG, currentUrl)
                     binding.webView.loadUrl(currentUrl)
                 }
                 Config.INTENT_REFRESH_SETTINGS -> refreshSettings()
@@ -128,14 +130,13 @@ class MainActivity : AppCompatActivity() {
         mapTimer = MapTimer {
             runOnUiThread {
                 currentLocation?.let {
-                    val url = currentUrl
+                    var url = currentUrl
                         .plus("?lat=" + it.latitude)
                         .plus("&lon=" + it.longitude)
-                        .apply {
-                            if (zoomMap) {
-                                plus("&zoom=16")
-                            }
-                        }
+
+                    if (zoomMap) {
+                        url = url.plus("&zoom=16")
+                    }
                     Log.d(Config.LOG_TAG, url)
                     binding.webView.loadUrl(url)
                 }

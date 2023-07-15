@@ -1,7 +1,6 @@
 package pl.pzienowicz.zditmszczecinlive.adapter
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -31,13 +30,13 @@ class InfoListAdapter(
             ?: context.inflater.inflate(R.layout.row_info, parent, false)
 
         val infoTextView = row.findViewById<TextView>(R.id.infoText)
-        infoTextView.text = info.description
+        infoTextView.text = info.description.pl
 
         val fromDateTv = row.findViewById<TextView>(R.id.fromDate)
         fromDateTv.text = context.getString(R.string.from_date, info.fromDate)
 
         val toDateTv = row.findViewById<TextView>(R.id.toDate)
-        if (info.to != null) {
+        if (info.valid_to != null) {
             toDateTv.visibility = View.VISIBLE
             toDateTv.text = context.getString(R.string.to_date, info.toDate)
         } else {
