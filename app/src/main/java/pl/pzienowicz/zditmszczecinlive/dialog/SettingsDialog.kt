@@ -20,22 +20,6 @@ class SettingsDialog(context: Context) : Dialog(context) {
         binding = DialogSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.locationCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            context.prefs.useLocation = isChecked
-            val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
-            context.sendBroadcast(intent)
-        }
-
-        binding.locationCheckbox.isChecked = context.prefs.useLocation
-
-        binding.zoomMapCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            context.prefs.zoomMap = isChecked
-            val intent = Intent(Config.INTENT_REFRESH_SETTINGS)
-            context.sendBroadcast(intent)
-        }
-
-        binding.zoomMapCheckbox.isChecked = context.prefs.zoomMap
-
         binding.refreshWidgetsCheckbox.setOnCheckedChangeListener { _, isChecked ->
             context.prefs.refreshWidgets = isChecked
             val intent = Intent(Config.ACTION_AUTO_UPDATE)

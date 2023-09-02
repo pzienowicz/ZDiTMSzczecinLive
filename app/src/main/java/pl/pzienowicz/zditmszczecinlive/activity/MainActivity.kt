@@ -7,13 +7,12 @@ import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.webkit.WebViewClient
+import android.webkit.GeolocationPermissions
+import android.webkit.WebChromeClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -28,9 +27,9 @@ class MainActivity : AppCompatActivity() {
     private var bcr: BroadcastReceiver? = null
     private var currentLocation: Location? = null
     private lateinit var mapTimer: MapTimer
-    private var zoomMap = false
     private var currentUrl = Config.URL
-    private lateinit var locationListener: LocationListener
+    var mGeoLocationCallback: GeolocationPermissions.Callback? = null
+    var mGeoLocationRequestOrigin: String? = null
 
     private lateinit var binding: ActivityMainBinding
 
@@ -88,7 +87,29 @@ class MainActivity : AppCompatActivity() {
 
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
-        binding.webView.webViewClient = object : WebViewClient() {}
+        binding.webView.settings.setGeolocationEnabled(true)
+        binding.webView.webChromeClient = object : WebChromeClient() {
+            override fun onGeolocationPermissionsShowPrompt(
+                origin: String, callback: GeolocationPermissions.Callback
+            ) {
+                if (
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    mGeoLocationCallback = callback
+                    mGeoLocationRequestOrigin = origin
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        MY_PERMISSIONS_REQUEST_LOCATION
+                    )
+                } else {
+                    callback.invoke(origin, true, false)
+                }
+            }
+        }
 
         bcr = registerReceiver(listOf(
             Config.INTENT_LOAD_NEW_URL,
@@ -106,20 +127,9 @@ class MainActivity : AppCompatActivity() {
                     Log.d(Config.LOG_TAG, currentUrl)
                     binding.webView.loadUrl(currentUrl)
                 }
-                Config.INTENT_REFRESH_SETTINGS -> refreshSettings()
                 Config.INTENT_NO_INTERNET_CONNECTION -> showNoInternetSnackbar()
             }
         }
-
-        locationListener = object : LocationListener {
-            override fun onLocationChanged(it: Location) {
-                currentLocation = it
-            }
-            override fun onProviderDisabled(provider: String) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-        }
-        refreshSettings()
 
         if (savedInstanceState != null) {
             binding.webView.restoreState(savedInstanceState)
@@ -130,13 +140,9 @@ class MainActivity : AppCompatActivity() {
         mapTimer = MapTimer {
             runOnUiThread {
                 currentLocation?.let {
-                    var url = currentUrl
+                    val url = currentUrl
                         .plus("?lat=" + it.latitude)
                         .plus("&lon=" + it.longitude)
-
-                    if (zoomMap) {
-                        url = url.plus("&zoom=16")
-                    }
                     Log.d(Config.LOG_TAG, url)
                     binding.webView.loadUrl(url)
                 }
@@ -152,32 +158,6 @@ class MainActivity : AppCompatActivity() {
         dialog.setFullWidth()
         dialog.show()
         binding.multipleActions.collapse()
-    }
-
-    private fun refreshSettings() {
-        if (isGpsProviderAvailable && prefs.useLocation) {
-            if (
-                ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 0, 0f, locationListener
-                )
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MY_PERMISSIONS_REQUEST_LOCATION
-                )
-            }
-        } else {
-            locationManager.removeUpdates(locationListener)
-            currentLocation = null
-        }
-
-        zoomMap = prefs.zoomMap
     }
 
     public override fun onDestroy() {
@@ -233,30 +213,16 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        prefs.zoomMap = false
-                        prefs.useLocation = false
-                    }
-                    locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        0,
-                        0f,
-                        locationListener
-                    )
-                } else {
-                    prefs.zoomMap = false
-                    prefs.useLocation = false
+                    mGeoLocationCallback?.invoke(mGeoLocationRequestOrigin, true, false)
                 }
             }
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
     }
 
     private fun showNoInternetSnackbar() {

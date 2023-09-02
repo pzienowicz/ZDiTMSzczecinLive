@@ -4,18 +4,6 @@
     android:layout_height="match_parent"
     android:padding="15dp">
 
-    <CheckBox
-        android:id="@+id/locationCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/use_location" />
-
-    <CheckBox
-        android:id="@+id/zoomMapCheckbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/zoom_map" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
