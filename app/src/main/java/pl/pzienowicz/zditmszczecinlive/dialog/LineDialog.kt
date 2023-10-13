@@ -93,7 +93,12 @@ class LineDialog(context: Context) : Dialog(context) {
             it.type == match.type &&
             it.subtype == match.subtype &&
             it.on_demand == match.onDemand
-        } ?: emptyList()
+        }?.sortedWith(compareBy {
+            when {
+                it.number.toIntOrNull() != null -> it.number.toInt()
+                else -> it.number
+            }
+        }) ?: emptyList()
     }
 
     private fun drawLinesTable(lines: List<Line>, pair: Pair<TableLayout, LinearLayout>) {
