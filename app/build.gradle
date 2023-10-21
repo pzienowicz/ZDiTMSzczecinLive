@@ -19,8 +19,8 @@ android {
         applicationId "pl.pzienowicz.zditmszczecinlive"
         minSdkVersion 15
         targetSdkVersion 33
-        versionCode 62
-        versionName "1.16.3"
+        versionCode 63
+        versionName "1.16.4"
     }
     buildTypes {
         release {
@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.android.billingclient:billing-ktx:4.0.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.karumi:dexter:6.2.3'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
