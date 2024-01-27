@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 33
@@ -21,16 +20,14 @@ android {
         minSdkVersion 19
         targetSdkVersion 33
         versionCode 65
-        versionName "1.16.6"
+        versionName "1.16.7"
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    dexOptions {
-        preDexLibraries = false
     }
     namespace 'pl.pzienowicz.zditmszczecinlive'
 }
@@ -40,7 +37,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     implementation 'de.codecrafters.tableview:tableview:2.8.0'
-    implementation 'com.android.billingclient:billing-ktx:6.1.0'
+    implementation 'com.android.billingclient:billing-ktx:6.0.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'androidx.preference:preference-ktx:1.2.1'
@@ -48,7 +45,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.google.android.gms:play-services-location:21.1.0'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
