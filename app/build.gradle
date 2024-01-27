@@ -4,23 +4,24 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 33
-    buildToolsVersion '30.0.2'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     buildFeatures {
         viewBinding = true
     }
 
     defaultConfig {
         applicationId "pl.pzienowicz.zditmszczecinlive"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 33
-        versionCode 64
-        versionName "1.16.5"
+        versionCode 65
+        versionName "1.16.6"
     }
     buildTypes {
         release {
@@ -31,6 +32,7 @@ android {
     dexOptions {
         preDexLibraries = false
     }
+    namespace 'pl.pzienowicz.zditmszczecinlive'
 }
 
 dependencies {
@@ -38,7 +40,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     implementation 'de.codecrafters.tableview:tableview:2.8.0'
-    implementation 'com.android.billingclient:billing-ktx:4.0.0'
+    implementation 'com.android.billingclient:billing-ktx:6.1.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'androidx.preference:preference-ktx:1.2.1'
@@ -46,13 +48,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.1.0'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-
 
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
