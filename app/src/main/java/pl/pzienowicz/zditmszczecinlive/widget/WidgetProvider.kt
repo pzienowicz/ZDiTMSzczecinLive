@@ -104,16 +104,16 @@ class WidgetProvider : AppWidgetProvider() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
 
-        Log.d(Config.LOG_TAG, "alarm started")
-        val appWidgetAlarm = AppWidgetAlarm(context.applicationContext)
-        appWidgetAlarm.startAlarm()
+//        Log.d(Config.LOG_TAG, "alarm started")
+//        val appWidgetAlarm = AppWidgetAlarm(context.applicationContext)
+//        appWidgetAlarm.startAlarm()
     }
 
     override fun onDisabled(context: Context) {
         super.onDisabled(context)
 
-        Log.d(Config.LOG_TAG, "alarm stopped")
-        val appWidgetAlarm = AppWidgetAlarm(context.applicationContext)
-        appWidgetAlarm.stopAlarm()
+//        Log.d(Config.LOG_TAG, "alarm stopped")
+//        val appWidgetAlarm = AppWidgetAlarm(context.applicationContext)
+//        appWidgetAlarm.stopAlarm()
     }
 }

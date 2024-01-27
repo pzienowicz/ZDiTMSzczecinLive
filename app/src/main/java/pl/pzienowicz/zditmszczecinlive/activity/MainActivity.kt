@@ -21,7 +21,6 @@ import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 import pl.pzienowicz.zditmszczecinlive.dialog.*
 import pl.pzienowicz.zditmszczecinlive.timer.MapTimer
-import pl.pzienowicz.zditmszczecinlive.widget.AppWidgetAlarm
 
 class MainActivity : AppCompatActivity() {
 
@@ -151,9 +150,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         mapTimer.start()
-
-        val alarm = AppWidgetAlarm(this)
-        alarm.startAlarm()
     }
 
     private fun showDialog(dialog: Dialog) {

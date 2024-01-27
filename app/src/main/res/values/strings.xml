@@ -44,6 +44,7 @@
     <string name="contact_us">Napisz do nas</string>
     <string name="check">Sprawdź</string>
     <string name="call">Zadzwoń</string>
+    <string name="understand">Rozumiem</string>
 
     <string name="type_bus_stop_number">Podaj numer przystanku</string>
     <string name="scan_bus_stop_number">Zeskanuj kod przystanku</string>
@@ -62,6 +63,8 @@
     <string name="payment_error">Wystąpił błąd, spróbuj ponownie lub skontaktuj się z nami</string>
 
     <string name="camera_permission_description">Potrzebujemy tego uprawnienia aby za pomocą aparatu zeskanować kod QR.</string>
+    <string name="permissions_needed">Potrzebne uprawnienia</string>
+    <string name="alarm_permission_needed">Przyznaj aplikacji dostęp do alarmów i przypomnień aby widgety mogły być odświeżane automatycznie</string>
 
     <string name="refresh_widgets_every">Odświeżaj widgety co</string>
     <string name="seconds">sekund(y)</string>

@@ -41,8 +41,17 @@ class AppWidgetAlarm(private val mContext: Context) {
         val am = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmType = AlarmManager.RTC_WAKEUP
         when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                -> am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
+                } else {
+                    if (am.canScheduleExactAlarms()) {
+                        am.setExactAndAllowWhileIdle(alarmType, calendar.timeInMillis, pendingIntent)
+                    } else {
+                        Log.w(Config.LOG_TAG, "no permission to set alarm")
+                    }
+                }
+            }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 -> am.setExact(alarmType, calendar.timeInMillis, pendingIntent)
             else -> am.set(alarmType, calendar.timeInMillis, pendingIntent)

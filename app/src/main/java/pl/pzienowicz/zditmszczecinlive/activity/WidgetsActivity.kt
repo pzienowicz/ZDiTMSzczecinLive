@@ -1,5 +1,6 @@
 package pl.pzienowicz.zditmszczecinlive.activity
 
+import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.graphics.Color
@@ -16,10 +17,12 @@ import pl.pzienowicz.zditmszczecinlive.dialog.BusStopDialog
 import android.content.Intent
 import android.util.Log
 import android.content.ComponentName
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityWidgetsBinding
+import pl.pzienowicz.zditmszczecinlive.dialog.AlarmDialog
 
 class WidgetsActivity : AppCompatActivity() {
 
@@ -96,6 +99,14 @@ class WidgetsActivity : AppCompatActivity() {
         if(!billingClient.areWidgetsUnlocked()) {
             this.widgetId = widgetId
             billingClient.unlockWidgets()
+            return
+        }
+
+        val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
+            val dialog = AlarmDialog(this@WidgetsActivity)
+            dialog.setFullWidth()
+            dialog.show()
             return
         }
 
