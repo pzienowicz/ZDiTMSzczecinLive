@@ -2,31 +2,31 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     defaultConfig {
         applicationId "pl.pzienowicz.zditmszczecinlive"
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion 23
+        targetSdkVersion 35
         versionCode 65
         versionName "1.16.7"
-        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     namespace 'pl.pzienowicz.zditmszczecinlive'
@@ -36,22 +36,22 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.2'
 
-    implementation 'de.codecrafters.tableview:tableview:2.8.0'
-    implementation 'com.android.billingclient:billing-ktx:6.0.0'
-    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+    implementation 'com.android.billingclient:billing:8.3.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation 'com.karumi:dexter:6.2.3'
+    implementation 'androidx.core:core-ktx:1.17.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:3.0.0'
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
+    implementation 'com.google.code.gson:gson:2.13.2'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.3.2'
 
-    implementation 'org.jsoup:jsoup:1.14.3'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'org.jsoup:jsoup:1.22.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
 }
