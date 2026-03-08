@@ -15,7 +15,7 @@ class GooglePlayBillingClient(
 
     private var isConnected = false
     private var areWidgetsUnlocked = false
-    var skuMap: HashMap<String, SkuDetails> = HashMap()
+    private var productDetailsMap: HashMap<String, ProductDetails> = HashMap()
 
     private var billingClient: BillingClient = BillingClient
         .newBuilder(activity)
@@ -34,7 +34,7 @@ class GooglePlayBillingClient(
                 activity.showBar(R.string.payment_error)
             }
         }
-        .enablePendingPurchases()
+        .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
         .build()
 
     init {
@@ -68,44 +68,56 @@ class GooglePlayBillingClient(
             Log.v(Config.LOG_TAG, "debugMessage : $billingDebugMessage")
         }
 
-        if(purchase.skus.first().equals(Config.PRODUCT_WIDGETS_UNLOCK)) {
+        if (purchase.products.first() == Config.PRODUCT_WIDGETS_UNLOCK) {
             areWidgetsUnlocked = true
             onPurchased()
         }
     }
 
     fun unlockWidgets() {
-        skuMap[Config.PRODUCT_WIDGETS_UNLOCK]?.let {
+        productDetailsMap[Config.PRODUCT_WIDGETS_UNLOCK]?.let { productDetails ->
+            val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                .setProductDetails(productDetails)
+                .build()
+
             val flowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(it)
+                .setProductDetailsParamsList(listOf(productDetailsParams))
                 .build()
 
             billingClient.launchBillingFlow(activity, flowParams)
         }
     }
 
-    fun areWidgetsUnlocked()= areWidgetsUnlocked
+    fun areWidgetsUnlocked() = areWidgetsUnlocked
 
     fun loadDetails() {
-        val skuList = listOf(
-            Config.PRODUCT_WIDGETS_UNLOCK
+        val productList = listOf(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(Config.PRODUCT_WIDGETS_UNLOCK)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
         )
 
-        val params = SkuDetailsParams.newBuilder()
-        params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP)
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
 
-        billingClient.querySkuDetailsAsync(params.build()) { billingResult, skuDetailsList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
-                for (skuDetails in skuDetailsList) {
-                    skuMap[skuDetails.sku] = skuDetails
+        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsResult ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                for (productDetails in productDetailsResult.productDetailsList) {
+                    productDetailsMap[productDetails.productId] = productDetails
                 }
             }
 
-            billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP) { billingResult, purchases ->
-                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            val purchasesParams = QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+
+            billingClient.queryPurchasesAsync(purchasesParams) { purchaseResult, purchases ->
+                if (purchaseResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     purchases.forEach {
                         if (it.purchaseState == Purchase.PurchaseState.PURCHASED
-                            && it.skus.first().equals(Config.PRODUCT_WIDGETS_UNLOCK)
+                            && it.products.first() == Config.PRODUCT_WIDGETS_UNLOCK
                         ) {
                             Log.d(Config.LOG_TAG, "areWidgetsUnlocked")
                             areWidgetsUnlocked = true
