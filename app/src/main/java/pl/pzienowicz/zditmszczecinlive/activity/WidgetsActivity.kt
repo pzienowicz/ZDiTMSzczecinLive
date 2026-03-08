@@ -3,22 +3,22 @@ package pl.pzienowicz.zditmszczecinlive.activity
 import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
 import android.content.*
-import android.graphics.Color
 import android.os.Bundle
-import de.codecrafters.tableview.TableView
-import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import pl.pzienowicz.zditmszczecinlive.adapter.WidgetTableDataAdapter
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.data.Widget
 import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 import java.util.ArrayList
-import de.codecrafters.tableview.model.TableColumnWeightModel
 import pl.pzienowicz.zditmszczecinlive.dialog.BusStopDialog
 import android.content.Intent
 import android.util.Log
 import android.content.ComponentName
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityWidgetsBinding
@@ -57,25 +57,8 @@ class WidgetsActivity : AppCompatActivity() {
             }
         )
 
-        val tableView = binding.tableView as TableView<*>
-
-        val columnModel = TableColumnWeightModel(4)
-            .apply {
-                setColumnWeight(0, 1)
-                setColumnWeight(1, 2)
-                setColumnWeight(2, 5)
-                setColumnWeight(3, 1)
-            }
-
-        val headerAdapter = SimpleTableHeaderAdapter(
-            this,
-            *resources.getStringArray(R.array.headers)
-        )
-        headerAdapter.setTextColor(Color.parseColor("#FFFFFF"))
-
-        tableView.columnModel = columnModel
-        tableView.headerAdapter = headerAdapter
-        tableView.dataAdapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
 
         reloadWidgets()
 
@@ -115,7 +98,7 @@ class WidgetsActivity : AppCompatActivity() {
             prefs.putString(Config.WIDGET_PREFIX + widgetId, busStop.number)
 
             val intent = Intent(Config.INTENT_REFRESH_WIDGETS_LIST)
-            sendBroadcast(intent)
+            sendLocalBroadcast(intent)
 
             val intent2 = Intent(this, WidgetProvider::class.java)
             intent2.action = Config.ACTION_AUTO_UPDATE

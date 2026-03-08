@@ -69,6 +69,7 @@
     <string name="refresh_widgets_every">Odświeżaj widgety co</string>
     <string name="seconds">sekund(y)</string>
 
+    <string name="edit">Edytuj</string>
     <string name="error_occurred">Wystąpił błąd, pracujemy już nad tym</string>
 
     <string-array name="headers">
