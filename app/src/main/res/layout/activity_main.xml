@@ -3,12 +3,14 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swiperefresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
 
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/webView"/>
+        android:id="@+id/webView"
+        android:fitsSystemWindows="true"/>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
@@ -17,7 +19,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="48dp"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         fab:fab_labelStyle="@style/menu_labels_style"
@@ -56,14 +58,6 @@
             fab:fab_size="mini"
             fab:fab_title="Lista linii"
             fab:fab_icon="@drawable/ic_directions_bus_white_48dp"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/show_cameras"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_size="mini"
-            fab:fab_title="Kamery miejskie"
-            fab:fab_icon="@drawable/baseline_live_tv_white_24"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/settings"

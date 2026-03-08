@@ -16,11 +16,13 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import android.view.WindowInsets
 import androidx.core.app.ActivityCompat
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 import pl.pzienowicz.zditmszczecinlive.dialog.*
 import pl.pzienowicz.zditmszczecinlive.timer.MapTimer
+import androidx.core.net.toUri
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        window.insetsController?.hide(WindowInsets.Type.statusBars())
 
         prefs.selectedLine = 0
 
@@ -64,10 +68,6 @@ class MainActivity : AppCompatActivity() {
             showDialog(LineDialog(this))
         }
 
-        binding.showCameras.setOnClickListener {
-            showDialog(CamerasDialog(this))
-        }
-
         binding.settings.setOnClickListener {
             showDialog(SettingsDialog(this))
         }
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.forum.setOnClickListener {
             val facebookIntent = Intent(Intent.ACTION_VIEW)
-            facebookIntent.data = Uri.parse(Config.FB_GROUP_URL)
+            facebookIntent.data = Config.FB_GROUP_URL.toUri()
             startActivity(facebookIntent)
             binding.multipleActions.collapse()
         }
