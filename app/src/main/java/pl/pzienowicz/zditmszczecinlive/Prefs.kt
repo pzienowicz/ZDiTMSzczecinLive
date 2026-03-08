@@ -3,6 +3,7 @@ package pl.pzienowicz.zditmszczecinlive
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 
 val Context.prefs: Prefs
     get() = Prefs(this)
@@ -12,24 +13,24 @@ class Prefs (context: Context) {
 
     var selectedLine: Int
         get() = prefs.getInt(Config.PREFERENCE_SELECTED_LINE, 0)
-        set(value) = prefs.edit().putInt(Config.PREFERENCE_SELECTED_LINE, value).apply()
+        set(value) = prefs.edit { putInt(Config.PREFERENCE_SELECTED_LINE, value) }
 
     var favouriteMap: String
         get() = prefs.getString(Config.PREFERENCE_FAVOURITE_MAP, Config.URL) ?: Config.URL
-        set(value) = prefs.edit().putString(Config.PREFERENCE_FAVOURITE_MAP, value).apply()
+        set(value) = prefs.edit { putString(Config.PREFERENCE_FAVOURITE_MAP, value) }
 
     var showInitDialog: Boolean
         get() = prefs.getBoolean(Config.PREFERENCE_SHOW_DIALOG, true)
-        set(value) = prefs.edit().putBoolean(Config.PREFERENCE_SHOW_DIALOG, value).apply()
+        set(value) = prefs.edit { putBoolean(Config.PREFERENCE_SHOW_DIALOG, value) }
 
     var refreshWidgets: Boolean
         get() = prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)
-        set(value) = prefs.edit().putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, value).apply()
+        set(value) = prefs.edit { putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, value) }
 
     var refreshWidgetsTime: String
         get() = prefs.getString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, "30") ?: "30"
-        set(value) = prefs.edit().putString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, value).apply()
+        set(value) = prefs.edit { putString(Config.PREFERENCE_WIDGETS_REFRESH_TIME, value) }
 
-    fun putString(key: String, value: String?) = prefs.edit().putString(key, value).apply()
+    fun putString(key: String, value: String?) = prefs.edit { putString(key, value) }
     fun getString(key: String): String? = prefs.getString(key, null)
 }
