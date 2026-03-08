@@ -56,7 +56,7 @@ class LineDialog(context: Context) : Dialog(context) {
         if (!context.isNetworkAvailable) {
             context.showToast(R.string.no_internet)
             val intent = Intent(Config.INTENT_NO_INTERNET_CONNECTION)
-            context.sendBroadcast(intent)
+            context.sendLocalBroadcast(intent)
             dismiss()
         }
 
@@ -180,7 +180,7 @@ class LineDialog(context: Context) : Dialog(context) {
             context.prefs.selectedLine = line.id
             intent.putExtra(Config.EXTRA_LINE_ID, "${line.id}/${line.number}")
         }
-        context.sendBroadcast(intent)
+        context.sendLocalBroadcast(intent)
         dismiss()
     }
 }

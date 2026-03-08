@@ -10,6 +10,7 @@ import android.content.res.Configuration
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Build
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -69,7 +70,7 @@ fun Context.showToast(@StringRes text: Int) {
 }
 
 val Context.isNetworkAvailable
-    get() = connectivityManager.activeNetworkInfo != null
+    get() = connectivityManager.activeNetwork != null
 
 val Context.isGpsProviderAvailable
     get() = packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION)
@@ -92,6 +93,11 @@ fun Context.registerReceiver(
             onReceive(p1)
         }
     }
-    registerReceiver(bcr, filter)
+    ContextCompat.registerReceiver(this, bcr, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     return bcr
+}
+
+fun Context.sendLocalBroadcast(intent: Intent) {
+    intent.setPackage(packageName)
+    sendBroadcast(intent)
 }

@@ -15,6 +15,7 @@ import pl.pzienowicz.zditmszczecinlive.model.Data
 import pl.pzienowicz.zditmszczecinlive.model.Info
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
+import pl.pzienowicz.zditmszczecinlive.sendLocalBroadcast
 import pl.pzienowicz.zditmszczecinlive.showToast
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,7 +39,7 @@ class InfoDialog(context: Context) : Dialog(context) {
             context.showToast(R.string.no_internet)
 
             val intent = Intent(Config.INTENT_NO_INTERNET_CONNECTION)
-            context.sendBroadcast(intent)
+            context.sendLocalBroadcast(intent)
 
             dismiss()
         } else {
