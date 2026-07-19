@@ -23,6 +23,18 @@ class LineDialog(context: Context) : Dialog(context) {
     private val currentLine: Int
     private var binding: DialogLineBinding
 
+    private object LineApiValue {
+        const val BUS = "BUS"
+        const val TRAM = "TRAM"
+        const val DAY = "DAY"
+        const val NIGHT = "NIGHT"
+        const val NORMAL = "NORMAL"
+        const val FAST = "FAST"
+        const val REPLACEMENT = "REPLACEMENT"
+        const val SPECIAL = "SPECIAL"
+        const val TOURIST = "TOURIST"
+    }
+
     data class LineMatch(
         val vehicleType: String,
         val type: String,
@@ -36,17 +48,17 @@ class LineDialog(context: Context) : Dialog(context) {
         setContentView(binding.root)
 
         val types = setOf(
-            LineMatch("tram", "day", "normal", false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),
-            LineMatch("bus","day", "normal", false) to Pair(binding.busNormalTable, binding.busNormalLabel),
-            LineMatch("bus", "day", "fast", false) to Pair(binding.busExpressTable, binding.busExpressLabel),
-            LineMatch("bus", "night", "normal", false) to Pair(binding.busNightTable, binding.busNightLabel),
-            LineMatch("bus", "day", "replacement", false) to Pair(binding.busSubstituteTable, binding.busSubstituteLabel),
-            LineMatch("tram", "day", "replacement", false) to Pair(binding.tramSubstituteTable, binding.tramSubstituteLabel),
-            LineMatch("tram", "day", "tourist", false) to Pair(binding.tramTouristicTable, binding.tramTouristicLabel),
-            LineMatch("bus", "day", "tourist", false) to Pair(binding.busTouristicTable, binding.busTouristicLabel),
-            LineMatch("bus", "day", "normal", true) to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
-            LineMatch("tram", "day", "special", false) to Pair(binding.tramExtraTable, binding.tramExtraLabel),
-            LineMatch("bus", "day", "special", false) to Pair(binding.busExtraTable, binding.busExtraLabel)
+            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.busNormalTable, binding.busNormalLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.FAST, false) to Pair(binding.busExpressTable, binding.busExpressLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.NIGHT, LineApiValue.NORMAL, false) to Pair(binding.busNightTable, binding.busNightLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.REPLACEMENT, false) to Pair(binding.busSubstituteTable, binding.busSubstituteLabel),
+            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.REPLACEMENT, false) to Pair(binding.tramSubstituteTable, binding.tramSubstituteLabel),
+            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.TOURIST, false) to Pair(binding.tramTouristicTable, binding.tramTouristicLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.TOURIST, false) to Pair(binding.busTouristicTable, binding.busTouristicLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.NORMAL, true) to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
+            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.SPECIAL, false) to Pair(binding.tramExtraTable, binding.tramExtraLabel),
+            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.SPECIAL, false) to Pair(binding.busExtraTable, binding.busExtraLabel)
         )
 
         binding.clearFilterText.setOnClickListener { changeFilter(null) }

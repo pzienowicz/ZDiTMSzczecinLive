@@ -11,7 +11,7 @@ import retrofit2.http.Path
 
 interface ZDiTMService {
 
-    @GET("/api/v1/lines")
+    @GET("/api/v2/lines")
     fun listLines(): Call<Data<Line>>
 
     @GET("api/v2/timetable-change-descriptions")
