@@ -14,12 +14,12 @@ interface ZDiTMService {
     @GET("/api/v1/lines")
     fun listLines(): Call<Data<Line>>
 
-    @GET("api/v1/timetable-change-descriptions")
+    @GET("api/v2/timetable-change-descriptions")
     fun listInfo(): Call<Data<Info>>
 
     @GET("api/v1/displays/{stopNumber}")
     fun getBoard(@Path("stopNumber") busStopNumber: String): Call<Board>
 
-    @GET("api/v1/stops")
+    @GET("api/v2/stops")
     fun listBusStops(): Call<Data<BusStop>>
 }
