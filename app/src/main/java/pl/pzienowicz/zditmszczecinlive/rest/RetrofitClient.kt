@@ -8,14 +8,12 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private const val USER_AGENT = "Komunikacja Miejska Szczecin (aplikacja nieoficjalna)"
-
     fun getRetrofit(): Retrofit {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor { chain ->
             val request = chain.request()
                 .newBuilder()
-                .header("User-Agent", USER_AGENT)
+                .header("User-Agent", Config.USER_AGENT)
                 .build()
 
             chain.proceed(request)
