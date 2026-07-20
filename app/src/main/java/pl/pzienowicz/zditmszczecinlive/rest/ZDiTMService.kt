@@ -17,7 +17,7 @@ interface ZDiTMService {
     @GET("api/v2/timetable-change-descriptions")
     fun listInfo(): Call<Data<Info>>
 
-    @GET("api/v1/displays/{stopNumber}")
+    @GET("api/v2/departure-boards/{stopNumber}")
     fun getBoard(@Path("stopNumber") busStopNumber: String): Call<Board>
 
     @GET("api/v2/stops")
