@@ -28,6 +28,7 @@
                 android:layout_marginLeft="5dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 android:id="@+id/label1"
                 android:text="@string/changes" />
 
@@ -42,6 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_changes"
+                android:textColor="@color/black"
                 android:visibility="gone"/>
 
             <TextView
@@ -51,6 +53,7 @@
                 android:layout_marginTop="15dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 android:id="@+id/label2"
                 android:text="@string/ad" />
 
@@ -65,6 +68,7 @@
                     android:layout_weight="2"
                     android:layout_height="match_parent"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/ad_flats"/>
 
                 <Button
@@ -91,6 +95,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/ad_text"/>
 
                 <Button

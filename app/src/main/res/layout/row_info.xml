@@ -12,20 +12,23 @@
         <TextView
             android:id="@+id/fromDate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/toDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"/>
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/infoText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"/>
 
 </LinearLayout>
