@@ -56,8 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.setFavourite.setOnClickListener {
             prefs.favouriteMap = currentUrl
+            updateFavouriteIcon()
             showBar(R.string.set_favourite)
         }
+        updateFavouriteIcon()
 
         binding.navLines.setOnClickListener {
             openLineDialog()
@@ -115,6 +117,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     Log.d(Config.LOG_TAG, currentUrl)
                     binding.webView.loadUrl(currentUrl)
+                    updateFavouriteIcon()
                 }
                 Config.INTENT_NO_INTERNET_CONNECTION -> showNoInternetSnackbar()
             }
@@ -174,11 +177,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadPage() {
         if (isNetworkAvailable) {
-            binding.webView.loadUrl(prefs.favouriteMap)
+            currentUrl = prefs.favouriteMap
+            binding.webView.loadUrl(currentUrl)
+            updateFavouriteIcon()
             showInitDialog()
         } else {
             showNoInternetSnackbar()
         }
+    }
+
+    private fun updateFavouriteIcon() {
+        val icon = if (currentUrl == prefs.favouriteMap) {
+            R.drawable.ic_favorite_white_48dp
+        } else {
+            R.drawable.ic_favorite_border_white_48dp
+        }
+        binding.setFavourite.setImageResource(icon)
     }
 
     private fun showInitDialog() {
