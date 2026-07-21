@@ -299,14 +299,23 @@ class MainActivity : AppCompatActivity() {
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
 
+        val menuLocation = IntArray(2)
         val anchorLocation = IntArray(2)
         val rootLocation = IntArray(2)
+        binding.bottomNavigation.getLocationOnScreen(menuLocation)
         binding.navMore.getLocationOnScreen(anchorLocation)
         binding.root.getLocationOnScreen(rootLocation)
 
         val margin = resources.getDimensionPixelSize(R.dimen.more_menu_margin)
-        val x = anchorLocation[0] - rootLocation[0] + binding.navMore.width - popupView.measuredWidth
-        val y = anchorLocation[1] - rootLocation[1] - popupView.measuredHeight - margin
+        val x: Int
+        val y: Int
+        if (isLandscape) {
+            x = menuLocation[0] - rootLocation[0] + binding.bottomNavigation.width + margin / 2
+            y = menuLocation[1] - rootLocation[1] + binding.bottomNavigation.height - popupView.measuredHeight - margin
+        } else {
+            x = anchorLocation[0] - rootLocation[0] + binding.navMore.width - popupView.measuredWidth
+            y = anchorLocation[1] - rootLocation[1] - popupView.measuredHeight - margin
+        }
         popupWindow.showAtLocation(binding.root, Gravity.NO_GRAVITY, x.coerceAtLeast(margin), y)
     }
 
