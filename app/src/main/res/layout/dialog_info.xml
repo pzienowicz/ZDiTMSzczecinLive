@@ -14,6 +14,14 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_bottom_sheet_handle" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,7 +107,7 @@
     <FrameLayout
         android:id="@+id/progressBarHolder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:alpha="0.4"
         android:animateLayoutChanges="true"
         android:background="#000000"

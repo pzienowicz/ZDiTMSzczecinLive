@@ -1,11 +1,11 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
-import android.view.Window
+import com.google.android.material.R as MaterialR
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
@@ -21,16 +21,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class InfoDialog(context: Context) : Dialog(context) {
+class InfoDialog(context: Context) : BottomSheetDialog(context) {
 
     private var adapter: InfoListAdapter
     private val records = ArrayList<Info>()
     private var binding: DialogInfoBinding
 
     init {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
         binding = DialogInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setOnShowListener {
+            findViewById<View>(MaterialR.id.design_bottom_sheet)
+                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
+        }
 
         adapter = InfoListAdapter(context, records)
         binding.listView.adapter = adapter

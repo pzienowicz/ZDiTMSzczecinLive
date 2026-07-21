@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@drawable/bg_bottom_sheet">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -15,6 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp">
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_bottom_sheet_handle" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -398,12 +406,12 @@
                 android:layout_gravity="center_horizontal"
                 android:text="@string/clear_filter" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <FrameLayout
         android:id="@+id/progressBarHolder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:alpha="0.4"
         android:animateLayoutChanges="true"
         android:background="#000000"

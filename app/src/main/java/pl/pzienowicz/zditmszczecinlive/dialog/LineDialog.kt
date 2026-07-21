@@ -1,14 +1,14 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.view.Window
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.google.android.material.R as MaterialR
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogLineBinding
 import pl.pzienowicz.zditmszczecinlive.model.Data
@@ -19,7 +19,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LineDialog(context: Context) : Dialog(context) {
+class LineDialog(context: Context) : BottomSheetDialog(context) {
     private val currentLine: Int
     private var binding: DialogLineBinding
 
@@ -43,9 +43,13 @@ class LineDialog(context: Context) : Dialog(context) {
     )
 
     init {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
         binding = DialogLineBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setOnShowListener {
+            findViewById<View>(MaterialR.id.design_bottom_sheet)
+                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
+        }
 
         val types = setOf(
             LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),

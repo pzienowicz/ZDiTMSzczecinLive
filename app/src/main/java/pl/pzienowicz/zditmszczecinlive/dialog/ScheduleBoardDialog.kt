@@ -1,24 +1,38 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
-import android.view.Window
+import android.widget.FrameLayout
 import android.webkit.WebViewClient
+import com.google.android.material.R as MaterialR
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import pl.pzienowicz.zditmszczecinlive.Config
+import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogBoardBinding
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 
 @SuppressLint("SetJavaScriptEnabled")
-class ScheduleBoardDialog(context: Context, busStop: BusStop) : Dialog(context) {
+class ScheduleBoardDialog(context: Context, busStop: BusStop) : BottomSheetDialog(context) {
 
     private var binding: DialogBoardBinding
 
     init {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
         binding = DialogBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setOnShowListener {
+            findViewById<FrameLayout>(MaterialR.id.design_bottom_sheet)
+                ?.let { bottomSheet ->
+                    bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet)
+                    bottomSheet.layoutParams = bottomSheet.layoutParams.apply {
+                        height = (context.resources.displayMetrics.heightPixels * 0.9f).toInt()
+                    }
+
+                    BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
+                }
+        }
 
         binding.webView
             .apply {
