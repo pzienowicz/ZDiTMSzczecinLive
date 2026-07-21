@@ -18,14 +18,16 @@ open class AdaptiveSheetDialog(context: Context) : BottomSheetDialog(context) {
 
     init {
         super.setOnShowListener {
-            onShowListener?.onShow(this)
+            applySheetLayout()
             configureBottomSheet()
+            onShowListener?.onShow(this)
         }
     }
 
     override fun show() {
-        super.show()
         applySheetLayout()
+        configureBottomSheet()
+        super.show()
     }
 
     override fun setOnShowListener(listener: DialogInterface.OnShowListener?) {
