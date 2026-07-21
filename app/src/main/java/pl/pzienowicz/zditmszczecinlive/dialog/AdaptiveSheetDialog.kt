@@ -7,7 +7,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.FrameLayout
 import com.google.android.material.R as MaterialR
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.sidesheet.SideSheetDialog
 import pl.pzienowicz.zditmszczecinlive.R
@@ -31,6 +33,7 @@ open class AdaptiveSheetDialog(context: Context) : Dialog(context) {
         delegate.setOnShowListener {
             setSheetBackground()
             onShowListener?.onShow(this)
+            expandBottomSheet()
         }
     }
 
@@ -105,6 +108,15 @@ open class AdaptiveSheetDialog(context: Context) : Dialog(context) {
             ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
         findViewById<View>(MaterialR.id.m3_side_sheet)
             ?.setBackgroundResource(R.drawable.bg_side_sheet)
+    }
+
+    private fun expandBottomSheet() {
+        findViewById<FrameLayout>(MaterialR.id.design_bottom_sheet)?.let { bottomSheet ->
+            BottomSheetBehavior.from(bottomSheet).apply {
+                skipCollapsed = true
+                state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
     }
 
     private fun configureSideSheetEdge() {
