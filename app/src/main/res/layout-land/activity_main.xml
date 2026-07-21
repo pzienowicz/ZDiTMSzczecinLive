@@ -6,17 +6,145 @@
     android:layout_height="match_parent">
 
     <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/webView"/>
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_bottom_navigation"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:paddingStart="6dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="8dp"
+        android:weightSum="4">
+
+        <LinearLayout
+            android:id="@+id/nav_lines"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_directions_bus_white_48dp"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/line_list"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_info"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_announcement_white_48dp"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/information"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_dashboard"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_web_white_24dp"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/schedule_board_short"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_more"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_more_horiz_24dp"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/more"
+                android:textColor="@color/black"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_above="@id/bottom_navigation"
+        android:elevation="16dp"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
@@ -28,7 +156,7 @@
             android:layout_height="wrap_content"
             fab:fab_icon="@drawable/ic_favorite_white_48dp"
             fab:fab_size="mini"
-            fab:fab_title="Zapisz jako ulubione"
+            fab:fab_title="@string/set_favourite_action"
             fab:fab_colorNormal="@color/pink"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -36,7 +164,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_size="mini"
-            fab:fab_title="Informacje"
+            fab:fab_title="@string/information"
             fab:fab_icon="@drawable/ic_announcement_white_48dp"
             fab:fab_colorNormal="@color/yellow"/>
 
@@ -45,7 +173,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_size="mini"
-            fab:fab_title="Wirtualna tablica"
+            fab:fab_title="@string/schedule_board"
             fab:fab_icon="@drawable/ic_web_white_24dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -53,7 +181,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_size="mini"
-            fab:fab_title="Lista linii"
+            fab:fab_title="@string/line_list"
             fab:fab_icon="@drawable/ic_directions_bus_white_48dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -61,7 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_size="mini"
-            fab:fab_title="Ustawienia"
+            fab:fab_title="@string/settings"
             fab:fab_icon="@drawable/ic_settings_white_48dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -69,7 +197,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_size="mini"
-            fab:fab_title="Widgety"
+            fab:fab_title="@string/widgets"
             fab:fab_icon="@drawable/ic_widgets_white_48dp"
             fab:fab_colorNormal="@color/green"/>
 
@@ -78,7 +206,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_size="mini"
-            fab:fab_title="Dyskusje (oraz awarie i opóźnienia)"
+            fab:fab_title="@string/discussions_with_delays"
             fab:fab_icon="@drawable/ic_forum_white_24dp"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

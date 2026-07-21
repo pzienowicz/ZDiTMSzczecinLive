@@ -28,6 +28,15 @@
     <string name="touristic_bus_lines">Linie autobusowe dzienne turystyczne</string>
 
     <string name="set_favourite">Ustawiono jako mapę domyślną - będzie ona widoczna od razu po włączeniu aplikacji.</string>
+    <string name="set_favourite_action">Zapisz jako ulubione</string>
+    <string name="line_list">Lista linii</string>
+    <string name="information">Informacje</string>
+    <string name="schedule_board">Wirtualna tablica</string>
+    <string name="schedule_board_short">Tablica</string>
+    <string name="settings">Ustawienia</string>
+    <string name="discussions">Dyskusje</string>
+    <string name="discussions_with_delays">Dyskusje (oraz awarie i opóźnienia)</string>
+    <string name="more">Więcej</string>
 
     <string name="lines_request_error">Nie udało się pobrać linii</string>
     <string name="info_request_error">Nie udało się pobrać aktualności</string>

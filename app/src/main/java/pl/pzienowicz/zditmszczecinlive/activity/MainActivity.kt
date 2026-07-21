@@ -6,10 +6,15 @@ import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
@@ -18,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import android.widget.PopupWindow
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 import pl.pzienowicz.zditmszczecinlive.dialog.*
@@ -34,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     var mGeoLocationRequestOrigin: String? = null
 
     private lateinit var binding: ActivityMainBinding
+    private var morePopupWindow: PopupWindow? = null
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,34 +61,36 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.showInfo.setOnClickListener {
-            showDialog(InfoDialog(this))
+            openInfoDialog()
         }
 
         binding.showDashboard.setOnClickListener {
-            val dialog = BusStopDialog(this, { busStop ->
-                showDialog(ScheduleBoardDialog(this, busStop))
-            }, null)
-            showDialog(dialog)
+            openScheduleBoardDialog()
         }
 
         binding.showLines.setOnClickListener {
-            showDialog(LineDialog(this))
+            openLineDialog()
         }
 
-        binding.settings.setOnClickListener {
-            showDialog(SettingsDialog(this))
+        binding.settings.setOnClickListener { openSettingsDialog() }
+
+        binding.widgets.setOnClickListener { openWidgetsDialog() }
+
+        binding.navLines.setOnClickListener {
+            openLineDialog()
         }
 
-        binding.widgets.setOnClickListener {
-            showDialog(WidgetsDialog(this))
+        binding.navInfo.setOnClickListener {
+            openInfoDialog()
         }
 
-        binding.forum.setOnClickListener {
-            val facebookIntent = Intent(Intent.ACTION_VIEW)
-            facebookIntent.data = Config.FB_GROUP_URL.toUri()
-            startActivity(facebookIntent)
-            binding.multipleActions.collapse()
+        binding.navDashboard.setOnClickListener {
+            openScheduleBoardDialog()
         }
+
+        binding.navMore.setOnClickListener { showMoreMenu() }
+
+        binding.forum.setOnClickListener { openForum() }
 
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
@@ -231,6 +240,81 @@ class MainActivity : AppCompatActivity() {
 
     private fun showNoInternetSnackbar() {
         showBar(R.string.no_internet, R.string.refresh) { loadPage() }
+    }
+
+    private fun openInfoDialog() {
+        showDialog(InfoDialog(this))
+    }
+
+    private fun openScheduleBoardDialog() {
+        val dialog = BusStopDialog(this, { busStop ->
+            showDialog(ScheduleBoardDialog(this, busStop))
+        }, null)
+        showDialog(dialog)
+    }
+
+    private fun openLineDialog() {
+        showDialog(LineDialog(this))
+    }
+
+    private fun openWidgetsDialog() {
+        showDialog(WidgetsDialog(this))
+    }
+
+    private fun openSettingsDialog() {
+        showDialog(SettingsDialog(this))
+    }
+
+    private fun openForum() {
+        val facebookIntent = Intent(Intent.ACTION_VIEW)
+        facebookIntent.data = Config.FB_GROUP_URL.toUri()
+        startActivity(facebookIntent)
+        binding.multipleActions.collapse()
+    }
+
+    private fun showMoreMenu() {
+        morePopupWindow?.dismiss()
+
+        val popupView = layoutInflater.inflate(R.layout.view_more_menu, binding.root, false)
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            isOutsideTouchable = true
+            elevation = 0f
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        morePopupWindow = popupWindow
+
+        popupView.findViewById<View>(R.id.more_widgets).setOnClickListener {
+            popupWindow.dismiss()
+            openWidgetsDialog()
+        }
+        popupView.findViewById<View>(R.id.more_settings).setOnClickListener {
+            popupWindow.dismiss()
+            openSettingsDialog()
+        }
+        popupView.findViewById<View>(R.id.more_forum).setOnClickListener {
+            popupWindow.dismiss()
+            openForum()
+        }
+
+        popupView.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+
+        val anchorLocation = IntArray(2)
+        val rootLocation = IntArray(2)
+        binding.navMore.getLocationOnScreen(anchorLocation)
+        binding.root.getLocationOnScreen(rootLocation)
+
+        val margin = resources.getDimensionPixelSize(R.dimen.more_menu_margin)
+        val x = anchorLocation[0] - rootLocation[0] + binding.navMore.width - popupView.measuredWidth
+        val y = anchorLocation[1] - rootLocation[1] - popupView.measuredHeight - margin
+        popupWindow.showAtLocation(binding.root, Gravity.NO_GRAVITY, x.coerceAtLeast(margin), y)
     }
 
     private fun openWidgetsDialogIfRequested(intent: Intent?) {
