@@ -57,24 +57,7 @@ class MainActivity : AppCompatActivity() {
         binding.setFavourite.setOnClickListener {
             prefs.favouriteMap = currentUrl
             showBar(R.string.set_favourite)
-            binding.multipleActions.collapse()
         }
-
-        binding.showInfo.setOnClickListener {
-            openInfoDialog()
-        }
-
-        binding.showDashboard.setOnClickListener {
-            openScheduleBoardDialog()
-        }
-
-        binding.showLines.setOnClickListener {
-            openLineDialog()
-        }
-
-        binding.settings.setOnClickListener { openSettingsDialog() }
-
-        binding.widgets.setOnClickListener { openWidgetsDialog() }
 
         binding.navLines.setOnClickListener {
             openLineDialog()
@@ -89,8 +72,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.navMore.setOnClickListener { showMoreMenu() }
-
-        binding.forum.setOnClickListener { openForum() }
 
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
@@ -170,7 +151,6 @@ class MainActivity : AppCompatActivity() {
     private fun showDialog(dialog: Dialog) {
         dialog.setFullWidth()
         dialog.show()
-        binding.multipleActions.collapse()
     }
 
     public override fun onDestroy() {
@@ -269,7 +249,6 @@ class MainActivity : AppCompatActivity() {
         val facebookIntent = Intent(Intent.ACTION_VIEW)
         facebookIntent.data = Config.FB_GROUP_URL.toUri()
         startActivity(facebookIntent)
-        binding.multipleActions.collapse()
     }
 
     private fun showMoreMenu() {
