@@ -45,17 +45,10 @@ fun Context.createPendingIntent(
 
 fun Dialog.setFullWidth() {
     if (this is AdaptiveSheetDialog) {
-        if (isSideSheet) {
-            setSheetLayout(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-        } else {
-            setSheetLayout(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
+        setSheetLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         return
     }
 
