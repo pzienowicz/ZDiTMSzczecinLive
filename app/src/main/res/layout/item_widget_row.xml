@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="4dp">
 
     <TextView
         android:id="@+id/tvIndex"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="3dp"
         android:textColor="@color/black" />
 
     <TextView
@@ -18,7 +20,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
-        android:padding="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="3dp"
         android:textColor="@color/black" />
 
     <TextView
@@ -26,15 +29,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
-        android:padding="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="3dp"
         android:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/ivEdit"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
+        android:tint="@color/icon_gray"
         android:src="@drawable/ic_edit_black_24dp"
         android:contentDescription="@string/edit" />
 
