@@ -11,8 +11,6 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.R as MaterialR
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.WidgetTableDataAdapter
@@ -31,7 +29,7 @@ import java.util.ArrayList
 class WidgetsDialog(
     private val activity: Activity,
     initialWidgetId: String? = null
-) : BottomSheetDialog(activity) {
+) : AdaptiveSheetDialog(activity) {
 
     private val adapter: WidgetTableDataAdapter
     private var bcr: BroadcastReceiver? = null
@@ -49,8 +47,6 @@ class WidgetsDialog(
 
         setOnShowListener {
             isShown = true
-            findViewById<View>(MaterialR.id.design_bottom_sheet)
-                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
             openPendingWidgetEditIfReady()
         }
 

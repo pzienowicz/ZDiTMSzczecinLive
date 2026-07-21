@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
+import pl.pzienowicz.zditmszczecinlive.dialog.AdaptiveSheetDialog
 
 val Context.inflater: LayoutInflater
     get() = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -43,6 +44,21 @@ fun Context.createPendingIntent(
 }
 
 fun Dialog.setFullWidth() {
+    if (this is AdaptiveSheetDialog) {
+        if (isSideSheet) {
+            setSheetLayout(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        } else {
+            setSheetLayout(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        return
+    }
+
     window?.setLayout(
         LinearLayout.LayoutParams.MATCH_PARENT,
         LinearLayout.LayoutParams.WRAP_CONTENT

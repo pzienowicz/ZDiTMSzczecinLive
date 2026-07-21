@@ -1,9 +1,6 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.app.Activity
-import android.view.View
-import com.google.android.material.R as MaterialR
-import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
@@ -16,18 +13,13 @@ class BusStopDialog(
     activity: Activity,
     onSelected: (busStop: BusStop) -> Unit,
     currentBusStop: String?
-) : BottomSheetDialog(activity) {
+) : AdaptiveSheetDialog(activity) {
 
     private var binding: DialogBusStopBinding
 
     init {
         binding = DialogBusStopBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setOnShowListener {
-            findViewById<View>(MaterialR.id.design_bottom_sheet)
-                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
-        }
 
         val txtUrl = binding.numberInput
 

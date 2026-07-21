@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
-import com.google.android.material.R as MaterialR
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.adapter.InfoListAdapter
@@ -21,7 +19,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class InfoDialog(context: Context) : BottomSheetDialog(context) {
+class InfoDialog(context: Context) : AdaptiveSheetDialog(context) {
 
     private var adapter: InfoListAdapter
     private val records = ArrayList<Info>()
@@ -30,11 +28,6 @@ class InfoDialog(context: Context) : BottomSheetDialog(context) {
     init {
         binding = DialogInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setOnShowListener {
-            findViewById<View>(MaterialR.id.design_bottom_sheet)
-                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
-        }
 
         adapter = InfoListAdapter(context, records)
         binding.listView.adapter = adapter

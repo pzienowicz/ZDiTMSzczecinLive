@@ -2,9 +2,6 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.Manifest
 import android.app.Activity
-import android.view.View
-import com.google.android.material.R as MaterialR
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -25,18 +22,13 @@ import pl.pzienowicz.zditmszczecinlive.showToast
 class ScanBusStopDialog(
     val activity: Activity,
     val onSelected: (busStop: BusStop) -> Unit
-) : BottomSheetDialog(activity) {
+) : AdaptiveSheetDialog(activity) {
 
     private var binding: DialogScanBusStopBinding
 
     init {
         binding = DialogScanBusStopBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setOnShowListener {
-            findViewById<View>(MaterialR.id.design_bottom_sheet)
-                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
-        }
 
         checkPermission()
 

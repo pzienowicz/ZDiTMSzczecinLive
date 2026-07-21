@@ -6,7 +6,6 @@ import android.widget.FrameLayout
 import android.webkit.WebViewClient
 import com.google.android.material.R as MaterialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
@@ -14,7 +13,7 @@ import pl.pzienowicz.zditmszczecinlive.databinding.DialogBoardBinding
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 
 @SuppressLint("SetJavaScriptEnabled")
-class ScheduleBoardDialog(context: Context, busStop: BusStop) : BottomSheetDialog(context) {
+class ScheduleBoardDialog(context: Context, busStop: BusStop) : AdaptiveSheetDialog(context) {
 
     private var binding: DialogBoardBinding
 

@@ -7,8 +7,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
-import com.google.android.material.R as MaterialR
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogLineBinding
 import pl.pzienowicz.zditmszczecinlive.model.Data
@@ -19,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LineDialog(context: Context) : BottomSheetDialog(context) {
+class LineDialog(context: Context) : AdaptiveSheetDialog(context) {
     private val currentLine: Int
     private var binding: DialogLineBinding
 
@@ -45,11 +43,6 @@ class LineDialog(context: Context) : BottomSheetDialog(context) {
     init {
         binding = DialogLineBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setOnShowListener {
-            findViewById<View>(MaterialR.id.design_bottom_sheet)
-                ?.setBackgroundResource(R.drawable.bg_bottom_sheet)
-        }
 
         val types = setOf(
             LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),
