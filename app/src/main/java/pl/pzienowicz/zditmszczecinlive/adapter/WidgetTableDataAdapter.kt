@@ -37,7 +37,8 @@ class WidgetTableDataAdapter(
         holder.tvName.text = widget.busStop?.name ?: ""
         holder.ivEdit.setOnClickListener {
             val intent = Intent(Config.INTENT_OPEN_BUS_STOP_EDIT)
-            intent.putExtra("widgetId", widget.widgetId)
+            intent.putExtra(Config.EXTRA_WIDGET_ID, widget.widgetId)
+            intent.putExtra(Config.EXTRA_BUS_STOP_NUMBER, widget.busStop?.number)
             context.sendLocalBroadcast(intent)
         }
     }

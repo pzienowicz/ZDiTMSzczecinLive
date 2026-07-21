@@ -73,9 +73,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.widgets.setOnClickListener {
-            val intent = Intent(this, WidgetsActivity::class.java)
-            startActivity(intent)
-            binding.multipleActions.collapse()
+            showDialog(WidgetsDialog(this))
         }
 
         binding.forum.setOnClickListener {
@@ -150,6 +148,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         mapTimer.start()
+
+        openWidgetsDialogIfRequested(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        openWidgetsDialogIfRequested(intent)
     }
 
     private fun showDialog(dialog: Dialog) {
@@ -225,6 +231,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun showNoInternetSnackbar() {
         showBar(R.string.no_internet, R.string.refresh) { loadPage() }
+    }
+
+    private fun openWidgetsDialogIfRequested(intent: Intent?) {
+        val widgetId = intent?.getStringExtra(Config.EXTRA_WIDGET_ID) ?: return
+        showDialog(WidgetsDialog(this, widgetId))
+        intent.removeExtra(Config.EXTRA_WIDGET_ID)
     }
 
     companion object {

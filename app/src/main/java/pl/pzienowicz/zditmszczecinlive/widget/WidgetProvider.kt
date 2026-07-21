@@ -12,7 +12,7 @@ import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import android.app.PendingIntent
 import android.util.Log
-import pl.pzienowicz.zditmszczecinlive.activity.WidgetsActivity
+import pl.pzienowicz.zditmszczecinlive.activity.MainActivity
 import android.content.ComponentName
 import androidx.preference.PreferenceManager
 import pl.pzienowicz.zditmszczecinlive.createPendingIntent
@@ -85,8 +85,12 @@ class WidgetProvider : AppWidgetProvider() {
 
         when(intent.action) {
             Config.CLICK_WIDGET_BUTTON -> {
-                val intent1 = Intent(context, WidgetsActivity::class.java)
-                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val intent1 = Intent(context, MainActivity::class.java)
+                intent1.addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                )
                 intent1.putExtra(Config.EXTRA_WIDGET_ID, intent.getStringExtra(Config.EXTRA_WIDGET_ID))
                 context.startActivity(intent1)
             }

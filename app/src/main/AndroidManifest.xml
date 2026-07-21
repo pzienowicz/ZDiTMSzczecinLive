@@ -23,8 +23,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.WidgetsActivity" android:label="@string/widgets" android:theme="@style/AppTheme.WithActionBar"/>
-
         <receiver android:name=".widget.WidgetProvider"
             android:exported="false"
             android:label="@string/app_name">
