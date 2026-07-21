@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat
 import pl.pzienowicz.zditmszczecinlive.*
@@ -43,6 +44,7 @@ class LineDialog(context: Context) : AdaptiveSheetDialog(context) {
     init {
         binding = DialogLineBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setHeaderTextColors()
 
         val types = setOf(
             LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),
@@ -191,5 +193,34 @@ class LineDialog(context: Context) : AdaptiveSheetDialog(context) {
         }
         context.sendLocalBroadcast(intent)
         dismiss()
+    }
+
+    private fun setHeaderTextColors() {
+        val black = ContextCompat.getColor(context, R.color.black)
+        listOf(
+            binding.tramNormalLabel,
+            binding.tramExtraLabel,
+            binding.tramSubstituteLabel,
+            binding.tramTouristicLabel,
+            binding.busNormalLabel,
+            binding.busNormalOnDemandLabel,
+            binding.busExpressLabel,
+            binding.busTouristicLabel,
+            binding.busSubstituteLabel,
+            binding.busExtraLabel,
+            binding.busNightLabel,
+            binding.clearFilterText
+        ).forEach { setTextColor(it, black) }
+    }
+
+    private fun setTextColor(view: View, color: Int) {
+        if (view is TextView) {
+            view.setTextColor(color)
+        }
+        if (view is ViewGroup) {
+            for (i in 0 until view.childCount) {
+                setTextColor(view.getChildAt(i), color)
+            }
+        }
     }
 }
