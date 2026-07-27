@@ -48,6 +48,16 @@
                 android:layout_marginTop="10dp"
                 app:zxing_scanner_layout="@layout/custom_barcode_scanner" />
 
+            <TextView
+                android:id="@+id/errorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_snackbar"
+                android:padding="12dp"
+                android:textColor="@color/red"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

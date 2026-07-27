@@ -32,6 +32,17 @@
                 android:id="@+id/label1"
                 android:text="@string/changes" />
 
+            <TextView
+                android:id="@+id/errorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_snackbar"
+                android:padding="12dp"
+                android:textColor="@color/red"
+                android:visibility="gone" />
+
             <pl.pzienowicz.zditmszczecinlive.compontent.MyListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

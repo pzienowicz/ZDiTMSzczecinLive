@@ -1,6 +1,6 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.view.View
@@ -13,13 +13,12 @@ import pl.pzienowicz.zditmszczecinlive.model.Data
 import pl.pzienowicz.zditmszczecinlive.model.Info
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
-import pl.pzienowicz.zditmszczecinlive.sendLocalBroadcast
-import pl.pzienowicz.zditmszczecinlive.showToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import androidx.core.net.toUri
 
-class InfoDialog(context: Context) : AdaptiveSheetDialog(context) {
+class InfoDialog(private val activity: Activity) : AdaptiveSheetDialog(activity) {
 
     private var adapter: InfoListAdapter
     private val records = ArrayList<Info>()
@@ -29,16 +28,11 @@ class InfoDialog(context: Context) : AdaptiveSheetDialog(context) {
         binding = DialogInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = InfoListAdapter(context, records)
+        adapter = InfoListAdapter(activity, records)
         binding.listView.adapter = adapter
 
-        if (!context.isNetworkAvailable) {
-            context.showToast(R.string.no_internet)
-
-            val intent = Intent(Config.INTENT_NO_INTERNET_CONNECTION)
-            context.sendLocalBroadcast(intent)
-
-            dismiss()
+        if (!activity.isNetworkAvailable) {
+            showError(R.string.no_internet)
         } else {
             binding.progressBarHolder.visibility = View.VISIBLE
 
@@ -57,31 +51,36 @@ class InfoDialog(context: Context) : AdaptiveSheetDialog(context) {
                             binding.noInfoTv.visibility = View.VISIBLE
                         }
                     } else {
-                        context.showToast(R.string.info_request_error)
+                        showError(R.string.info_request_error)
                     }
                 }
 
                 override fun onFailure(call: Call<Data<Info>>, t: Throwable) {
                     binding.progressBarHolder.visibility = View.GONE
                     t.printStackTrace()
-                    context.showToast(R.string.info_request_error)
+                    showError(R.string.info_request_error)
                 }
             })
 
             binding.contactUsBtn.setOnClickListener {
                 val emailIntent = Intent(
                     Intent.ACTION_SENDTO,
-                    Uri.fromParts("mailto", context.getString(R.string.owner_email), null)
+                    Uri.fromParts("mailto", activity.getString(R.string.owner_email), null)
                 )
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.email_title))
-                context.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, activity.getString(R.string.email_title))
+                activity.startActivity(Intent.createChooser(emailIntent, "Wyślij email..."))
             }
 
             binding.ad2Button.setOnClickListener {
                 val callIntent = Intent(Intent.ACTION_DIAL)
-                callIntent.data = Uri.parse(context.getString(R.string.owner_phone))
-                context.startActivity(callIntent)
+                callIntent.data = activity.getString(R.string.owner_phone).toUri()
+                activity.startActivity(callIntent)
             }
         }
+    }
+
+    private fun showError(message: Int) {
+        binding.errorText.setText(message)
+        binding.errorText.visibility = View.VISIBLE
     }
 }

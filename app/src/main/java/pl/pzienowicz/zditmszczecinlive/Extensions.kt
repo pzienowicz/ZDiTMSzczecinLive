@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
@@ -63,11 +64,14 @@ fun Activity.showBar(
     @StringRes actionText: Int? = null,
     action: View.OnClickListener? = null
 ) {
-    Snackbar.make(
-        findViewById(R.id.swiperefresh),
-        text,
-        Snackbar.LENGTH_LONG
-    ).apply {
+    val root = findViewById<View>(R.id.swiperefresh) ?: return
+    Snackbar.make(root, text, Snackbar.LENGTH_LONG).apply {
+        anchorView = findViewById(R.id.bottom_navigation)
+        view.setBackgroundResource(R.drawable.bg_snackbar)
+        view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            ?.setTextColor(ContextCompat.getColor(this@showBar, R.color.black))
+        view.findViewById<TextView>(com.google.android.material.R.id.snackbar_action)
+            ?.setTextColor(ContextCompat.getColor(this@showBar, R.color.colorPrimary))
         if (actionText != null) {
             setAction(actionText, action)
         }

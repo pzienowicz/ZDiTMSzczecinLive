@@ -167,16 +167,25 @@ class WidgetsDialog(
             val busStopId = activity.prefs.getString(Config.WIDGET_PREFIX + appWidgetId)
 
             if (busStopId != null) {
-                BusStops.getInstance(activity).loadByNumber(busStopId, callback = { busStop ->
-                    records.add(Widget(appWidgetId.toString(), busStop))
-                    adapter.notifyDataSetChanged()
-                    openPendingWidgetEditIfReady()
-                })
+                BusStops.getInstance(activity).loadByNumber(
+                    busStopId,
+                    onError = { showError(R.string.stops_request_error) },
+                    callback = { busStop ->
+                        records.add(Widget(appWidgetId.toString(), busStop))
+                        adapter.notifyDataSetChanged()
+                        openPendingWidgetEditIfReady()
+                    }
+                )
             } else {
                 records.add(Widget(appWidgetId.toString(), null))
                 adapter.notifyDataSetChanged()
                 openPendingWidgetEditIfReady()
             }
         }
+    }
+
+    private fun showError(message: Int) {
+        binding.errorText.setText(message)
+        binding.errorText.visibility = View.VISIBLE
     }
 }

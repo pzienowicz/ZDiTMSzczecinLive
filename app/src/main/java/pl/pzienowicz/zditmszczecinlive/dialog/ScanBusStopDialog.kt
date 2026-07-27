@@ -16,8 +16,6 @@ import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogScanBusStopBinding
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
-import pl.pzienowicz.zditmszczecinlive.showBar
-import pl.pzienowicz.zditmszczecinlive.showToast
 
 class ScanBusStopDialog(
     val activity: Activity,
@@ -57,15 +55,15 @@ class ScanBusStopDialog(
                 } catch (e: StringIndexOutOfBoundsException) {}
 
                 BusStops.getInstance(context)
-                    .loadByIdOrNumber(busStopId, busStopNumber) { busStop ->
+                    .loadByIdOrNumber(
+                        busStopId,
+                        busStopNumber,
+                        onError = { showError(R.string.stops_request_error) }
+                    ) { busStop ->
                         if (busStop == null) {
-                            context.showToast(R.string.incorrect_bus_stop)
+                            showError(R.string.incorrect_bus_stop)
                             binding.zxingBarcodeScanner.resume()
 
-//                              ACRA.getErrorReporter().putCustomData("busStopId", busStopId)
-//                              ACRA.getErrorReporter().putCustomData("busStopNumber", busStopNumber)
-//                              ACRA.getErrorReporter().putCustomData("busStopUrl", busStopUrl)
-//                              ACRA.getErrorReporter().handleException(IncorrectBusStopException())
                             return@loadByIdOrNumber
                         }
                         dismiss()
@@ -92,10 +90,14 @@ class ScanBusStopDialog(
                     }
 
                     override fun onPermissionDenied(response: PermissionDeniedResponse) {
-                        activity.showBar(R.string.camera_permission_description)
-                        dismiss()
+                        showError(R.string.camera_permission_description)
                     }
                 })
                 .check()
+    }
+
+    private fun showError(message: Int) {
+        binding.errorText.setText(message)
+        binding.errorText.visibility = android.view.View.VISIBLE
     }
 }

@@ -14,7 +14,10 @@ import retrofit2.Response
 
 class BusStops(val context: Context) {
 
-    private fun load(onLoaded: () -> Unit) {
+    private fun load(
+        onLoaded: () -> Unit,
+        onError: (() -> Unit)? = null
+    ) {
         val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
         val lines = service.listBusStops()
         lines.enqueue(object : Callback<Data<BusStop>> {
@@ -22,35 +25,52 @@ class BusStops(val context: Context) {
                 if (response.isSuccessful) {
                     stops.clear()
                     response.body()?.let { stops.addAll(it.items) }
+                    onLoaded()
                 } else {
-                    context.showToast(R.string.stops_request_error)
+                    showError(onError)
                 }
-                onLoaded()
             }
 
             override fun onFailure(call: Call<Data<BusStop>>, t: Throwable) {
-                context.showToast(R.string.stops_request_error)
+                showError(onError)
             }
         })
     }
 
-    fun loadByNumber(number: String, callback: (BusStop?) -> Unit) {
+    fun loadByNumber(
+        number: String,
+        onError: (() -> Unit)? = null,
+        callback: (BusStop?) -> Unit
+    ) {
         if(stops.isEmpty()) {
             load(onLoaded = {
                 callback(getByNumber(number))
-            })
+            }, onError = onError)
         } else {
             callback(getByNumber(number))
         }
     }
 
-    fun loadByIdOrNumber(id: String, number: String, callback: (BusStop?) -> Unit) {
+    fun loadByIdOrNumber(
+        id: String,
+        number: String,
+        onError: (() -> Unit)? = null,
+        callback: (BusStop?) -> Unit
+    ) {
         if(stops.isEmpty()) {
             load(onLoaded = {
                 callback(getById(id) ?: getByNumber(number))
-            })
+            }, onError = onError)
         } else {
             callback(getById(id) ?: getByNumber(number))
+        }
+    }
+
+    private fun showError(onError: (() -> Unit)?) {
+        if (onError != null) {
+            onError()
+        } else {
+            context.showToast(R.string.stops_request_error)
         }
     }
 

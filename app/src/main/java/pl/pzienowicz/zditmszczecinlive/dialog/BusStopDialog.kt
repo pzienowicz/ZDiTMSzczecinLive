@@ -1,13 +1,13 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.app.Activity
+import android.view.View
 
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.data.BusStops
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogBusStopBinding
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 import pl.pzienowicz.zditmszczecinlive.setFullWidth
-import pl.pzienowicz.zditmszczecinlive.showToast
 
 class BusStopDialog(
     activity: Activity,
@@ -28,18 +28,22 @@ class BusStopDialog(
         }
 
         binding.okBtn.setOnClickListener {
-            dismiss()
-
             val busStopNumber = txtUrl.text.toString()
+            binding.errorText.visibility = View.GONE
 
             BusStops.getInstance(context)
-                .loadByNumber(busStopNumber, callback = { busStop ->
-                    if (busStop == null) {
-                        context.showToast(R.string.incorrect_bus_stop)
-                        return@loadByNumber
+                .loadByNumber(
+                    busStopNumber,
+                    onError = { showError(R.string.stops_request_error) },
+                    callback = { busStop ->
+                        if (busStop == null) {
+                            showError(R.string.incorrect_bus_stop)
+                            return@loadByNumber
+                        }
+                        dismiss()
+                        onSelected(busStop)
                     }
-                    onSelected(busStop)
-                })
+                )
         }
 
         binding.cancelBtn.setOnClickListener {
@@ -53,5 +57,10 @@ class BusStopDialog(
             dialog.setFullWidth()
             dialog.show()
         }
+    }
+
+    private fun showError(message: Int) {
+        binding.errorText.setText(message)
+        binding.errorText.visibility = View.VISIBLE
     }
 }

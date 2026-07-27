@@ -1,7 +1,7 @@
 package pl.pzienowicz.zditmszczecinlive.dialog
 
-import android.content.Context
 import android.content.Intent
+import android.app.Activity
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -18,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LineDialog(context: Context) : AdaptiveSheetDialog(context) {
+class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity) {
     private val currentLine: Int
     private var binding: DialogLineBinding
 
@@ -62,40 +62,42 @@ class LineDialog(context: Context) : AdaptiveSheetDialog(context) {
 
         binding.clearFilterText.setOnClickListener { changeFilter(null) }
 
-        currentLine = context.prefs.selectedLine
+        currentLine = activity.prefs.selectedLine
 
-        if (!context.isNetworkAvailable) {
-            context.showToast(R.string.no_internet)
-            val intent = Intent(Config.INTENT_NO_INTERNET_CONNECTION)
-            context.sendLocalBroadcast(intent)
-            dismiss()
-        }
+        if (!activity.isNetworkAvailable) {
+            showError(R.string.no_internet)
+        } else {
+            binding.progressBarHolder.visibility = View.VISIBLE
 
-        binding.progressBarHolder.visibility = View.VISIBLE
+            val service = getRetrofit().create(ZDiTMService::class.java)
+            val lines = service.listLines()
+            lines.enqueue(object : Callback<Data<Line>?> {
+                override fun onResponse(call: Call<Data<Line>?>, response: Response<Data<Line>?>) {
+                    binding.progressBarHolder.visibility = View.GONE
 
-        val service = getRetrofit().create(ZDiTMService::class.java)
-        val lines = service.listLines()
-        lines.enqueue(object : Callback<Data<Line>?> {
-            override fun onResponse(call: Call<Data<Line>?>, response: Response<Data<Line>?>) {
-                binding.progressBarHolder.visibility = View.GONE
-
-                if (response.isSuccessful && response.body() != null) {
-                    types.forEach {
-                        drawLinesTable(
-                            filterLines(response.body()?.items, it.first),
-                            it.second
-                        )
+                    if (response.isSuccessful && response.body() != null) {
+                        types.forEach {
+                            drawLinesTable(
+                                filterLines(response.body()?.items, it.first),
+                                it.second
+                            )
+                        }
+                    } else {
+                        showError(R.string.lines_request_error)
                     }
-                } else {
-                    context.showToast(R.string.lines_request_error)
                 }
-            }
 
-            override fun onFailure(call: Call<Data<Line>?>, t: Throwable) {
-                binding.progressBarHolder.visibility = View.GONE
-                context.showToast(R.string.lines_request_error)
-            }
-        })
+                override fun onFailure(call: Call<Data<Line>?>, t: Throwable) {
+                    binding.progressBarHolder.visibility = View.GONE
+                    showError(R.string.lines_request_error)
+                }
+            })
+        }
+    }
+
+    private fun showError(message: Int) {
+        binding.errorText.setText(message)
+        binding.errorText.visibility = View.VISIBLE
     }
 
     private fun filterLines(lines: List<Line>?, match: LineMatch): List<Line> {
