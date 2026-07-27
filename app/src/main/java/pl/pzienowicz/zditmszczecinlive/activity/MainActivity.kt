@@ -12,7 +12,6 @@ import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
-import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.GeolocationPermissions
@@ -21,9 +20,11 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.updatePadding
 import android.widget.PopupWindow
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applyWindowInsets()
 
         WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
 
@@ -160,6 +162,32 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun applyWindowInsets() {
+        val navigationPaddingLeft = binding.bottomNavigation.paddingLeft
+        val navigationPaddingTop = binding.bottomNavigation.paddingTop
+        val navigationPaddingRight = binding.bottomNavigation.paddingRight
+        val navigationPaddingBottom = binding.bottomNavigation.paddingBottom
+        val favouriteLayoutParams = binding.setFavourite.layoutParams as ViewGroup.MarginLayoutParams
+        val favouriteMarginRight = favouriteLayoutParams.rightMargin
+        val favouriteMarginBottom = favouriteLayoutParams.bottomMargin
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
+            val navigationBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            binding.bottomNavigation.updatePadding(
+                left = navigationPaddingLeft + navigationBars.left,
+                top = navigationPaddingTop,
+                right = navigationPaddingRight + navigationBars.right,
+                bottom = navigationPaddingBottom + navigationBars.bottom
+            )
+            favouriteLayoutParams.rightMargin = favouriteMarginRight + navigationBars.right
+            favouriteLayoutParams.bottomMargin = favouriteMarginBottom + navigationBars.bottom
+            binding.setFavourite.layoutParams = favouriteLayoutParams
+
+            windowInsets
+        }
+        ViewCompat.requestApplyInsets(binding.root)
+    }
+
     public override fun onDestroy() {
         mapTimer.stop()
         unregisterReceiver(bcr)
@@ -169,14 +197,6 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         binding.webView.saveState(outState)
         return super.onSaveInstanceState(outState)
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
-            finish()
-            return true
-        }
-        return super.onKeyDown(keyCode, event)
     }
 
     private fun loadPage() {

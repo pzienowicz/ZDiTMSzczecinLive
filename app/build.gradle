@@ -23,7 +23,7 @@ android {
             version = release(23)
         }
         targetSdk {
-            version = release(35)
+            version = release(36)
         }
         versionCode = 70
         versionName = "1.19.0"
