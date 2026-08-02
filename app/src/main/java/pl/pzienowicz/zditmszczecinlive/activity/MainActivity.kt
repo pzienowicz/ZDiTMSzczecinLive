@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -107,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        setupBackNavigation()
 
         bcr = registerReceiver(listOf(
             Config.INTENT_LOAD_NEW_URL,
@@ -193,6 +195,32 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(bcr)
         super.onDestroy()
     }
+
+    private fun setupBackNavigation() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isSelectedMapUrl(binding.webView.url)) {
+                    finish()
+                    return
+                }
+
+                if (binding.webView.canGoBack()) {
+                    binding.webView.goBack()
+                } else {
+                    binding.webView.loadUrl(currentUrl)
+                }
+            }
+        })
+    }
+
+    private fun isSelectedMapUrl(url: String?): Boolean =
+        normalizeUrl(url) == normalizeUrl(currentUrl)
+
+    private fun normalizeUrl(url: String?): String? =
+        url
+            ?.substringBefore('#')
+            ?.substringBefore('?')
+            ?.trimEnd('/')
 
     override fun onSaveInstanceState(outState: Bundle) {
         binding.webView.saveState(outState)
