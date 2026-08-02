@@ -74,7 +74,8 @@ class ListProvider(
         listItemList.clear()
         listItemList.addAll(tempList)
 
-        val intent = Intent(Config.INTENT_WIDGET_DATA_LOADED)
+        val intent = Intent(context, WidgetProvider::class.java)
+        intent.action = Config.INTENT_WIDGET_DATA_LOADED
         context.sendBroadcast(intent)
     }
 

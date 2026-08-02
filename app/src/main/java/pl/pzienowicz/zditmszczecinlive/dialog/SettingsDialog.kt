@@ -9,6 +9,7 @@ import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogSettingsBinding
 import pl.pzienowicz.zditmszczecinlive.prefs
+import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 
 class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
 
@@ -20,8 +21,7 @@ class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
 
         binding.refreshWidgetsCheckbox.setOnCheckedChangeListener { _, isChecked ->
             context.prefs.refreshWidgets = isChecked
-            val intent = Intent(Config.ACTION_AUTO_UPDATE)
-            context.sendBroadcast(intent)
+            context.sendWidgetUpdateBroadcast()
         }
 
         binding.refreshWidgetsCheckbox.isChecked = context.prefs.refreshWidgets
@@ -35,11 +35,16 @@ class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
         binding.widgetsRefresh.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 context.prefs.refreshWidgetsTime = binding.widgetsRefresh.text.toString()
-                val intent = Intent(Config.ACTION_AUTO_UPDATE)
-                context.sendBroadcast(intent)
+                context.sendWidgetUpdateBroadcast()
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+    }
+
+    private fun Context.sendWidgetUpdateBroadcast() {
+        val intent = Intent(this, WidgetProvider::class.java)
+        intent.action = Config.ACTION_AUTO_UPDATE
+        sendBroadcast(intent)
     }
 }

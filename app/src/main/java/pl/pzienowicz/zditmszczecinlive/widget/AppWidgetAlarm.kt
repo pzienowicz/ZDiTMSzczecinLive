@@ -62,6 +62,7 @@ class AppWidgetAlarm(private val mContext: Context) {
 
     fun stopAlarm() {
         val alarmIntent = Intent(Config.ACTION_AUTO_UPDATE)
+        alarmIntent.setClass(mContext, WidgetProvider::class.java)
         val pendingIntent = mContext.createPendingIntent(ALARM_ID, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         mContext.alarmManager.cancel(pendingIntent)
     }
