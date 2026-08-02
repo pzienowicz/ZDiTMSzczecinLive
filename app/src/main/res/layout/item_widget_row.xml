@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:paddingHorizontal="4dp"
         android:paddingVertical="3dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/app_text" />
 
     <TextView
         android:id="@+id/tvNumber"
@@ -22,7 +22,7 @@
         android:layout_weight="2"
         android:paddingHorizontal="4dp"
         android:paddingVertical="3dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/app_text" />
 
     <TextView
         android:id="@+id/tvName"
@@ -31,7 +31,7 @@
         android:layout_weight="5"
         android:paddingHorizontal="4dp"
         android:paddingVertical="3dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/app_text" />
 
     <ImageView
         android:id="@+id/ivEdit"
@@ -39,7 +39,7 @@
         android:layout_height="24dp"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:tint="@color/icon_gray"
+        android:tint="@color/app_icon_secondary"
         android:src="@drawable/ic_edit_black_24dp"
         android:contentDescription="@string/edit" />
 

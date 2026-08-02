@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.appcompat.app.AppCompatDelegate
 
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogSettingsBinding
 import pl.pzienowicz.zditmszczecinlive.prefs
+import pl.pzienowicz.zditmszczecinlive.sendLocalBroadcast
 import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 
 class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
@@ -30,6 +32,19 @@ class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
             context.prefs.openLinksInExternalBrowser = isChecked
         }
         binding.openLinksExternalBrowserCheckbox.isChecked = context.prefs.openLinksInExternalBrowser
+
+        binding.darkModeCheckbox.isChecked = context.prefs.darkMode
+        binding.darkModeCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            context.prefs.darkMode = isChecked
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                }
+            )
+            context.sendLocalBroadcast(Intent(Config.INTENT_REFRESH_SETTINGS))
+        }
 
         binding.widgetsRefresh.setText(context.prefs.refreshWidgetsTime)
         binding.widgetsRefresh.addTextChangedListener(object: TextWatcher {

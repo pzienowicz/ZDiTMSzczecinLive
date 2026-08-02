@@ -97,6 +97,10 @@ class MainActivity : AppCompatActivity() {
             @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean =
                 openLinkExternallyIfNeeded(url)
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                applyMapThemePreference()
+            }
         }
         binding.webView.webChromeClient = object : WebChromeClient() {
             override fun onGeolocationPermissionsShowPrompt(
@@ -139,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                     binding.webView.loadUrl(currentUrl)
                     updateFavouriteIcon()
                 }
+                Config.INTENT_REFRESH_SETTINGS -> applyMapThemePreference()
                 Config.INTENT_NO_INTERNET_CONNECTION -> showNoInternetSnackbar()
             }
         }
@@ -261,6 +266,23 @@ class MainActivity : AppCompatActivity() {
         } else {
             showNoInternetSnackbar()
         }
+    }
+
+    private fun applyMapThemePreference() {
+        val theme = if (prefs.darkMode) "dark" else "light"
+        binding.webView.evaluateJavascript(
+            """
+                (function() {
+                    var theme = '$theme';
+                    localStorage.setItem('theme', theme);
+                    document.documentElement.setAttribute('data-bs-theme', theme);
+                    window.dispatchEvent(new CustomEvent('theme:changed', {
+                        detail: { theme: theme }
+                    }));
+                })();
+            """.trimIndent(),
+            null
+        )
     }
 
     private fun updateFavouriteIcon() {

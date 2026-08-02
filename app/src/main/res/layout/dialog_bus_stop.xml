@@ -18,7 +18,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
         android:id="@+id/label1"
-        android:textColor="@color/black"
+        android:textColor="@color/app_text"
         android:text="@string/type_bus_stop_number" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/label2"
-        android:textColor="@color/black"
+        android:textColor="@color/app_text"
         android:text="@string/bus_stop_description" />
 
     <EditText

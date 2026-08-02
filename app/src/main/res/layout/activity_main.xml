@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/line_list"
-                android:textColor="@color/black"
+                android:textColor="@color/app_text"
                 android:textSize="11sp" />
         </LinearLayout>
 
@@ -78,7 +78,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/information"
-                android:textColor="@color/black"
+                android:textColor="@color/app_text"
                 android:textSize="11sp" />
         </LinearLayout>
 
@@ -106,7 +106,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/schedule_board_short"
-                android:textColor="@color/black"
+                android:textColor="@color/app_text"
                 android:textSize="11sp" />
         </LinearLayout>
 
@@ -134,7 +134,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/more"
-                android:textColor="@color/black"
+                android:textColor="@color/app_text"
                 android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>

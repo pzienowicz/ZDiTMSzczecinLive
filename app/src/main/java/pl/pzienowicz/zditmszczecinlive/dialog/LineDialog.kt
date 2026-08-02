@@ -177,7 +177,7 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
                     }
                     tv.text = line.number
                 } else {
-                    tv.setTextColor(ContextCompat.getColor(context, android.R.color.white))
+                    tv.setTextColor(ContextCompat.getColor(context, R.color.app_surface))
                 }
                 cellLayout.addView(tv)
                 row.addView(cellLayout)
@@ -198,7 +198,7 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
     }
 
     private fun setHeaderTextColors() {
-        val black = ContextCompat.getColor(context, R.color.black)
+        val textColor = ContextCompat.getColor(context, R.color.app_text)
         listOf(
             binding.tramNormalLabel,
             binding.tramExtraLabel,
@@ -212,7 +212,7 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
             binding.busExtraLabel,
             binding.busNightLabel,
             binding.clearFilterText
-        ).forEach { setTextColor(it, black) }
+        ).forEach { setTextColor(it, textColor) }
     }
 
     private fun setTextColor(view: View, color: Int) {

@@ -69,7 +69,7 @@ fun Activity.showBar(
         anchorView = findViewById(R.id.bottom_navigation)
         view.setBackgroundResource(R.drawable.bg_snackbar)
         view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            ?.setTextColor(ContextCompat.getColor(this@showBar, R.color.black))
+            ?.setTextColor(ContextCompat.getColor(this@showBar, R.color.app_text))
         view.findViewById<TextView>(com.google.android.material.R.id.snackbar_action)
             ?.setTextColor(ContextCompat.getColor(this@showBar, R.color.colorPrimary))
         if (actionText != null) {

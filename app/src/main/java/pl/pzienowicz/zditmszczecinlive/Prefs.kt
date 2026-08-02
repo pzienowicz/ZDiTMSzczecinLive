@@ -27,6 +27,10 @@ class Prefs (context: Context) {
         get() = prefs.getBoolean(Config.PREFERENCE_OPEN_LINKS_EXTERNAL_BROWSER, false)
         set(value) = prefs.edit { putBoolean(Config.PREFERENCE_OPEN_LINKS_EXTERNAL_BROWSER, value) }
 
+    var darkMode: Boolean
+        get() = prefs.getBoolean(Config.PREFERENCE_DARK_MODE, false)
+        set(value) = prefs.edit { putBoolean(Config.PREFERENCE_DARK_MODE, value) }
+
     var refreshWidgets: Boolean
         get() = prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)
         set(value) = prefs.edit { putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, value) }

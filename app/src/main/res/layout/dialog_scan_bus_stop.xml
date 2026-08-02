@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/scan_bus_stop_number"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/black"
+                android:textColor="@color/app_text"
                 android:textStyle="bold" />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/scan_bus_stop_description"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/black" />
+                android:textColor="@color/app_text" />
 
             <com.journeyapps.barcodescanner.CompoundBarcodeView
                 android:id="@+id/zxing_barcode_scanner"
