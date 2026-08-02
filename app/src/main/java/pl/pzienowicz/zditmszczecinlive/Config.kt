@@ -13,6 +13,7 @@ object Config {
     const val USER_AGENT = "Komunikacja Miejska Szczecin (aplikacja nieoficjalna)"
     const val PREFERENCE_SHOW_DIALOG = "showDialog"
     const val PREFERENCE_FAVOURITE_MAP = "favouriteMapNew"
+    const val PREFERENCE_OPEN_LINKS_EXTERNAL_BROWSER = "openLinksExternalBrowser"
 
     const val FB_GROUP_URL = "https://www.facebook.com/groups/1241981472572028"
 

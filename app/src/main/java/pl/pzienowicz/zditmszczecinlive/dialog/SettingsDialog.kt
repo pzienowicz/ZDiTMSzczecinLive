@@ -26,6 +26,11 @@ class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
 
         binding.refreshWidgetsCheckbox.isChecked = context.prefs.refreshWidgets
 
+        binding.openLinksExternalBrowserCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            context.prefs.openLinksInExternalBrowser = isChecked
+        }
+        binding.openLinksExternalBrowserCheckbox.isChecked = context.prefs.openLinksInExternalBrowser
+
         binding.widgetsRefresh.setText(context.prefs.refreshWidgetsTime)
         binding.widgetsRefresh.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {

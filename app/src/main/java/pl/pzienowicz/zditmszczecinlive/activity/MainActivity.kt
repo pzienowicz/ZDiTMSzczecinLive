@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.BroadcastReceiver
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -15,7 +16,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.GeolocationPermissions
+import android.webkit.WebResourceRequest
 import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -85,7 +88,16 @@ class MainActivity : AppCompatActivity() {
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
         binding.webView.settings.setGeolocationEnabled(true)
-        binding.webView.webViewClient = WebViewClient()
+        binding.webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean = openLinkExternallyIfNeeded(request?.url?.toString())
+
+            @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean =
+                openLinkExternallyIfNeeded(url)
+        }
         binding.webView.webChromeClient = object : WebChromeClient() {
             override fun onGeolocationPermissionsShowPrompt(
                 origin: String, callback: GeolocationPermissions.Callback
@@ -215,6 +227,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun isSelectedMapUrl(url: String?): Boolean =
         normalizeUrl(url) == normalizeUrl(currentUrl)
+
+    private fun openLinkExternallyIfNeeded(url: String?): Boolean {
+        if (!prefs.openLinksInExternalBrowser || isSelectedMapUrl(url) || url.isNullOrBlank()) {
+            return false
+        }
+
+        return try {
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+            true
+        } catch (_: ActivityNotFoundException) {
+            false
+        }
+    }
 
     private fun normalizeUrl(url: String?): String? =
         url
