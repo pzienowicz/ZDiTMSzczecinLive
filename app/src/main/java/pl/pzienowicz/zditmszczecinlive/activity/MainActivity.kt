@@ -110,10 +110,6 @@ class MainActivity : AppCompatActivity() {
                     ActivityCompat.checkSelfPermission(
                         applicationContext,
                         Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        applicationContext,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     mGeoLocationCallback = callback
@@ -331,9 +327,11 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mGeoLocationCallback?.invoke(mGeoLocationRequestOrigin, true, false)
-                }
+                val fineLocationIndex = permissions.indexOf(Manifest.permission.ACCESS_FINE_LOCATION)
+                val isFineLocationGranted = fineLocationIndex >= 0 &&
+                    grantResults.getOrNull(fineLocationIndex) == PackageManager.PERMISSION_GRANTED
+
+                mGeoLocationCallback?.invoke(mGeoLocationRequestOrigin, isFineLocationGranted, false)
             }
         }
 
