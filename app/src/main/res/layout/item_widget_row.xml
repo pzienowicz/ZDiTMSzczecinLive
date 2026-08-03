@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -39,7 +40,7 @@
         android:layout_height="24dp"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:tint="@color/app_icon_secondary"
+        app:tint="@color/app_icon_secondary"
         android:src="@drawable/ic_edit_black_24dp"
         android:contentDescription="@string/edit" />
 

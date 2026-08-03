@@ -110,13 +110,20 @@ class MainActivity : AppCompatActivity() {
                     ActivityCompat.checkSelfPermission(
                         applicationContext,
                         Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     mGeoLocationCallback = callback
                     mGeoLocationRequestOrigin = origin
                     ActivityCompat.requestPermissions(
                         this@MainActivity,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ),
                         MY_PERMISSIONS_REQUEST_LOCATION
                     )
                 } else {

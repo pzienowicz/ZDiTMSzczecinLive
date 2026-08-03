@@ -40,7 +40,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_directions_bus_white_48dp"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_announcement_white_48dp"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_web_white_24dp"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_more_horiz_24dp"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:layout_width="match_parent"
