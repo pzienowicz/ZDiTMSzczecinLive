@@ -112,6 +112,10 @@ class MainActivity : AppCompatActivity() {
                     ActivityCompat.checkSelfPermission(
                         applicationContext,
                         Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        applicationContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     mGeoLocationCallback = callback
@@ -330,13 +334,15 @@ class MainActivity : AppCompatActivity() {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
                 val fineLocationIndex = permissions.indexOf(Manifest.permission.ACCESS_FINE_LOCATION)
-                val isFineLocationGranted = fineLocationIndex >= 0 &&
-                    grantResults.getOrNull(fineLocationIndex) == PackageManager.PERMISSION_GRANTED
+                val coarseLocationIndex = permissions.indexOf(Manifest.permission.ACCESS_COARSE_LOCATION)
+                val isLocationGranted = fineLocationIndex >= 0 &&
+                    grantResults.getOrNull(fineLocationIndex) == PackageManager.PERMISSION_GRANTED ||
+                    coarseLocationIndex >= 0 &&
+                    grantResults.getOrNull(coarseLocationIndex) == PackageManager.PERMISSION_GRANTED
 
-                mGeoLocationCallback?.invoke(mGeoLocationRequestOrigin, isFineLocationGranted, false)
+                mGeoLocationCallback?.invoke(mGeoLocationRequestOrigin, isLocationGranted, false)
             }
         }
-
     }
 
     private fun showNoInternetSnackbar() {
