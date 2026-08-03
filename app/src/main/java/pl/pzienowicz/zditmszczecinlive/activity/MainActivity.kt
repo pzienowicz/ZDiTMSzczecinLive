@@ -216,16 +216,17 @@ class MainActivity : AppCompatActivity() {
     private fun setupBackNavigation() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (binding.webView.canGoBack()) {
+                    binding.webView.goBack()
+                    return
+                }
+
                 if (isSelectedMapUrl(binding.webView.url)) {
                     finish()
                     return
                 }
 
-                if (binding.webView.canGoBack()) {
-                    binding.webView.goBack()
-                } else {
-                    binding.webView.loadUrl(currentUrl)
-                }
+                binding.webView.loadUrl(currentUrl)
             }
         })
     }
