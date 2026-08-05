@@ -35,6 +35,7 @@ import pl.pzienowicz.zditmszczecinlive.BuildConfig
 import pl.pzienowicz.zditmszczecinlive.*
 import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.data.FavouritesRepository
+import pl.pzienowicz.zditmszczecinlive.data.PremiumLimits
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 import pl.pzienowicz.zditmszczecinlive.dialog.*
 import pl.pzienowicz.zditmszczecinlive.model.FavouriteLine
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var billingClient: GooglePlayBillingClient
+    private val premiumLimits = PremiumLimits()
     private var premiumUnlockedAfterPurchase = false
     private var morePopupWindow: PopupWindow? = null
 
@@ -370,7 +372,7 @@ class MainActivity : AppCompatActivity() {
             repository.removeFavouriteLine(line.url)
             showBar(R.string.remove_favourite_line_success)
         } else {
-            if (!isPremiumUnlocked() && repository.getFavouriteLines().size >= Config.FAVOURITE_LINES_FREE_LIMIT) {
+            if (!premiumLimits.canAddFavouriteLine(repository.getFavouriteLines().size, isPremiumUnlocked())) {
                 showDialog(
                     PremiumDialog(this) {
                         premiumUnlockedAfterPurchase = true

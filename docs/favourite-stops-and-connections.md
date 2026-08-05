@@ -223,4 +223,4 @@ Proponowane encje:
 9. [x] Podpiac billing/odblokowanie premium.
 10. [x] Dodac limity free/premium.
 11. [x] Dodac dialog z prosba o zakup premium po przekroczeniu limitu.
-12. [ ] Dodac testy logiki limitow.
+12. [x] Dodac testy logiki limitow.

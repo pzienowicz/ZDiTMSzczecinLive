@@ -8,11 +8,11 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
 import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.data.FavouriteDepartureFormatter
 import pl.pzienowicz.zditmszczecinlive.data.FavouritesRepository
+import pl.pzienowicz.zditmszczecinlive.data.PremiumLimits
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogFavouritesBinding
 import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
 import pl.pzienowicz.zditmszczecinlive.model.Board
@@ -35,6 +35,7 @@ class FavouritesDialog(
 
     private val binding = DialogFavouritesBinding.inflate(layoutInflater)
     private val repository = FavouritesRepository(activity)
+    private val premiumLimits = PremiumLimits()
     private var premiumUnlockedAfterPurchase = false
     private val billingClient = GooglePlayBillingClient(
         activity = activity,
@@ -546,12 +547,10 @@ class FavouritesDialog(
     }
 
     private fun isFavouriteStopsLimitReached(): Boolean =
-        !isPremiumUnlocked() &&
-            repository.getFavouriteStops().size >= Config.FAVOURITE_STOPS_FREE_LIMIT
+        !premiumLimits.canAddFavouriteStop(repository.getFavouriteStops().size, isPremiumUnlocked())
 
     private fun isFavouriteConnectionsLimitReached(): Boolean =
-        !isPremiumUnlocked() &&
-            repository.getFavouriteConnections().size >= Config.FAVOURITE_CONNECTIONS_FREE_LIMIT
+        !premiumLimits.canAddFavouriteConnection(repository.getFavouriteConnections().size, isPremiumUnlocked())
 
     private fun isPremiumUnlocked(): Boolean =
         premiumUnlockedAfterPurchase || billingClient.isPremiumUnlocked()
