@@ -105,6 +105,7 @@
     <string name="payment_cancel">Mamy nadzieję że zmienisz zdanie :)</string>
     <string name="payment_error">Wystąpił błąd, spróbuj ponownie lub skontaktuj się z nami</string>
     <string name="premium_title">Odblokuj pełną wygodę</string>
+    <string name="premium_product_icon">Ikona produktu premium</string>
     <string name="premium_limit_reached">Osiągnięto limit wersji darmowej. Premium daje więcej miejsca na codzienne przystanki, połączenia i mapy.</string>
     <string name="premium_benefit_favourite_stops">Więcej ulubionych przystanków</string>
     <string name="premium_benefit_favourite_connections">Więcej ulubionych połączeń</string>

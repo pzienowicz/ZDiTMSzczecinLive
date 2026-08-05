@@ -89,5 +89,12 @@
             android:text="@string/dark_mode"
             android:textColor="@color/app_text" />
 
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/premium_product_icon"
+            android:src="@drawable/premium_product_icon" />
+
     </LinearLayout>
 </LinearLayout>

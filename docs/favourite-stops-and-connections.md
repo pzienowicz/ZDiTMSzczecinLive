@@ -75,6 +75,7 @@ Po przekroczeniu limitu free aplikacja pokazuje sheet premium z jasnym komunikat
 Sheet premium pokazuje:
 
 - sprzedazowy naglowek,
+- ikone produktu premium przycieta do szesciokata z zaokraglonymi rogami, w stylu podobnym do podsumowania zakupu Google Play,
 - liste korzysci z zielonymi checkami,
 - duza cene pobrana z Google Play Billing jako `formattedPrice`,
 - zielony przycisk zakupu,
