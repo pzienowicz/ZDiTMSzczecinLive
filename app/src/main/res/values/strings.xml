@@ -63,7 +63,7 @@
     <string name="scan_code">Skanuj kod</string>
     <string name="widgets">Widgety</string>
     <string name="active_widgets">Aktywne widgety</string>
-    <string name="add_widget">Aby dodać widget, przytrzymaj palec na ekranie głównym telefonu, a następnie wybierz "Widgety".</string>
+    <string name="add_widget">Aby dodać widget, przytrzymaj palec na ekranie głównym telefonu, wybierz "Widgety", znajdź "Komunikacja Miejska Szczecin" i przytrzymaj widget, aby dodać go na ekran. Po dodaniu widget pojawi się na liście poniżej.</string>
 
     <string name="payment_success">Dziękujemy za wsparcie! Widgety odblokowane.</string>
     <string name="payment_cancel">Mamy nadzieję że zmienisz zdanie :)</string>
