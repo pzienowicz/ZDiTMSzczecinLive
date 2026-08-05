@@ -10,6 +10,7 @@ import android.content.res.Configuration
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.os.Build
+import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +81,23 @@ fun Activity.showBar(
 
 fun Context.showToast(@StringRes text: Int) {
     Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+}
+
+fun WebView.applyThemePreference(darkMode: Boolean) {
+    val theme = if (darkMode) "dark" else "light"
+    evaluateJavascript(
+        """
+            (function() {
+                var theme = '$theme';
+                localStorage.setItem('theme', theme);
+                document.documentElement.setAttribute('data-bs-theme', theme);
+                window.dispatchEvent(new CustomEvent('theme:changed', {
+                    detail: { theme: theme }
+                }));
+            })();
+        """.trimIndent(),
+        null
+    )
 }
 
 val Context.isNetworkAvailable

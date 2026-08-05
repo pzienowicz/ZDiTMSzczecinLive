@@ -340,20 +340,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyMapThemePreference() {
-        val theme = if (prefs.darkMode) "dark" else "light"
-        binding.webView.evaluateJavascript(
-            """
-                (function() {
-                    var theme = '$theme';
-                    localStorage.setItem('theme', theme);
-                    document.documentElement.setAttribute('data-bs-theme', theme);
-                    window.dispatchEvent(new CustomEvent('theme:changed', {
-                        detail: { theme: theme }
-                    }));
-                })();
-            """.trimIndent(),
-            null
-        )
+        binding.webView.applyThemePreference(prefs.darkMode)
     }
 
     private fun updateFavouriteIcon() {

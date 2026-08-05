@@ -2,15 +2,18 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.FrameLayout
+import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import com.google.android.material.R as MaterialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
+import pl.pzienowicz.zditmszczecinlive.applyThemePreference
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogBoardBinding
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.prefs
 
 @SuppressLint("SetJavaScriptEnabled")
 class ScheduleBoardDialog(context: Context, busStop: BusStop) : AdaptiveSheetDialog(context) {
@@ -35,8 +38,15 @@ class ScheduleBoardDialog(context: Context, busStop: BusStop) : AdaptiveSheetDia
 
         binding.webView
             .apply {
-                webViewClient = object : WebViewClient() {}
+                webViewClient = object : WebViewClient() {
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        if (context.prefs.darkMode) {
+                            view?.applyThemePreference(true)
+                        }
+                    }
+                }
                 settings.javaScriptEnabled = true
+                settings.domStorageEnabled = true
                 loadUrl(Config.BUS_STOP_URL + busStop.id)
             }
 
