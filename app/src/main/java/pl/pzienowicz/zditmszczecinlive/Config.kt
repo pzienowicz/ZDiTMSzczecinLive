@@ -22,9 +22,6 @@ object Config {
     const val LINES_PER_ROW = 5
     const val LINES_PER_ROW_LANDSCAPE = 9
 
-    const val CAMERAS_PER_ROW = 2
-    const val CAMERAS_PER_ROW_LANDSCAPE = 3
-
     const val PREFERENCE_SELECTED_LINE = "selectedLine"
     const val INTENT_LOAD_NEW_URL = "loadNewUrl"
     const val INTENT_REFRESH_SETTINGS = "refreshSettings"
@@ -36,8 +33,6 @@ object Config {
     const val EXTRA_BUS_STOP_NUMBER = "busStopNumber"
     const val EXTRA_WIDGET_ID = "widgetId"
 
-    const val PREFERENCE_USE_LOCATION = "useLocation"
-    const val PREFERENCE_ZOOM_MAP = "zoomMap"
     const val PREFERENCE_WIDGETS_REFRESH = "widgetsRefresh"
     const val PREFERENCE_WIDGETS_REFRESH_TIME = "widgetsRefreshTime"
 
