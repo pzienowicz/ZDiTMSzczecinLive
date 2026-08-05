@@ -8,14 +8,27 @@ import androidx.appcompat.app.AppCompatDelegate
 
 import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
+import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogSettingsBinding
 import pl.pzienowicz.zditmszczecinlive.prefs
 import pl.pzienowicz.zditmszczecinlive.sendLocalBroadcast
+import pl.pzienowicz.zditmszczecinlive.setFullWidth
+import pl.pzienowicz.zditmszczecinlive.showBar
 import pl.pzienowicz.zditmszczecinlive.widget.WidgetProvider
 
 class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
 
     private var binding: DialogSettingsBinding
+    private var premiumUnlockedAfterPurchase = false
+    private val billingClient = GooglePlayBillingClient(
+        activity = context as android.app.Activity,
+        onInitialized = {},
+        onPurchased = {
+            premiumUnlockedAfterPurchase = true
+            context.showBar(R.string.payment_success)
+            enableDarkMode(context)
+        }
+    )
 
     init {
         binding = DialogSettingsBinding.inflate(layoutInflater)
@@ -35,15 +48,13 @@ class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
 
         binding.darkModeCheckbox.isChecked = context.prefs.darkMode
         binding.darkModeCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            context.prefs.darkMode = isChecked
-            AppCompatDelegate.setDefaultNightMode(
-                if (isChecked) {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-            )
-            context.sendLocalBroadcast(Intent(Config.INTENT_REFRESH_SETTINGS))
+            if (isChecked && !isPremiumUnlocked()) {
+                binding.darkModeCheckbox.isChecked = false
+                showPremiumDialog(context)
+                return@setOnCheckedChangeListener
+            }
+
+            setDarkMode(context, isChecked)
         }
 
         binding.widgetsRefresh.setText(context.prefs.refreshWidgetsTime)
@@ -55,6 +66,35 @@ class SettingsDialog(context: Context) : AdaptiveSheetDialog(context) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+    }
+
+    private fun isPremiumUnlocked(): Boolean =
+        premiumUnlockedAfterPurchase || billingClient.isPremiumUnlocked()
+
+    private fun showPremiumDialog(context: Context) {
+        val dialog = PremiumDialog(context as android.app.Activity) {
+            premiumUnlockedAfterPurchase = true
+            enableDarkMode(context)
+        }
+        dialog.setFullWidth()
+        dialog.show()
+    }
+
+    private fun enableDarkMode(context: Context) {
+        binding.darkModeCheckbox.isChecked = true
+        setDarkMode(context, true)
+    }
+
+    private fun setDarkMode(context: Context, enabled: Boolean) {
+        context.prefs.darkMode = enabled
+        AppCompatDelegate.setDefaultNightMode(
+            if (enabled) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
+        context.sendLocalBroadcast(Intent(Config.INTENT_REFRESH_SETTINGS))
     }
 
     private fun Context.sendWidgetUpdateBroadcast() {

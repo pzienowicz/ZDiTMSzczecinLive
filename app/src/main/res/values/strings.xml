@@ -105,6 +105,7 @@
     <string name="premium_benefit_favourite_connections">Więcej ulubionych połączeń</string>
     <string name="premium_benefit_favourite_maps">Więcej ulubionych map</string>
     <string name="premium_benefit_widgets">Widgety z odjazdami na ekranie telefonu</string>
+    <string name="premium_benefit_dark_mode">Tryb ciemny aplikacji</string>
     <string name="premium_price_loading">Ładowanie ceny...</string>
     <string name="premium_lifetime_access">Jednorazowy zakup. Dożywotni dostęp.</string>
     <string name="buy_premium">Kup Premium</string>

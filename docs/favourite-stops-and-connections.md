@@ -59,6 +59,7 @@ Proponowany model:
   - bez limitu ulubionych polaczen,
   - bez limitu ulubionych map,
   - mozliwosc tworzenia widgetow z ulubionego przystanku lub polaczenia,
+  - tryb ciemny aplikacji,
   - przyszlosciowo: alerty odjazdu/opoznien dla ulubionych.
 
 Limity wersji free i dialog z prosba o zakup premium sa egzekwowane przy probie dodania kolejnego rekordu ponad limit.
@@ -78,6 +79,8 @@ Sheet premium pokazuje:
 - duza cene pobrana z Google Play Billing jako `formattedPrice`,
 - zielony przycisk zakupu,
 - informacje o jednorazowym zakupie i dozywotnim dostepie.
+
+Tryb ciemny w ustawieniach jest funkcja premium. Proba wlaczenia go bez premium pokazuje sheet premium i zostawia checkbox wylaczony. Po zakupie premium dark mode wlacza sie automatycznie.
 
 Decyzje:
 
