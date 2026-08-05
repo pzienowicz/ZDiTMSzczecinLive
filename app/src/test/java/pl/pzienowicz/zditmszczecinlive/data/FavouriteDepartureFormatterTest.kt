@@ -36,6 +36,13 @@ class FavouriteDepartureFormatterTest {
     }
 
     @Test
+    fun formatTimeSkipsLineNumber() {
+        val departure = departure(line = "87", timeReal = null, timeScheduled = "12:40")
+
+        assertEquals("o 12:40", formatter.formatTime(departure))
+    }
+
+    @Test
     fun formatSkipsMissingTime() {
         val departure = departure(line = "B", timeReal = null, timeScheduled = null)
 

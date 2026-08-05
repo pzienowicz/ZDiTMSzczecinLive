@@ -9,7 +9,13 @@ class FavouriteDepartureFormatter(
 ) {
 
     fun format(departure: Board.Departure): String {
-        val time = departure.time_real?.let {
+        return listOf(departure.line_number, formatTime(departure))
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+    }
+
+    fun formatTime(departure: Board.Departure): String =
+        departure.time_real?.let {
             if (it == 0) {
                 strings.departingNow()
             } else {
@@ -18,11 +24,6 @@ class FavouriteDepartureFormatter(
         } ?: departure.time_scheduled?.let {
             strings.departingAtTime(it)
         }.orEmpty()
-
-        return listOf(departure.line_number, time)
-            .filter { it.isNotBlank() }
-            .joinToString(" ")
-    }
 
     interface Strings {
         fun departingNow(): String

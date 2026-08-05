@@ -328,10 +328,10 @@ class FavouritesDialog(
                 1f
             )
         }
-        textContainer.addView(createTitleText("${connection.lineNumber} - ${connection.direction}"))
-        val departureText = createSubtitleText(context.getString(R.string.loading_departures))
-        textContainer.addView(departureText)
-        loadConnectionDeparture(connection, departureText)
+        val titleText = createTitleText(connection.lineNumber)
+        textContainer.addView(titleText)
+        textContainer.addView(createSubtitleText("${connection.stopName} → ${connection.direction}"))
+        loadConnectionDepartures(connection, titleText)
 
         val deleteButton = ImageButton(context).apply {
             setImageResource(R.drawable.ic_delete_24dp)
@@ -459,9 +459,9 @@ class FavouritesDialog(
         })
     }
 
-    private fun loadConnectionDeparture(connection: FavouriteConnection, departureText: TextView) {
+    private fun loadConnectionDepartures(connection: FavouriteConnection, titleText: TextView) {
         if (!activity.isNetworkAvailable) {
-            departureText.setText(R.string.no_internet)
+            titleText.text = "${connection.lineNumber} - ${context.getString(R.string.no_internet)}"
             return
         }
 
@@ -469,32 +469,38 @@ class FavouritesDialog(
         service.getBoard(connection.stopNumber, CONNECTION_DEPARTURES_LIMIT).enqueue(object : Callback<Board> {
             override fun onResponse(call: Call<Board>, response: Response<Board>) {
                 if (!response.isSuccessful) {
-                    departureText.setText(
-                        if (response.code() == HTTP_TOO_MANY_REQUESTS) {
-                            R.string.departures_rate_limit_error
-                        } else {
-                            R.string.departures_request_error
-                        }
-                    )
+                    val error = if (response.code() == HTTP_TOO_MANY_REQUESTS) {
+                        R.string.departures_rate_limit_error
+                    } else {
+                        R.string.departures_request_error
+                    }
+                    titleText.text = "${connection.lineNumber} - ${context.getString(error)}"
                     return
                 }
 
-                val departure = response.body()
+                val departures = response.body()
                     ?.departures
-                    ?.firstOrNull {
+                    ?.filter {
                         it.line_number == connection.lineNumber &&
                             it.direction == connection.direction
                     }
+                    ?.take(CONNECTION_CARD_DEPARTURES_LIMIT)
+                    .orEmpty()
 
-                departureText.text = if (departure != null) {
-                    "${connection.stopName}, ${departureFormatter.format(departure)}"
+                titleText.text = if (departures.isNotEmpty()) {
+                    listOf(
+                        connection.lineNumber,
+                        departures.joinToString(" | ") { departure ->
+                            departureFormatter.formatTime(departure)
+                        }
+                    ).joinToString(" ")
                 } else {
-                    context.getString(R.string.no_departures)
+                    "${connection.lineNumber} - ${context.getString(R.string.no_departures)}"
                 }
             }
 
             override fun onFailure(call: Call<Board>, t: Throwable) {
-                departureText.setText(R.string.departures_request_error)
+                titleText.text = "${connection.lineNumber} - ${context.getString(R.string.departures_request_error)}"
             }
         })
     }
@@ -565,6 +571,7 @@ class FavouritesDialog(
 
     private companion object {
         const val DEPARTURES_LIMIT = 3
+        const val CONNECTION_CARD_DEPARTURES_LIMIT = 3
         const val CONNECTION_DEPARTURES_LIMIT = 10
         const val CONNECTION_PICKER_DEPARTURES_LIMIT = 20
         const val HTTP_TOO_MANY_REQUESTS = 429
