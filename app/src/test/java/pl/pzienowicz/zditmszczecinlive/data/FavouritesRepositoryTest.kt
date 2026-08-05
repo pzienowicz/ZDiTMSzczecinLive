@@ -1,9 +1,12 @@
 package pl.pzienowicz.zditmszczecinlive.data
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import pl.pzienowicz.zditmszczecinlive.model.Board
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.model.FavouriteLine
 
 class FavouritesRepositoryTest {
 
@@ -94,6 +97,52 @@ class FavouritesRepositoryTest {
         )
     }
 
+    @Test
+    fun addFavouriteLineStoresLine() {
+        val repository = FavouritesRepository(FakeStorage())
+
+        repository.addFavouriteLine(FavouriteLine(title = "Linia 75", url = "https://example.com/75"))
+
+        assertEquals(
+            listOf("Linia 75" to "https://example.com/75"),
+            repository.getFavouriteLines().map { it.title to it.url }
+        )
+    }
+
+    @Test
+    fun addFavouriteLineIgnoresDuplicateUrl() {
+        val repository = FavouritesRepository(FakeStorage())
+
+        repository.addFavouriteLine(FavouriteLine(title = "Linia 75", url = "https://example.com/75"))
+        repository.addFavouriteLine(FavouriteLine(title = "Linia 75 dublet", url = "https://example.com/75"))
+
+        assertEquals(1, repository.getFavouriteLines().size)
+        assertEquals("Linia 75", repository.getFavouriteLines().first().title)
+    }
+
+    @Test
+    fun removeFavouriteLineDeletesMatchingUrl() {
+        val repository = FavouritesRepository(FakeStorage())
+        repository.addFavouriteLine(FavouriteLine(title = "Linia 75", url = "https://example.com/75"))
+        repository.addFavouriteLine(FavouriteLine(title = "Linia 8", url = "https://example.com/8"))
+
+        repository.removeFavouriteLine("https://example.com/75")
+
+        assertEquals(
+            listOf("https://example.com/8"),
+            repository.getFavouriteLines().map { it.url }
+        )
+    }
+
+    @Test
+    fun isFavouriteLineChecksUrl() {
+        val repository = FavouritesRepository(FakeStorage())
+        repository.addFavouriteLine(FavouriteLine(title = "Linia 75", url = "https://example.com/75"))
+
+        assertTrue(repository.isFavouriteLine("https://example.com/75"))
+        assertFalse(repository.isFavouriteLine("https://example.com/8"))
+    }
+
     private fun departure(line: String, direction: String): Board.Departure =
         Board.Departure(
             line_number = line,
@@ -104,6 +153,7 @@ class FavouritesRepositoryTest {
 
     private class FakeStorage(
         override var favouriteStopsJson: String = "[]",
-        override var favouriteConnectionsJson: String = "[]"
+        override var favouriteConnectionsJson: String = "[]",
+        override var favouriteLinesJson: String = "[]"
     ) : FavouritesRepository.Storage
 }

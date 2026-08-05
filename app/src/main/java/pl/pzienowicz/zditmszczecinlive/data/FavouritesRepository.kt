@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import pl.pzienowicz.zditmszczecinlive.model.Board
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 import pl.pzienowicz.zditmszczecinlive.model.FavouriteConnection
+import pl.pzienowicz.zditmszczecinlive.model.FavouriteLine
 import pl.pzienowicz.zditmszczecinlive.model.FavouriteStop
 import pl.pzienowicz.zditmszczecinlive.prefs
 
@@ -25,17 +26,24 @@ class FavouritesRepository(
                 set(value) {
                     context.prefs.favouriteConnectionsJson = value
                 }
+            override var favouriteLinesJson: String
+                get() = context.prefs.favouriteLinesJson
+                set(value) {
+                    context.prefs.favouriteLinesJson = value
+                }
         }
     )
 
     interface Storage {
         var favouriteStopsJson: String
         var favouriteConnectionsJson: String
+        var favouriteLinesJson: String
     }
 
     private val gson = Gson()
     private val favouriteStopListType = object : TypeToken<List<FavouriteStop>>() {}.type
     private val favouriteConnectionListType = object : TypeToken<List<FavouriteConnection>>() {}.type
+    private val favouriteLineListType = object : TypeToken<List<FavouriteLine>>() {}.type
 
     fun getFavouriteStops(): List<FavouriteStop> =
         runCatching {
@@ -108,11 +116,39 @@ class FavouritesRepository(
         )
     }
 
+    fun getFavouriteLines(): List<FavouriteLine> =
+        runCatching {
+            gson.fromJson<List<FavouriteLine>>(
+                storage.favouriteLinesJson,
+                favouriteLineListType
+            )
+        }.getOrNull().orEmpty()
+
+    fun isFavouriteLine(url: String): Boolean =
+        getFavouriteLines().any { it.url == url }
+
+    fun addFavouriteLine(line: FavouriteLine) {
+        val currentLines = getFavouriteLines()
+        if (currentLines.any { it.url == line.url }) {
+            return
+        }
+
+        saveFavouriteLines(currentLines + line)
+    }
+
+    fun removeFavouriteLine(url: String) {
+        saveFavouriteLines(getFavouriteLines().filterNot { it.url == url })
+    }
+
     private fun saveFavouriteStops(stops: List<FavouriteStop>) {
         storage.favouriteStopsJson = gson.toJson(stops)
     }
 
     private fun saveFavouriteConnections(connections: List<FavouriteConnection>) {
         storage.favouriteConnectionsJson = gson.toJson(connections)
+    }
+
+    private fun saveFavouriteLines(lines: List<FavouriteLine>) {
+        storage.favouriteLinesJson = gson.toJson(lines)
     }
 }

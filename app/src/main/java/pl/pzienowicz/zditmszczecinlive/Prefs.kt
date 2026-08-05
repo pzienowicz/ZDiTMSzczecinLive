@@ -19,6 +19,21 @@ class Prefs (context: Context) {
         get() = prefs.getString(Config.PREFERENCE_FAVOURITE_MAP, Config.URL) ?: Config.URL
         set(value) = prefs.edit { putString(Config.PREFERENCE_FAVOURITE_MAP, value) }
 
+    fun favouriteMapToMigrate(): String? =
+        if (prefs.contains(Config.PREFERENCE_FAVOURITE_MAP)) {
+            prefs.getString(Config.PREFERENCE_FAVOURITE_MAP, null)
+        } else {
+            null
+        }
+
+    fun clearFavouriteMap() {
+        prefs.edit { remove(Config.PREFERENCE_FAVOURITE_MAP) }
+    }
+
+    var favouriteMapMigrated: Boolean
+        get() = prefs.getBoolean(Config.PREFERENCE_FAVOURITE_MAP_MIGRATED, false)
+        set(value) = prefs.edit { putBoolean(Config.PREFERENCE_FAVOURITE_MAP_MIGRATED, value) }
+
     var showInitDialog: Boolean
         get() = prefs.getBoolean(Config.PREFERENCE_SHOW_DIALOG, true)
         set(value) = prefs.edit { putBoolean(Config.PREFERENCE_SHOW_DIALOG, value) }
@@ -38,6 +53,10 @@ class Prefs (context: Context) {
     var favouriteConnectionsJson: String
         get() = prefs.getString(Config.PREFERENCE_FAVOURITE_CONNECTIONS, "[]") ?: "[]"
         set(value) = prefs.edit { putString(Config.PREFERENCE_FAVOURITE_CONNECTIONS, value) }
+
+    var favouriteLinesJson: String
+        get() = prefs.getString(Config.PREFERENCE_FAVOURITE_LINES, "[]") ?: "[]"
+        set(value) = prefs.edit { putString(Config.PREFERENCE_FAVOURITE_LINES, value) }
 
     var refreshWidgets: Boolean
         get() = prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)

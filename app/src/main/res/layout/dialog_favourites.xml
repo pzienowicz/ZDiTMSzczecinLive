@@ -122,5 +122,31 @@
             android:text="@string/no_favourite_connections"
             android:textColor="@color/app_text_secondary" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/favourite_maps"
+            android:textColor="@color/app_text"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/favouriteLinesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/emptyFavouriteLinesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_snackbar"
+            android:padding="12dp"
+            android:text="@string/no_favourite_lines"
+            android:textColor="@color/app_text_secondary" />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

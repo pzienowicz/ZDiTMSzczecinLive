@@ -32,8 +32,10 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 import android.widget.PopupWindow
 import pl.pzienowicz.zditmszczecinlive.*
+import pl.pzienowicz.zditmszczecinlive.data.FavouritesRepository
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 import pl.pzienowicz.zditmszczecinlive.dialog.*
+import pl.pzienowicz.zditmszczecinlive.model.FavouriteLine
 import pl.pzienowicz.zditmszczecinlive.timer.MapTimer
 import androidx.core.net.toUri
 
@@ -65,11 +67,11 @@ class MainActivity : AppCompatActivity() {
         WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
 
         prefs.selectedLine = 0
+        migrateFavouriteMap()
 
         binding.setFavourite.setOnClickListener {
-            prefs.favouriteMap = currentUrl
+            toggleFavouriteLine()
             updateFavouriteIcon()
-            showBar(R.string.set_favourite)
         }
         updateFavouriteIcon()
 
@@ -286,13 +288,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadPage() {
         if (isNetworkAvailable) {
-            currentUrl = prefs.favouriteMap
+            currentUrl = FavouritesRepository(this).getFavouriteLines().firstOrNull()?.url
+                ?: Config.URL
             binding.webView.loadUrl(currentUrl)
             updateFavouriteIcon()
             showInitDialog()
         } else {
             showNoInternetSnackbar()
         }
+    }
+
+    private fun migrateFavouriteMap() {
+        if (prefs.favouriteMapMigrated) {
+            return
+        }
+
+        prefs.favouriteMapToMigrate()?.let { favouriteMap ->
+            val oldFavouriteMap = normalizeUrl(favouriteMap) ?: Config.URL
+            val repository = FavouritesRepository(this)
+            if (!repository.isFavouriteLine(oldFavouriteMap)) {
+                repository.addFavouriteLine(
+                    FavouriteLine(
+                        title = oldFavouriteMap.toFavouriteLineTitle(),
+                        url = oldFavouriteMap
+                    )
+                )
+            }
+        }
+        prefs.clearFavouriteMap()
+        prefs.favouriteMapMigrated = true
     }
 
     private fun applyMapThemePreference() {
@@ -313,12 +337,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateFavouriteIcon() {
-        val icon = if (currentUrl == prefs.favouriteMap) {
+        val icon = if (FavouritesRepository(this).isFavouriteLine(normalizeUrl(currentUrl) ?: currentUrl)) {
             R.drawable.ic_favorite_white_48dp
         } else {
             R.drawable.ic_favorite_border_white_48dp
         }
         binding.setFavourite.setImageResource(icon)
+    }
+
+    private fun toggleFavouriteLine() {
+        val line = currentFavouriteLine()
+        val repository = FavouritesRepository(this)
+        if (repository.isFavouriteLine(line.url)) {
+            repository.removeFavouriteLine(line.url)
+            showBar(R.string.remove_favourite_line_success)
+        } else {
+            repository.addFavouriteLine(line)
+            showBar(R.string.add_favourite_line_success)
+        }
+    }
+
+    private fun currentFavouriteLine(): FavouriteLine {
+        val url = normalizeUrl(currentUrl) ?: Config.URL
+        return FavouriteLine(
+            title = url.toFavouriteLineTitle(),
+            url = url
+        )
+    }
+
+    private fun String.toFavouriteLineTitle(): String {
+        if (this == Config.URL) {
+            return getString(R.string.default_map)
+        }
+
+        if (startsWith(Config.LINE_URL)) {
+            val lineNumber = removePrefix(Config.LINE_URL)
+                .trimEnd('/')
+                .substringAfterLast('/')
+            if (lineNumber.isNotBlank()) {
+                return getString(R.string.favourite_line_title, lineNumber)
+            }
+        }
+
+        return getString(R.string.map)
     }
 
     private fun showInitDialog() {
@@ -382,7 +443,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openFavouritesDialog() {
-        showDialog(FavouritesDialog(this))
+        showDialog(
+            FavouritesDialog(
+                activity = this,
+                onLineSelected = { line ->
+                    currentUrl = line.url
+                    binding.webView.loadUrl(line.url)
+                    updateFavouriteIcon()
+                }
+            )
+        )
     }
 
     private fun openWidgetsDialog() {

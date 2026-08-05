@@ -17,6 +17,8 @@ object Config {
     const val PREFERENCE_DARK_MODE = "darkMode"
     const val PREFERENCE_FAVOURITE_STOPS = "favouriteStops"
     const val PREFERENCE_FAVOURITE_CONNECTIONS = "favouriteConnections"
+    const val PREFERENCE_FAVOURITE_LINES = "favouriteLines"
+    const val PREFERENCE_FAVOURITE_MAP_MIGRATED = "favouriteMapMigrated"
 
     const val FB_GROUP_URL = "https://www.facebook.com/groups/1241981472572028"
 

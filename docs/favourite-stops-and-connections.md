@@ -1,12 +1,14 @@
-# Ulubione przystanki i polaczenia
+# Ulubione przystanki, polaczenia i mapy
 
 ## Cel
 
-Dodac w aplikacji funkcje ulubionych przystankow i ulubionych polaczen, tak aby uzytkownik mogl szybko sprawdzic najwazniejsze dla siebie odjazdy bez kazdorazowego wpisywania numeru przystanku albo wybierania linii z mapy.
+Dodac w aplikacji funkcje ulubionych przystankow, ulubionych polaczen i ulubionych map, tak aby uzytkownik mogl szybko sprawdzic najwazniejsze dla siebie odjazdy albo otworzyc wybrana mape bez kazdorazowego wpisywania numeru przystanku albo wybierania linii z mapy.
 
 Funkcja ma byc dobrym kandydatem na rozbudowe premium, ale podstawowy zakres powinien byc uzyteczny takze bez zakupu.
 
 ## Zakres MVP
+
+Status: ulubione przystanki, ulubione polaczenia i ulubione mapy sa zaimplementowane jako MVP. Dane sa zapisywane lokalnie w `SharedPreferences` jako JSON przez Gson.
 
 ### Ulubione przystanki
 
@@ -30,6 +32,19 @@ Funkcja ma byc dobrym kandydatem na rozbudowe premium, ale podstawowy zakres pow
 - Lista ulubionych polaczen pokazuje najblizszy pasujacy odjazd.
 - Klikniecie polaczenia otwiera szczegoly odjazdow dla tego przystanku przefiltrowane do danej linii/kierunku.
 - Uzytkownik moze usunac polaczenie z ulubionych.
+
+Obecnie klikniecie polaczenia otwiera pelna tablice odjazdow dla przystanku. Dedykowany widok przefiltrowany do linii/kierunku zostaje jako mozliwe ulepszenie.
+
+### Ulubione mapy
+
+- Uzytkownik moze dodac aktualna mape do ulubionych przez FAB z sercem.
+- Ponowne klikniecie serca usuwa aktualna mape z ulubionych.
+- Dodawanie map odbywa sie tylko przez FAB na ekranie mapy.
+- Lista ulubionych map pokazuje krotkie kafelki po dwa w wierszu.
+- Klikniecie kafelka otwiera konkretna mape.
+- Uzytkownik moze usunac mape z ulubionych.
+- Po starcie aplikacja otwiera pierwsza ulubiona mape, a jesli lista jest pusta, otwiera domyslna mape ZDiTM.
+- Stara preferencja `prefs.favouriteMap` jest migrowana przy starcie aplikacji do rekordu ulubionych map, a nastepnie czyszczona.
 
 ## Premium
 
@@ -105,10 +120,11 @@ Preferowane MVP: nowa pozycja w "Wiecej", zeby nie przebudowywac glownej nawigac
 
 ### Widok ulubionych
 
-Sheet z zakladkami:
+Sheet z sekcjami:
 
 - `Przystanki`
 - `Polaczenia`
+- `Mapy`
 
 Dla kazdego wpisu:
 
@@ -134,50 +150,59 @@ Dla kazdego wpisu:
   - line number,
   - headsign/direction.
 
+### Dodawanie mapy
+
+- FAB z sercem dziala jako toggle aktualnej mapy:
+  - jesli aktualna mapa nie jest w ulubionych, dodaje ja,
+  - jesli aktualna mapa jest juz w ulubionych, usuwa ja.
+- Sheet ulubionych ma sekcje `Mapy`, bez przycisku dodawania.
+- Kafelki map sa wyswietlane po dwa w wierszu.
+
 ## Model danych
 
-Docelowo warto przejsc na Room, jezeli funkcja bedzie rosla. MVP mozna zrobic w SharedPreferences jako JSON, ale bedzie to mniej wygodne przy migracjach.
+Decyzja na MVP: nie dodajemy Room. Uzywamy `SharedPreferences` + JSON przez Gson, bo danych jest malo, struktura jest prosta i aplikacja juz korzysta z `SharedPreferences`.
 
-Rekomendacja: Room.
+Room zostaje jako opcja pozniejsza, jezeli funkcja urosnie o offline GTFS, historie, alerty albo zlozone filtrowanie.
 
 Proponowane encje:
 
 ### FavouriteStop
 
-- `id`: lokalny identyfikator
-- `stopId`: id z API, opcjonalnie
+- `stopId`: id z API
 - `stopNumber`: numer przystanku
 - `stopName`: nazwa przystanku
-- `createdAt`
-- `sortOrder`
 
 ### FavouriteConnection
 
-- `id`: lokalny identyfikator
+- `stopId`: id z API
 - `stopNumber`
 - `stopName`
-- `lineId`
 - `lineNumber`
 - `direction`
-- `createdAt`
-- `sortOrder`
+
+### FavouriteLine
+
+- `title`: nazwa widoczna w UI, np. `Linia 75`, `Wszystkie linie` albo `Mapa`
+- `url`: konkretna mapa do otwarcia
 
 ## Otwarte decyzje
 
 - Czy darmowy limit ma byc 3 przystanki i 1 polaczenie.
-- Czy ulubione maja miec osobny ekran, czy sheet.
-- Czy dodajemy widget dla ulubionego polaczenia juz w pierwszym etapie.
-- Czy migrujemy od razu na Room.
-- Czy zmieniamy obecny przycisk serca, czy zostawiamy go tylko dla domyslnej mapy.
+- Czy dodajemy widget dla ulubionego polaczenia.
+- Czy dodajemy dedykowany widok odjazdow przefiltrowany do ulubionego polaczenia.
+- Czy limity free obejmuja takze ulubione mapy.
 
 ## Etapy implementacji
 
-1. Dodac model i storage ulubionych.
-2. Dodac sheet/listy ulubionych.
-3. Dodac dodawanie/usuwanie ulubionych przystankow.
-4. Dodac pobieranie odjazdow dla ulubionych przystankow.
-5. Dodac dodawanie/usuwanie ulubionych polaczen.
-6. Podpiac billing/odblokowanie premium.
-7. Na koncu dodac limity free/premium.
-8. Na koncu dodac dialog z prosba o zakup premium po przekroczeniu limitu.
-9. Dodac testy storage i logiki limitow.
+1. [x] Dodac model i storage ulubionych.
+2. [x] Dodac sheet/listy ulubionych.
+3. [x] Dodac dodawanie/usuwanie ulubionych przystankow.
+4. [x] Dodac pobieranie odjazdow dla ulubionych przystankow.
+5. [x] Dodac dodawanie/usuwanie ulubionych polaczen.
+6. [x] Dodac pobieranie najblizszego pasujacego odjazdu dla ulubionych polaczen.
+7. [x] Dodac testy storage i formatowania odjazdow.
+8. [x] Dodac sekcje ulubionych map.
+9. [ ] Podpiac billing/odblokowanie premium.
+10. [ ] Na koncu dodac limity free/premium.
+11. [ ] Na koncu dodac dialog z prosba o zakup premium po przekroczeniu limitu.
+12. [ ] Dodac testy logiki limitow.

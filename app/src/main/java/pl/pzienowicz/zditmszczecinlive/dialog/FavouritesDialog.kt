@@ -16,6 +16,7 @@ import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
 import pl.pzienowicz.zditmszczecinlive.model.Board
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
 import pl.pzienowicz.zditmszczecinlive.model.FavouriteConnection
+import pl.pzienowicz.zditmszczecinlive.model.FavouriteLine
 import pl.pzienowicz.zditmszczecinlive.model.FavouriteStop
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
@@ -25,7 +26,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(activity) {
+class FavouritesDialog(
+    private val activity: Activity,
+    private val onLineSelected: (FavouriteLine) -> Unit
+) : AdaptiveSheetDialog(activity) {
 
     private val binding = DialogFavouritesBinding.inflate(layoutInflater)
     private val repository = FavouritesRepository(activity)
@@ -42,9 +46,9 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         binding.addFavouriteConnectionButton.setOnClickListener {
             openAddConnectionStopDialog()
         }
-
         renderFavouriteStops()
         renderFavouriteConnections()
+        renderFavouriteLines()
     }
 
     private fun openAddStopDialog() {
@@ -184,6 +188,36 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         }
     }
 
+    private fun renderFavouriteLines() {
+        binding.favouriteLinesContainer.removeAllViews()
+        val lines = repository.getFavouriteLines()
+        binding.emptyFavouriteLinesText.visibility = if (lines.isEmpty()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        lines.chunked(LINES_PER_ROW).forEach { rowLines ->
+            val row = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            rowLines.forEach { line ->
+                row.addView(createLineCard(line))
+            }
+
+            repeat(LINES_PER_ROW - rowLines.size) {
+                row.addView(createLineSpacer())
+            }
+
+            binding.favouriteLinesContainer.addView(row)
+        }
+    }
+
     private fun createStopCard(stop: FavouriteStop): View {
         val row = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -288,6 +322,61 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         row.addView(deleteButton)
         return row
     }
+
+    private fun createLineCard(line: FavouriteLine): View {
+        val card = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            isClickable = true
+            isFocusable = true
+            setBackgroundResource(R.drawable.bg_snackbar)
+            setPadding(dp(10), dp(10), dp(4), dp(10))
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            ).apply {
+                setMargins(dp(2), dp(2), dp(2), dp(6))
+            }
+            setOnClickListener {
+                onLineSelected(line)
+                dismiss()
+            }
+        }
+
+        val title = createTitleText(line.title).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        }
+        val deleteButton = ImageButton(context).apply {
+            setImageResource(R.drawable.ic_delete_24dp)
+            background = null
+            setBackgroundColor(Color.TRANSPARENT)
+            contentDescription = context.getString(R.string.remove_favourite_line)
+            setPadding(dp(8), dp(8), dp(8), dp(8))
+            layoutParams = LinearLayout.LayoutParams(dp(40), dp(40))
+            setOnClickListener {
+                repository.removeFavouriteLine(line.url)
+                renderFavouriteLines()
+            }
+        }
+
+        card.addView(title)
+        card.addView(deleteButton)
+        return card
+    }
+
+    private fun createLineSpacer(): View =
+        View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        }
 
     private fun openScheduleBoard(stop: FavouriteStop) {
         openScheduleBoard(stop.toBusStop())
@@ -434,5 +523,6 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         const val CONNECTION_DEPARTURES_LIMIT = 10
         const val CONNECTION_PICKER_DEPARTURES_LIMIT = 20
         const val HTTP_TOO_MANY_REQUESTS = 429
+        const val LINES_PER_ROW = 2
     }
 }
