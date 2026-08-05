@@ -15,10 +15,12 @@ import pl.pzienowicz.zditmszczecinlive.databinding.DialogFavouritesBinding
 import pl.pzienowicz.zditmszczecinlive.isNetworkAvailable
 import pl.pzienowicz.zditmszczecinlive.model.Board
 import pl.pzienowicz.zditmszczecinlive.model.BusStop
+import pl.pzienowicz.zditmszczecinlive.model.FavouriteConnection
 import pl.pzienowicz.zditmszczecinlive.model.FavouriteStop
 import pl.pzienowicz.zditmszczecinlive.rest.RetrofitClient
 import pl.pzienowicz.zditmszczecinlive.rest.ZDiTMService
 import pl.pzienowicz.zditmszczecinlive.setFullWidth
+import pl.pzienowicz.zditmszczecinlive.showBar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,34 +33,18 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         FavouriteDepartureFormatter.AndroidStrings(activity)
     )
 
-    private data class FavouriteConnectionMock(
-        val line: String,
-        val stop: String,
-        val direction: String,
-        val departure: String
-    )
-
-    private val favouriteConnections = listOf(
-        FavouriteConnectionMock("75", "Plac Rodla", "Osiedle Bukowe", "za 7 min"),
-        FavouriteConnectionMock("8", "Turkusowa", "Gumience", "za 11 min")
-    )
-
     init {
         setContentView(binding.root)
 
         binding.addFavouriteStopButton.setOnClickListener {
             openAddStopDialog()
         }
+        binding.addFavouriteConnectionButton.setOnClickListener {
+            openAddConnectionStopDialog()
+        }
 
         renderFavouriteStops()
-        favouriteConnections.forEach { connection ->
-            binding.favouriteConnectionsContainer.addView(
-                createCard(
-                    title = "${connection.line} - ${connection.direction}",
-                    subtitle = "${connection.stop}, ${connection.departure}"
-                )
-            )
-        }
+        renderFavouriteConnections()
     }
 
     private fun openAddStopDialog() {
@@ -74,6 +60,102 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         dialog.show()
     }
 
+    private fun openAddConnectionStopDialog() {
+        val dialog = BusStopDialog(
+            activity = activity,
+            onSelected = { busStop ->
+                openDeparturePicker(busStop)
+            },
+            currentBusStop = null
+        )
+        dialog.setFullWidth()
+        dialog.show()
+    }
+
+    private fun openDeparturePicker(busStop: BusStop) {
+        if (!activity.isNetworkAvailable) {
+            showError(R.string.no_internet)
+            return
+        }
+
+        val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
+        service.getBoard(busStop.number, CONNECTION_PICKER_DEPARTURES_LIMIT).enqueue(object : Callback<Board> {
+            override fun onResponse(call: Call<Board>, response: Response<Board>) {
+                if (!response.isSuccessful) {
+                    showError(
+                        if (response.code() == HTTP_TOO_MANY_REQUESTS) {
+                            R.string.departures_rate_limit_error
+                        } else {
+                            R.string.departures_request_error
+                        }
+                    )
+                    return
+                }
+
+                val departures = response.body()
+                    ?.departures
+                    ?.distinctBy { it.line_number to it.direction }
+                    .orEmpty()
+                if (departures.isEmpty()) {
+                    showError(R.string.no_connections_to_add)
+                    return
+                }
+
+                val dialog = createConnectionPickerDialog(busStop, departures)
+                dialog.setFullWidth()
+                dialog.show()
+            }
+
+            override fun onFailure(call: Call<Board>, t: Throwable) {
+                showError(R.string.departures_request_error)
+            }
+        })
+    }
+
+    private fun createConnectionPickerDialog(
+        busStop: BusStop,
+        departures: List<Board.Departure>
+    ): AdaptiveSheetDialog {
+        val dialog = AdaptiveSheetDialog(activity)
+        val container = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(15), dp(15), dp(15), dp(15))
+        }
+        container.addView(
+            View(context).apply {
+                setBackgroundResource(R.drawable.bg_bottom_sheet_handle)
+                layoutParams = LinearLayout.LayoutParams(dp(40), dp(4)).apply {
+                    gravity = android.view.Gravity.CENTER_HORIZONTAL
+                    bottomMargin = dp(12)
+                }
+            }
+        )
+        container.addView(createTitleText(context.getString(R.string.select_favourite_connection)))
+
+        departures.forEach { departure ->
+            container.addView(
+                createConnectionPickerCard(departure) {
+                    repository.addFavouriteConnection(busStop, departure)
+                    renderFavouriteConnections()
+                    dialog.dismiss()
+                }
+            )
+        }
+
+        dialog.setContentView(container)
+        return dialog
+    }
+
+    private fun createConnectionPickerCard(
+        departure: Board.Departure,
+        onClick: () -> Unit
+    ): View =
+        createClickableCard(
+            title = "${departure.line_number} - ${departure.direction}",
+            subtitle = departureFormatter.format(departure),
+            onClick = onClick
+        )
+
     private fun renderFavouriteStops() {
         binding.favouriteStopsContainer.removeAllViews()
         val stops = repository.getFavouriteStops()
@@ -85,6 +167,20 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
 
         stops.forEach { stop ->
             binding.favouriteStopsContainer.addView(createStopCard(stop))
+        }
+    }
+
+    private fun renderFavouriteConnections() {
+        binding.favouriteConnectionsContainer.removeAllViews()
+        val connections = repository.getFavouriteConnections()
+        binding.emptyFavouriteConnectionsText.visibility = if (connections.isEmpty()) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+
+        connections.forEach { connection ->
+            binding.favouriteConnectionsContainer.addView(createConnectionCard(connection))
         }
     }
 
@@ -140,18 +236,77 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         return row
     }
 
+    private fun createBaseRow(onClick: () -> Unit): LinearLayout =
+        LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            isClickable = true
+            isFocusable = true
+            setBackgroundResource(R.drawable.bg_snackbar)
+            setPadding(dp(12), dp(10), dp(8), dp(10))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                bottomMargin = dp(8)
+            }
+            setOnClickListener { onClick() }
+        }
+
+    private fun createConnectionCard(connection: FavouriteConnection): View {
+        val row = createBaseRow {
+            openScheduleBoard(connection.toBusStop())
+        }
+
+        val textContainer = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        }
+        textContainer.addView(createTitleText("${connection.lineNumber} - ${connection.direction}"))
+        val departureText = createSubtitleText(context.getString(R.string.loading_departures))
+        textContainer.addView(departureText)
+        loadConnectionDeparture(connection, departureText)
+
+        val deleteButton = ImageButton(context).apply {
+            setImageResource(R.drawable.ic_delete_24dp)
+            background = null
+            setBackgroundColor(Color.TRANSPARENT)
+            contentDescription = context.getString(R.string.remove_favourite_connection)
+            setPadding(dp(8), dp(8), dp(8), dp(8))
+            layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
+            setOnClickListener {
+                repository.removeFavouriteConnection(connection)
+                renderFavouriteConnections()
+            }
+        }
+
+        row.addView(textContainer)
+        row.addView(deleteButton)
+        return row
+    }
+
     private fun openScheduleBoard(stop: FavouriteStop) {
+        openScheduleBoard(stop.toBusStop())
+    }
+
+    private fun openScheduleBoard(busStop: BusStop) {
         val dialog = ScheduleBoardDialog(
             context,
-            BusStop(
-                id = stop.stopId,
-                number = stop.stopNumber,
-                name = stop.stopName
-            )
+            busStop
         )
         dialog.setFullWidth()
         dialog.show()
     }
+
+    private fun FavouriteStop.toBusStop(): BusStop =
+        BusStop(id = stopId, number = stopNumber, name = stopName)
+
+    private fun FavouriteConnection.toBusStop(): BusStop =
+        BusStop(id = stopId, number = stopNumber, name = stopName)
 
     private fun loadDepartures(stop: FavouriteStop, departuresText: TextView) {
         if (!activity.isNetworkAvailable) {
@@ -187,6 +342,46 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         })
     }
 
+    private fun loadConnectionDeparture(connection: FavouriteConnection, departureText: TextView) {
+        if (!activity.isNetworkAvailable) {
+            departureText.setText(R.string.no_internet)
+            return
+        }
+
+        val service = RetrofitClient.getRetrofit().create(ZDiTMService::class.java)
+        service.getBoard(connection.stopNumber, CONNECTION_DEPARTURES_LIMIT).enqueue(object : Callback<Board> {
+            override fun onResponse(call: Call<Board>, response: Response<Board>) {
+                if (!response.isSuccessful) {
+                    departureText.setText(
+                        if (response.code() == HTTP_TOO_MANY_REQUESTS) {
+                            R.string.departures_rate_limit_error
+                        } else {
+                            R.string.departures_request_error
+                        }
+                    )
+                    return
+                }
+
+                val departure = response.body()
+                    ?.departures
+                    ?.firstOrNull {
+                        it.line_number == connection.lineNumber &&
+                            it.direction == connection.direction
+                    }
+
+                departureText.text = if (departure != null) {
+                    "${connection.stopName}, ${departureFormatter.format(departure)}"
+                } else {
+                    context.getString(R.string.no_departures)
+                }
+            }
+
+            override fun onFailure(call: Call<Board>, t: Throwable) {
+                departureText.setText(R.string.departures_request_error)
+            }
+        })
+    }
+
     private fun createCard(title: String, subtitle: String): View {
         val card = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -204,6 +399,13 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
         card.addView(createSubtitleText(subtitle))
         return card
     }
+
+    private fun createClickableCard(title: String, subtitle: String, onClick: () -> Unit): View =
+        createCard(title, subtitle).apply {
+            isClickable = true
+            isFocusable = true
+            setOnClickListener { onClick() }
+        }
 
     private fun createTitleText(text: String): TextView =
         TextView(context).apply {
@@ -223,8 +425,14 @@ class FavouritesDialog(private val activity: Activity) : AdaptiveSheetDialog(act
     private fun dp(value: Int): Int =
         (value * context.resources.displayMetrics.density).toInt()
 
+    private fun showError(message: Int) {
+        activity.showBar(message)
+    }
+
     private companion object {
         const val DEPARTURES_LIMIT = 3
+        const val CONNECTION_DEPARTURES_LIMIT = 10
+        const val CONNECTION_PICKER_DEPARTURES_LIMIT = 20
         const val HTTP_TOO_MANY_REQUESTS = 429
     }
 }

@@ -40,8 +40,13 @@
     <string name="favourite_stops">Przystanki</string>
     <string name="favourite_connections">Połączenia</string>
     <string name="add_favourite_stop">Dodaj przystanek</string>
+    <string name="add_favourite_connection">Dodaj połączenie</string>
     <string name="no_favourite_stops">Nie masz jeszcze ulubionych przystanków.</string>
+    <string name="no_favourite_connections">Nie masz jeszcze ulubionych połączeń.</string>
     <string name="remove_favourite_stop">Usuń przystanek z ulubionych</string>
+    <string name="remove_favourite_connection">Usuń połączenie z ulubionych</string>
+    <string name="select_favourite_connection">Wybierz połączenie</string>
+    <string name="no_connections_to_add">Brak odjazdów do dodania</string>
     <string name="loading_departures">Pobieranie odjazdów...</string>
     <string name="departures_request_error">Nie udało się pobrać odjazdów</string>
     <string name="departures_rate_limit_error">Przekroczono limit, spróbuj za chwilę</string>

@@ -87,12 +87,40 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/addFavouriteConnectionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_outline_primary_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:minHeight="44dp"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="10dp"
+            android:text="@string/add_favourite_connection"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:id="@+id/favouriteConnectionsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/emptyFavouriteConnectionsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_snackbar"
+            android:padding="12dp"
+            android:text="@string/no_favourite_connections"
+            android:textColor="@color/app_text_secondary" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
