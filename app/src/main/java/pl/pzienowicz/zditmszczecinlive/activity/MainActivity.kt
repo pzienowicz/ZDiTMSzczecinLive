@@ -195,18 +195,31 @@ class MainActivity : AppCompatActivity() {
         val navigationPaddingTop = binding.bottomNavigation.paddingTop
         val navigationPaddingRight = binding.bottomNavigation.paddingRight
         val navigationPaddingBottom = binding.bottomNavigation.paddingBottom
+        val navigationLayoutParams = binding.bottomNavigation.layoutParams
+        val navigationWidth = navigationLayoutParams.width
         val favouriteLayoutParams = binding.setFavourite.layoutParams as ViewGroup.MarginLayoutParams
         val favouriteMarginRight = favouriteLayoutParams.rightMargin
         val favouriteMarginBottom = favouriteLayoutParams.bottomMargin
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
             val navigationBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            binding.bottomNavigation.updatePadding(
-                left = navigationPaddingLeft + navigationBars.left,
-                top = navigationPaddingTop,
-                right = navigationPaddingRight + navigationBars.right,
-                bottom = navigationPaddingBottom + navigationBars.bottom
-            )
+            if (isLandscape && navigationWidth > 0) {
+                navigationLayoutParams.width = navigationWidth + navigationBars.left
+                binding.bottomNavigation.layoutParams = navigationLayoutParams
+                binding.bottomNavigation.updatePadding(
+                    left = navigationPaddingLeft + navigationBars.left,
+                    top = navigationPaddingTop + navigationBars.top,
+                    right = navigationPaddingRight,
+                    bottom = navigationPaddingBottom + navigationBars.bottom
+                )
+            } else {
+                binding.bottomNavigation.updatePadding(
+                    left = navigationPaddingLeft + navigationBars.left,
+                    top = navigationPaddingTop,
+                    right = navigationPaddingRight + navigationBars.right,
+                    bottom = navigationPaddingBottom + navigationBars.bottom
+                )
+            }
             favouriteLayoutParams.rightMargin = favouriteMarginRight + navigationBars.right
             favouriteLayoutParams.bottomMargin = favouriteMarginBottom + navigationBars.bottom
             binding.setFavourite.layoutParams = favouriteLayoutParams

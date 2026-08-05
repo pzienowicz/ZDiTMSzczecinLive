@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="@string/line_list"
                 android:textColor="@color/black"
                 android:textSize="11sp" />
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="@string/information"
                 android:textColor="@color/black"
                 android:textSize="11sp" />
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="@string/schedule_board_short"
                 android:textColor="@color/black"
                 android:textSize="11sp" />
@@ -131,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:gravity="center"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="@string/more"
                 android:textColor="@color/black"
                 android:textSize="11sp" />
