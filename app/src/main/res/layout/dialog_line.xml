@@ -405,16 +405,25 @@
             </TableLayout>
 
             <TextView
+                android:id="@+id/clearFilterText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:id="@+id/clearFilterText"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/clear_filter" />
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/bg_outline_primary_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:minHeight="44dp"
+                android:paddingStart="16dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/clear_filter"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
