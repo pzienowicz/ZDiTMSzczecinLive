@@ -29,6 +29,7 @@ object Config {
     const val INTENT_OPEN_BUS_STOP_EDIT = "editBusStop"
     const val INTENT_NO_INTERNET_CONNECTION = "noInternet"
     const val INTENT_WIDGET_DATA_LOADED = "widgetDataLoaded"
+    const val INTENT_WIDGET_PINNED = "widgetPinned"
     const val EXTRA_LINE_ID = "lineId"
     const val EXTRA_BUS_STOP_NUMBER = "busStopNumber"
     const val EXTRA_WIDGET_ID = "widgetId"
