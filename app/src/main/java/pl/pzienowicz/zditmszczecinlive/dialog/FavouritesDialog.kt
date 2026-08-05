@@ -288,8 +288,12 @@ class FavouritesDialog(
             setPadding(dp(8), dp(8), dp(8), dp(8))
             layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
             setOnClickListener {
-                repository.removeFavouriteStop(stop.stopNumber)
-                renderFavouriteStops()
+                confirmDelete(
+                    context.getString(R.string.confirm_delete_stop, "${stop.stopName} ${stop.stopNumber}")
+                ) {
+                    repository.removeFavouriteStop(stop.stopNumber)
+                    renderFavouriteStops()
+                }
             }
         }
 
@@ -341,8 +345,15 @@ class FavouritesDialog(
             setPadding(dp(8), dp(8), dp(8), dp(8))
             layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
             setOnClickListener {
-                repository.removeFavouriteConnection(connection)
-                renderFavouriteConnections()
+                confirmDelete(
+                    context.getString(
+                        R.string.confirm_delete_connection,
+                        "${connection.lineNumber} ${connection.stopName} → ${connection.direction}"
+                    )
+                ) {
+                    repository.removeFavouriteConnection(connection)
+                    renderFavouriteConnections()
+                }
             }
         }
 
@@ -387,8 +398,12 @@ class FavouritesDialog(
             setPadding(dp(8), dp(8), dp(8), dp(8))
             layoutParams = LinearLayout.LayoutParams(dp(40), dp(40))
             setOnClickListener {
-                repository.removeFavouriteLine(line.url)
-                renderFavouriteLines()
+                confirmDelete(
+                    context.getString(R.string.confirm_delete_line, line.title)
+                ) {
+                    repository.removeFavouriteLine(line.url)
+                    renderFavouriteLines()
+                }
             }
         }
 
@@ -550,6 +565,12 @@ class FavouritesDialog(
 
     private fun showError(message: Int) {
         activity.showBar(message)
+    }
+
+    private fun confirmDelete(message: String, onConfirmed: () -> Unit) {
+        val dialog = ConfirmDeleteDialog(context, message, onConfirmed)
+        dialog.setFullWidth()
+        dialog.show()
     }
 
     private fun isFavouriteStopsLimitReached(): Boolean =

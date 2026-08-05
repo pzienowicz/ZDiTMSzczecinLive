@@ -47,6 +47,11 @@
     <string name="remove_favourite_stop">Usuń przystanek z ulubionych</string>
     <string name="remove_favourite_connection">Usuń połączenie z ulubionych</string>
     <string name="remove_favourite_line">Usuń mapę z ulubionych</string>
+    <string name="confirm_delete_title">Usunąć z ulubionych?</string>
+    <string name="confirm_delete_stop">Przystanek "%s" zostanie usunięty z ulubionych.</string>
+    <string name="confirm_delete_connection">Połączenie "%s" zostanie usunięte z ulubionych.</string>
+    <string name="confirm_delete_line">Mapa "%s" zostanie usunięta z ulubionych.</string>
+    <string name="delete">Usuń</string>
     <string name="select_favourite_connection">Wybierz połączenie</string>
     <string name="no_connections_to_add">Brak odjazdów do dodania</string>
     <string name="loading_departures">Pobieranie odjazdów...</string>
