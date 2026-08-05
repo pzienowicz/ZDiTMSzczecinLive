@@ -32,9 +32,23 @@
     <string name="line_list">Lista linii</string>
     <string name="information">Informacje</string>
     <string name="schedule_board_short">Tablica</string>
+    <string name="favourites">Ulubione</string>
     <string name="settings">Ustawienia</string>
     <string name="discussions">Dyskusje</string>
     <string name="more">Więcej</string>
+    <string name="favourites_description">Szybki dostęp do najczęściej używanych przystanków i połączeń.</string>
+    <string name="favourite_stops">Przystanki</string>
+    <string name="favourite_connections">Połączenia</string>
+    <string name="add_favourite_stop">Dodaj przystanek</string>
+    <string name="no_favourite_stops">Nie masz jeszcze ulubionych przystanków.</string>
+    <string name="remove_favourite_stop">Usuń przystanek z ulubionych</string>
+    <string name="loading_departures">Pobieranie odjazdów...</string>
+    <string name="departures_request_error">Nie udało się pobrać odjazdów</string>
+    <string name="departures_rate_limit_error">Przekroczono limit, spróbuj za chwilę</string>
+    <string name="no_departures">Brak najbliższych odjazdów</string>
+    <string name="departing_now">teraz</string>
+    <string name="departing_in_minutes">za %d min</string>
+    <string name="departing_at_time">o %s</string>
 
     <string name="lines_request_error">Nie udało się pobrać linii</string>
     <string name="info_request_error">Nie udało się pobrać aktualności</string>

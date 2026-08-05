@@ -15,6 +15,7 @@ object Config {
     const val PREFERENCE_FAVOURITE_MAP = "favouriteMapNew"
     const val PREFERENCE_OPEN_LINKS_EXTERNAL_BROWSER = "openLinksExternalBrowser"
     const val PREFERENCE_DARK_MODE = "darkMode"
+    const val PREFERENCE_FAVOURITE_STOPS = "favouriteStops"
 
     const val FB_GROUP_URL = "https://www.facebook.com/groups/1241981472572028"
 

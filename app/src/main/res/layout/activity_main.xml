@@ -24,7 +24,7 @@
         android:paddingTop="10dp"
         android:paddingEnd="6dp"
         android:paddingBottom="10dp"
-        android:weightSum="4">
+        android:weightSum="5">
 
         <LinearLayout
             android:id="@+id/nav_lines"
@@ -106,6 +106,34 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/schedule_board_short"
+                android:textColor="@color/app_text"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_favourites"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_favorite_white_48dp"
+                app:tint="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/favourites"
                 android:textColor="@color/app_text"
                 android:textSize="11sp" />
         </LinearLayout>

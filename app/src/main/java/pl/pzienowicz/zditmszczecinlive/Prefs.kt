@@ -31,6 +31,10 @@ class Prefs (context: Context) {
         get() = prefs.getBoolean(Config.PREFERENCE_DARK_MODE, false)
         set(value) = prefs.edit { putBoolean(Config.PREFERENCE_DARK_MODE, value) }
 
+    var favouriteStopsJson: String
+        get() = prefs.getString(Config.PREFERENCE_FAVOURITE_STOPS, "[]") ?: "[]"
+        set(value) = prefs.edit { putString(Config.PREFERENCE_FAVOURITE_STOPS, value) }
+
     var refreshWidgets: Boolean
         get() = prefs.getBoolean(Config.PREFERENCE_WIDGETS_REFRESH, true)
         set(value) = prefs.edit { putBoolean(Config.PREFERENCE_WIDGETS_REFRESH, value) }

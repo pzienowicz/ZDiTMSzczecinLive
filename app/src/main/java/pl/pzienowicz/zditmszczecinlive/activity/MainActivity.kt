@@ -85,6 +85,10 @@ class MainActivity : AppCompatActivity() {
             openScheduleBoardDialog()
         }
 
+        binding.navFavourites.setOnClickListener {
+            openFavouritesDialog()
+        }
+
         binding.navMore.setOnClickListener { showMoreMenu() }
 
         binding.webView.settings.javaScriptEnabled = true
@@ -375,6 +379,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun openLineDialog() {
         showDialog(LineDialog(this))
+    }
+
+    private fun openFavouritesDialog() {
+        showDialog(FavouritesDialog(this))
     }
 
     private fun openWidgetsDialog() {

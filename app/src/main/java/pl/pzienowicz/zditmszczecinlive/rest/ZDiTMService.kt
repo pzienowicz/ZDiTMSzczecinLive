@@ -8,6 +8,7 @@ import pl.pzienowicz.zditmszczecinlive.model.Line
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ZDiTMService {
 
@@ -18,7 +19,10 @@ interface ZDiTMService {
     fun listInfo(): Call<Data<Info>>
 
     @GET("api/v2/departure-boards/{stopNumber}")
-    fun getBoard(@Path("stopNumber") busStopNumber: String): Call<Board>
+    fun getBoard(
+        @Path("stopNumber") busStopNumber: String,
+        @Query("limit") limit: Int? = null
+    ): Call<Board>
 
     @GET("api/v2/stops")
     fun listBusStops(): Call<Data<BusStop>>
