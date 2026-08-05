@@ -14,7 +14,7 @@ class GooglePlayBillingClient(
 ) {
 
     private var isConnected = false
-    private var areWidgetsUnlocked = false
+    private var isPremiumUnlocked = false
     private var productDetailsMap: HashMap<String, ProductDetails> = HashMap()
 
     private var billingClient: BillingClient = BillingClient
@@ -26,6 +26,7 @@ class GooglePlayBillingClient(
                         if (!purchase.isAcknowledged) {
                             ackPurchase(purchase)
                         }
+                        handlePremiumPurchase(purchase)
                     }
                 }
             } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -68,14 +69,26 @@ class GooglePlayBillingClient(
             Log.v(Config.LOG_TAG, "debugMessage : $billingDebugMessage")
         }
 
-        if (purchase.products.first() == Config.PRODUCT_WIDGETS_UNLOCK) {
-            areWidgetsUnlocked = true
+    }
+
+    private fun handlePremiumPurchase(purchase: Purchase) {
+        if (purchase.isPremiumPurchase()) {
+            isPremiumUnlocked = true
             onPurchased()
         }
     }
 
-    fun unlockWidgets() {
-        productDetailsMap[Config.PRODUCT_WIDGETS_UNLOCK]?.let { productDetails ->
+    fun unlockPremium() {
+        unlockProduct(Config.PRODUCT_PREMIUM_UNLOCK)
+    }
+
+    fun premiumPrice(): String? =
+        productDetailsMap[Config.PRODUCT_PREMIUM_UNLOCK]
+            ?.oneTimePurchaseOfferDetails
+            ?.formattedPrice
+
+    private fun unlockProduct(productId: String) {
+        productDetailsMap[productId]?.let { productDetails ->
             val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
                 .setProductDetails(productDetails)
                 .build()
@@ -85,17 +98,67 @@ class GooglePlayBillingClient(
                 .build()
 
             billingClient.launchBillingFlow(activity, flowParams)
+        } ?: activity.showBar(R.string.payment_error)
+    }
+
+    fun isPremiumUnlocked() = isPremiumUnlocked
+
+    fun consumePremiumProducts() {
+        val purchasesParams = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
+
+        billingClient.queryPurchasesAsync(purchasesParams) { purchaseResult, purchases ->
+            if (purchaseResult.responseCode != BillingClient.BillingResponseCode.OK) {
+                activity.showBar(R.string.payment_error)
+                return@queryPurchasesAsync
+            }
+
+            val purchasesToConsume = purchases.filter { purchase ->
+                purchase.products.any { it in PREMIUM_PRODUCT_IDS }
+            }
+            if (purchasesToConsume.isEmpty()) {
+                activity.showBar(R.string.debug_no_premium_products_to_consume)
+                return@queryPurchasesAsync
+            }
+
+            purchasesToConsume.forEach { purchase ->
+                val consumeParams = ConsumeParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
+
+                billingClient.consumeAsync(consumeParams) { billingResult, _ ->
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                        isPremiumUnlocked = false
+                        activity.showBar(R.string.debug_premium_products_consumed)
+                    } else {
+                        activity.showBar(R.string.payment_error)
+                    }
+                }
+            }
         }
     }
 
-    fun areWidgetsUnlocked() = areWidgetsUnlocked
+    private fun inAppProduct(productId: String): QueryProductDetailsParams.Product =
+        QueryProductDetailsParams.Product.newBuilder()
+            .setProductId(productId)
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
+
+    private fun Purchase.isPremiumPurchase(): Boolean =
+        purchaseState == Purchase.PurchaseState.PURCHASED &&
+            products.any { it in PREMIUM_PRODUCT_IDS }
+
+    private companion object {
+        val PREMIUM_PRODUCT_IDS = setOf(
+            Config.PRODUCT_PREMIUM_UNLOCK,
+            Config.PRODUCT_WIDGETS_UNLOCK
+        )
+    }
 
     fun loadDetails() {
         val productList = listOf(
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(Config.PRODUCT_WIDGETS_UNLOCK)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build()
+            inAppProduct(Config.PRODUCT_PREMIUM_UNLOCK)
         )
 
         val params = QueryProductDetailsParams.newBuilder()
@@ -116,11 +179,9 @@ class GooglePlayBillingClient(
             billingClient.queryPurchasesAsync(purchasesParams) { purchaseResult, purchases ->
                 if (purchaseResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     purchases.forEach {
-                        if (it.purchaseState == Purchase.PurchaseState.PURCHASED
-                            && it.products.first() == Config.PRODUCT_WIDGETS_UNLOCK
-                        ) {
-                            Log.d(Config.LOG_TAG, "areWidgetsUnlocked")
-                            areWidgetsUnlocked = true
+                        if (it.isPremiumPurchase()) {
+                            Log.d(Config.LOG_TAG, "isPremiumUnlocked")
+                            isPremiumUnlocked = true
                         }
                     }
                 }

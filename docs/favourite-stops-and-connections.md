@@ -51,22 +51,33 @@ Obecnie klikniecie polaczenia otwiera pelna tablice odjazdow dla przystanku. Ded
 Proponowany model:
 
 - Free:
-  - maksymalnie 3 ulubione przystanki,
-  - maksymalnie 1 ulubione polaczenie.
+  - maksymalnie 1 ulubiony przystanek,
+  - maksymalnie 1 ulubione polaczenie,
+  - maksymalnie 2 ulubione mapy.
 - Premium:
   - bez limitu ulubionych przystankow,
   - bez limitu ulubionych polaczen,
+  - bez limitu ulubionych map,
   - mozliwosc tworzenia widgetow z ulubionego przystanku lub polaczenia,
   - przyszlosciowo: alerty odjazdu/opoznien dla ulubionych.
 
-Limity wersji free i dialog z prosba o zakup premium dodajemy na koncu prac nad funkcja. Najpierw doprowadzamy ulubione przystanki i polaczenia do dzialajacego stanu, a dopiero potem ograniczamy liczbe rekordow dla uzytkownikow bez premium.
+Limity wersji free i dialog z prosba o zakup premium sa egzekwowane przy probie dodania kolejnego rekordu ponad limit.
 
-Po przekroczeniu limitu free aplikacja powinna pokazac dialog premium z jasnym komunikatem:
+Po przekroczeniu limitu free aplikacja pokazuje sheet premium z jasnym komunikatem:
 
 - co zostalo zablokowane,
 - jakie sa limity wersji darmowej,
 - co odblokowuje premium,
 - ze zakup jest jednorazowy.
+- ze zakup daje dozywotni dostep.
+
+Sheet premium pokazuje:
+
+- sprzedazowy naglowek,
+- liste korzysci z zielonymi checkami,
+- duza cene pobrana z Google Play Billing jako `formattedPrice`,
+- zielony przycisk zakupu,
+- informacje o jednorazowym zakupie i dozywotnim dostepie.
 
 Decyzje:
 
@@ -74,11 +85,17 @@ Decyzje:
 - Id nowego produktu premium w Google Play: `premium_unlock`.
 - Nadal wspieramy istniejacy produkt `widgets_unlock`.
 - Zakup `widgets_unlock` ma dawac pelne premium jako legacy entitlement dla obecnych kupujacych.
+- `widgets_unlock` nie jest juz oferowany do zakupu w UI.
+- `widgets_unlock` nie musi byc w `queryProductDetailsAsync`, bo nie uruchamiamy dla niego nowego flow zakupu.
+- Legacy entitlement dla `widgets_unlock` jest sprawdzany przez `queryPurchasesAsync`.
 - Premium bedzie platnoscia jednorazowa.
 
-Do ustalenia:
+Wspolny entitlement w kodzie: `isPremiumUnlocked`.
 
-- Jak nazwiemy wspolny entitlement w kodzie, np. `isPremiumUnlocked`.
+W wersji debug long press na pozycji `Ulubione` konsumuje zakupione produkty premium:
+
+- `premium_unlock`,
+- `widgets_unlock`.
 
 ## Dane z API ZDiTM
 
@@ -187,10 +204,8 @@ Proponowane encje:
 
 ## Otwarte decyzje
 
-- Czy darmowy limit ma byc 3 przystanki i 1 polaczenie.
 - Czy dodajemy widget dla ulubionego polaczenia.
 - Czy dodajemy dedykowany widok odjazdow przefiltrowany do ulubionego polaczenia.
-- Czy limity free obejmuja takze ulubione mapy.
 
 ## Etapy implementacji
 
@@ -202,7 +217,7 @@ Proponowane encje:
 6. [x] Dodac pobieranie najblizszego pasujacego odjazdu dla ulubionych polaczen.
 7. [x] Dodac testy storage i formatowania odjazdow.
 8. [x] Dodac sekcje ulubionych map.
-9. [ ] Podpiac billing/odblokowanie premium.
-10. [ ] Na koncu dodac limity free/premium.
-11. [ ] Na koncu dodac dialog z prosba o zakup premium po przekroczeniu limitu.
+9. [x] Podpiac billing/odblokowanie premium.
+10. [x] Dodac limity free/premium.
+11. [x] Dodac dialog z prosba o zakup premium po przekroczeniu limitu.
 12. [ ] Dodac testy logiki limitow.

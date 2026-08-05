@@ -42,6 +42,7 @@ class WidgetsDialog(
     private var widgetBusStopNumber: String? = null
     private var pendingWidgetEditId: String? = initialWidgetId
     private var billingInitialized = false
+    private var premiumUnlockedAfterPurchase = false
     private var isShown = false
     private val billingClient: GooglePlayBillingClient
     private val binding = DialogWidgetsBinding.inflate(layoutInflater)
@@ -61,6 +62,7 @@ class WidgetsDialog(
                 openPendingWidgetEditIfReady()
             },
             onPurchased = {
+                premiumUnlockedAfterPurchase = true
                 activity.showBar(R.string.payment_success)
 
                 if (widgetId != null) {
@@ -108,10 +110,15 @@ class WidgetsDialog(
     }
 
     private fun openBusStopDialog(widgetId: String?, currentBusStop: String? = null) {
-        if (!billingClient.areWidgetsUnlocked()) {
+        if (!isPremiumUnlocked()) {
             this.widgetId = widgetId
             widgetBusStopNumber = currentBusStop
-            billingClient.unlockWidgets()
+            val dialog = PremiumDialog(activity) {
+                premiumUnlockedAfterPurchase = true
+                openBusStopDialog(widgetId, currentBusStop)
+            }
+            dialog.setFullWidth()
+            dialog.show()
             return
         }
 
@@ -138,6 +145,9 @@ class WidgetsDialog(
         }, currentBusStop)
         dialog.show()
     }
+
+    private fun isPremiumUnlocked(): Boolean =
+        premiumUnlockedAfterPurchase || billingClient.isPremiumUnlocked()
 
     private fun openPendingWidgetEditIfReady() {
         if (!isShown || !billingInitialized) {

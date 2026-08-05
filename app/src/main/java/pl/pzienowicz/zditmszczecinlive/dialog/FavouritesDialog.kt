@@ -8,7 +8,9 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import pl.pzienowicz.zditmszczecinlive.Config
 import pl.pzienowicz.zditmszczecinlive.R
+import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.data.FavouriteDepartureFormatter
 import pl.pzienowicz.zditmszczecinlive.data.FavouritesRepository
 import pl.pzienowicz.zditmszczecinlive.databinding.DialogFavouritesBinding
@@ -33,6 +35,15 @@ class FavouritesDialog(
 
     private val binding = DialogFavouritesBinding.inflate(layoutInflater)
     private val repository = FavouritesRepository(activity)
+    private var premiumUnlockedAfterPurchase = false
+    private val billingClient = GooglePlayBillingClient(
+        activity = activity,
+        onInitialized = {},
+        onPurchased = {
+            premiumUnlockedAfterPurchase = true
+            activity.showBar(R.string.payment_success)
+        }
+    )
     private val departureFormatter = FavouriteDepartureFormatter(
         FavouriteDepartureFormatter.AndroidStrings(activity)
     )
@@ -41,9 +52,17 @@ class FavouritesDialog(
         setContentView(binding.root)
 
         binding.addFavouriteStopButton.setOnClickListener {
+            if (isFavouriteStopsLimitReached()) {
+                openPremiumDialog()
+                return@setOnClickListener
+            }
             openAddStopDialog()
         }
         binding.addFavouriteConnectionButton.setOnClickListener {
+            if (isFavouriteConnectionsLimitReached()) {
+                openPremiumDialog()
+                return@setOnClickListener
+            }
             openAddConnectionStopDialog()
         }
         renderFavouriteStops()
@@ -55,6 +74,10 @@ class FavouritesDialog(
         val dialog = BusStopDialog(
             activity = activity,
             onSelected = { busStop ->
+                if (isFavouriteStopsLimitReached()) {
+                    openPremiumDialog()
+                    return@BusStopDialog
+                }
                 repository.addFavouriteStop(busStop)
                 renderFavouriteStops()
             },
@@ -139,6 +162,10 @@ class FavouritesDialog(
         departures.forEach { departure ->
             container.addView(
                 createConnectionPickerCard(departure) {
+                    if (isFavouriteConnectionsLimitReached()) {
+                        openPremiumDialog()
+                        return@createConnectionPickerCard
+                    }
                     repository.addFavouriteConnection(busStop, departure)
                     renderFavouriteConnections()
                     dialog.dismiss()
@@ -516,6 +543,25 @@ class FavouritesDialog(
 
     private fun showError(message: Int) {
         activity.showBar(message)
+    }
+
+    private fun isFavouriteStopsLimitReached(): Boolean =
+        !isPremiumUnlocked() &&
+            repository.getFavouriteStops().size >= Config.FAVOURITE_STOPS_FREE_LIMIT
+
+    private fun isFavouriteConnectionsLimitReached(): Boolean =
+        !isPremiumUnlocked() &&
+            repository.getFavouriteConnections().size >= Config.FAVOURITE_CONNECTIONS_FREE_LIMIT
+
+    private fun isPremiumUnlocked(): Boolean =
+        premiumUnlockedAfterPurchase || billingClient.isPremiumUnlocked()
+
+    private fun openPremiumDialog() {
+        val dialog = PremiumDialog(activity) {
+            premiumUnlockedAfterPurchase = true
+        }
+        dialog.setFullWidth()
+        dialog.show()
     }
 
     private companion object {

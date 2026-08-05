@@ -5,6 +5,10 @@ object Config {
     const val LOG_TAG = "Komunikacja"
 
     const val PRODUCT_WIDGETS_UNLOCK = "widgets_unlock"
+    const val PRODUCT_PREMIUM_UNLOCK = "premium_unlock"
+    const val FAVOURITE_STOPS_FREE_LIMIT = 1
+    const val FAVOURITE_CONNECTIONS_FREE_LIMIT = 1
+    const val FAVOURITE_LINES_FREE_LIMIT = 2
 
     const val URL: String = "https://www.zditm.szczecin.pl/pl/mapy/przystanki-i-pojazdy"
     const val LINE_URL = "https://www.zditm.szczecin.pl/pl/mapy/linia/"

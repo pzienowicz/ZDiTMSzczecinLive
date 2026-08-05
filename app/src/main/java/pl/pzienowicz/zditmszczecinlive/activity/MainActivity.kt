@@ -31,7 +31,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 import android.widget.PopupWindow
+import pl.pzienowicz.zditmszczecinlive.BuildConfig
 import pl.pzienowicz.zditmszczecinlive.*
+import pl.pzienowicz.zditmszczecinlive.billing.GooglePlayBillingClient
 import pl.pzienowicz.zditmszczecinlive.data.FavouritesRepository
 import pl.pzienowicz.zditmszczecinlive.databinding.ActivityMainBinding
 import pl.pzienowicz.zditmszczecinlive.dialog.*
@@ -49,6 +51,8 @@ class MainActivity : AppCompatActivity() {
     var mGeoLocationRequestOrigin: String? = null
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var billingClient: GooglePlayBillingClient
+    private var premiumUnlockedAfterPurchase = false
     private var morePopupWindow: PopupWindow? = null
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -68,6 +72,14 @@ class MainActivity : AppCompatActivity() {
 
         prefs.selectedLine = 0
         migrateFavouriteMap()
+        billingClient = GooglePlayBillingClient(
+            activity = this,
+            onInitialized = {},
+            onPurchased = {
+                premiumUnlockedAfterPurchase = true
+                showBar(R.string.payment_success)
+            }
+        )
 
         binding.setFavourite.setOnClickListener {
             toggleFavouriteLine()
@@ -89,6 +101,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.navFavourites.setOnClickListener {
             openFavouritesDialog()
+        }
+        if (BuildConfig.DEBUG) {
+            binding.navFavourites.setOnLongClickListener {
+                billingClient.consumePremiumProducts()
+                true
+            }
         }
 
         binding.navMore.setOnClickListener { showMoreMenu() }
@@ -352,10 +370,21 @@ class MainActivity : AppCompatActivity() {
             repository.removeFavouriteLine(line.url)
             showBar(R.string.remove_favourite_line_success)
         } else {
+            if (!isPremiumUnlocked() && repository.getFavouriteLines().size >= Config.FAVOURITE_LINES_FREE_LIMIT) {
+                showDialog(
+                    PremiumDialog(this) {
+                        premiumUnlockedAfterPurchase = true
+                    }
+                )
+                return
+            }
             repository.addFavouriteLine(line)
             showBar(R.string.add_favourite_line_success)
         }
     }
+
+    private fun isPremiumUnlocked(): Boolean =
+        premiumUnlockedAfterPurchase || billingClient.isPremiumUnlocked()
 
     private fun currentFavouriteLine(): FavouriteLine {
         val url = normalizeUrl(currentUrl) ?: Config.URL
