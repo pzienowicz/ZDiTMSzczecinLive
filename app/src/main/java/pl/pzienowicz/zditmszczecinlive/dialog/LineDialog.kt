@@ -2,6 +2,8 @@ package pl.pzienowicz.zditmszczecinlive.dialog
 
 import android.content.Intent
 import android.app.Activity
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -41,23 +43,31 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
         val onDemand: Boolean
     )
 
+    data class LineSection(
+        val match: LineMatch,
+        val table: TableLayout,
+        val label: LinearLayout,
+        val colorRes: Int
+    )
+
     init {
         binding = DialogLineBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setHeaderTextColors()
 
-        val types = setOf(
-            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.tramNormalTable, binding.tramExtraLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.NORMAL, false) to Pair(binding.busNormalTable, binding.busNormalLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.FAST, false) to Pair(binding.busExpressTable, binding.busExpressLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.NIGHT, LineApiValue.NORMAL, false) to Pair(binding.busNightTable, binding.busNightLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.REPLACEMENT, false) to Pair(binding.busSubstituteTable, binding.busSubstituteLabel),
-            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.REPLACEMENT, false) to Pair(binding.tramSubstituteTable, binding.tramSubstituteLabel),
-            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.TOURIST, false) to Pair(binding.tramTouristicTable, binding.tramTouristicLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.TOURIST, false) to Pair(binding.busTouristicTable, binding.busTouristicLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.NORMAL, true) to Pair(binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel),
-            LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.SPECIAL, false) to Pair(binding.tramExtraTable, binding.tramExtraLabel),
-            LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.SPECIAL, false) to Pair(binding.busExtraTable, binding.busExtraLabel)
+        val types = listOf(
+            LineSection(LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.NORMAL, false), binding.tramNormalTable, binding.tramNormalLabel, R.color.line_tram),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.NORMAL, false), binding.busNormalTable, binding.busNormalLabel, R.color.line_bus),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.FAST, false), binding.busExpressTable, binding.busExpressLabel, R.color.line_bus_express),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.NIGHT, LineApiValue.NORMAL, false), binding.busNightTable, binding.busNightLabel, R.color.line_bus_night),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.NIGHT, LineApiValue.REPLACEMENT, false), binding.busNightSubstituteTable, binding.busNightSubstituteLabel, R.color.line_bus_night),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.REPLACEMENT, false), binding.busSubstituteTable, binding.busSubstituteLabel, R.color.line_bus),
+            LineSection(LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.REPLACEMENT, false), binding.tramSubstituteTable, binding.tramSubstituteLabel, R.color.line_tram),
+            LineSection(LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.TOURIST, false), binding.tramTouristicTable, binding.tramTouristicLabel, R.color.line_tram_touristic),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.TOURIST, false), binding.busTouristicTable, binding.busTouristicLabel, R.color.line_bus_touristic),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.NORMAL, true), binding.busNormalOnDemandTable, binding.busNormalOnDemandLabel, R.color.line_bus),
+            LineSection(LineMatch(LineApiValue.TRAM, LineApiValue.DAY, LineApiValue.SPECIAL, false), binding.tramExtraTable, binding.tramExtraLabel, R.color.line_tram),
+            LineSection(LineMatch(LineApiValue.BUS, LineApiValue.DAY, LineApiValue.SPECIAL, false), binding.busExtraTable, binding.busExtraLabel, R.color.line_bus)
         )
 
         binding.clearFilterText.setOnClickListener { changeFilter(null) }
@@ -78,8 +88,8 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
                     if (response.isSuccessful && response.body() != null) {
                         types.forEach {
                             drawLinesTable(
-                                filterLines(response.body()?.items, it.first),
-                                it.second
+                                filterLines(response.body()?.items, it.match),
+                                it
                             )
                         }
                     } else {
@@ -114,10 +124,10 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
         }) ?: emptyList()
     }
 
-    private fun drawLinesTable(lines: List<Line>, pair: Pair<TableLayout, LinearLayout>) {
+    private fun drawLinesTable(lines: List<Line>, section: LineSection) {
         if (lines.isEmpty()) {
-            pair.first.visibility = View.GONE
-            pair.second.visibility = View.GONE
+            section.table.visibility = View.GONE
+            section.label.visibility = View.GONE
             return
         }
 
@@ -143,18 +153,14 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
             for (j in 1..linesPerRow) {
                 val cellLayout = LinearLayout(context)
                 val params = TableRow.LayoutParams(
-                    TableRow.LayoutParams.WRAP_CONTENT,
+                    0,
                     TableRow.LayoutParams.WRAP_CONTENT
-                )
-                params.setMargins(2, 2, 2, 3)
+                ).apply {
+                    weight = 1f
+                    setMargins(dp(4), dp(3), dp(4), dp(5))
+                }
                 cellLayout.layoutParams = params
-                val tv = TextView(context)
-                tv.layoutParams = TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.MATCH_PARENT
-                )
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-                tv.gravity = Gravity.CENTER
+                cellLayout.orientation = LinearLayout.VERTICAL
 
                 if (iterator < lines.size) {
                     val line = lines[iterator]
@@ -162,30 +168,58 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
                     cellLayout.isFocusable = true
                     cellLayout.id = line.id
 
-                    if (line.highlighted) {
-                        cellLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
-                    } else {
-                        cellLayout.setBackgroundResource(R.drawable.selector_line)
-                    }
-
-                    if (currentLine == line.id) {
-                        tv.setTextColor(ContextCompat.getColor(context, R.color.red))
-                    }
-
                     cellLayout.setOnClickListener { view: View ->
                         changeFilter(lines.first { it.id == view.id })
                     }
-                    tv.text = line.number
-                } else {
-                    tv.setTextColor(ContextCompat.getColor(context, R.color.app_surface))
+                    cellLayout.addView(createLineTopBar(section.colorRes))
+                    cellLayout.addView(createLineNumberView(line))
                 }
-                cellLayout.addView(tv)
                 row.addView(cellLayout)
                 iterator++
             }
-            pair.first.addView(row)
+            section.table.addView(row)
         }
     }
+
+    private fun createLineTopBar(colorRes: Int): View =
+        View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp(3)
+            )
+            setBackgroundColor(ContextCompat.getColor(context, colorRes))
+        }
+
+    private fun createLineNumberView(line: Line): TextView =
+        TextView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                dp(37)
+            )
+            background = createLineTileBackground(line.highlighted)
+            elevation = dp(2).toFloat()
+            gravity = Gravity.CENTER
+            includeFontPadding = false
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    if (currentLine == line.id) R.color.red else R.color.black
+                )
+            )
+            text = line.number
+        }
+
+    private fun createLineTileBackground(highlighted: Boolean): GradientDrawable =
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(ContextCompat.getColor(context, if (highlighted) R.color.yellow else R.color.white))
+            setStroke(dp(1), ContextCompat.getColor(context, R.color.app_surface_stroke))
+        }
+
+    private fun dp(value: Int): Int =
+        (value * context.resources.displayMetrics.density).toInt()
 
     private fun changeFilter(line: Line?) {
         val intent = Intent(Config.INTENT_LOAD_NEW_URL)
@@ -211,6 +245,7 @@ class LineDialog(private val activity: Activity) : AdaptiveSheetDialog(activity)
             binding.busSubstituteLabel,
             binding.busExtraLabel,
             binding.busNightLabel,
+            binding.busNightSubstituteLabel,
             binding.clearFilterText
         ).forEach { setTextColor(it, textColor) }
     }

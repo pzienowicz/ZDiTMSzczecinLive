@@ -21,4 +21,11 @@
     <color name="bottom_sheet_handle">#D0D0D0</color>
     <color name="orange">#fa0</color>
     <color name="black_semi_transparent">#B2000000</color>
+
+    <color name="line_tram">#00AEEF</color>
+    <color name="line_tram_touristic">#6B3F00</color>
+    <color name="line_bus">#58B700</color>
+    <color name="line_bus_express">#E30613</color>
+    <color name="line_bus_touristic">#8A4B00</color>
+    <color name="line_bus_night">#222222</color>
 </resources>

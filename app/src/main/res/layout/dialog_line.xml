@@ -404,6 +404,38 @@
                 android:dividerPadding="10dp">
             </TableLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/busNightSubstituteLabel"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/anz25" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/night_substitute_bus_lines" />
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/busNightSubstituteTable"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:shrinkColumns="*"
+                android:stretchColumns="*"
+                android:dividerPadding="10dp">
+            </TableLayout>
+
             <TextView
                 android:id="@+id/clearFilterText"
                 android:layout_width="match_parent"
